@@ -39,7 +39,9 @@ export const ClientForm = ({ initialData }: { initialData?: Client }) => {
     },
   })
 
-  const { execute } = useAction(action.client.create, {
+  const { create, update } = action.client()
+
+  const { execute } = useAction(create, {
     onSuccess: (data) => {
       router.replace(String(data.companyId))
       toast({
@@ -56,7 +58,7 @@ export const ClientForm = ({ initialData }: { initialData?: Client }) => {
     },
   })
 
-  const { execute: executeUpdate } = useAction(action.client.update, {
+  const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
         title: 'Cliente atualizado com sucesso',

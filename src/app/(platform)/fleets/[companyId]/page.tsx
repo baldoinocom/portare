@@ -9,7 +9,9 @@ export default async function Page({
 }: {
   params: { companyId: string }
 }) {
-  const fleet = await action.fleet.find({ companyId: Number(params.companyId) })
+  const fleet = await action
+    .fleet()
+    .find({ companyId: Number(params.companyId) })
 
   if (!fleet.data) {
     return NotFound()

@@ -4,10 +4,12 @@ import { findAction } from './find'
 import { findManyAction } from './find-many'
 import { updateAction } from './update'
 
-export const fleetAction = {
-  create: createAction,
-  delete: deleteAction,
-  find: findAction,
-  findMany: findManyAction,
-  update: updateAction,
+export const fleetAction = () => {
+  return {
+    create: createAction,
+    delete: deleteAction,
+    find: findAction,
+    findMany: findManyAction,
+    update: updateAction,
+  }
 }

@@ -27,9 +27,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     })
 
     if (aggregate?.personId && !aggregate?.person?.driver) {
-      await action.person.delete({ id: aggregate.personId })
+      await action.person().delete({ id: aggregate.personId })
     } else if (aggregate?.companyId) {
-      await action.company.delete({ id: aggregate.companyId })
+      await action.company().delete({ id: aggregate.companyId })
     }
 
     aggregate = await db.aggregate.delete({ where: { id } })

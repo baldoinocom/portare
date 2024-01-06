@@ -29,7 +29,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     let trailerIds
 
     if (trailers?.length) {
-      const { error } = await action.trailer.findExistingTrailer({
+      const { error } = await action.trailer().findExistingTrailer({
         id,
         trailers,
       })

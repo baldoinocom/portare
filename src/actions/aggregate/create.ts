@@ -18,8 +18,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     if (person) {
-      const { data, error } =
-        await action.person.createWithoutRelationship(person)
+      const { data, error } = await action
+        .person()
+        .createWithoutRelationship(person)
 
       if (data) {
         aggregate = await db.aggregate.create({
@@ -33,7 +34,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         return { error }
       }
     } else if (company) {
-      const { data, error } = await action.company.create(company)
+      const { data, error } = await action.company().create(company)
 
       if (data) {
         aggregate = await db.aggregate.create({

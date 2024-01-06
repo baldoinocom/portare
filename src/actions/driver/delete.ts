@@ -26,7 +26,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     })
 
     if (!driver?.person?.aggregateOwner) {
-      await action.person.delete({ id: personId })
+      await action.person().delete({ id: personId })
     }
 
     driver = await db.driver.delete({ where: { personId } })

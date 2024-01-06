@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let truck
 
   try {
-    const { data, error } = await action.vehicle.create(vehicle)
+    const { data, error } = await action.vehicle().create(vehicle)
 
     if (data) {
       truck = await db.truck.create({

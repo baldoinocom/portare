@@ -5,11 +5,13 @@ import { findManyAction } from './find-many'
 import { updateAction } from './update'
 import { updateDocumentAction } from './update-document'
 
-export const aggregateAction = {
-  create: createAction,
-  delete: deleteAction,
-  find: findAction,
-  findMany: findManyAction,
-  update: updateAction,
-  updateDocument: updateDocumentAction,
+export const aggregateAction = () => {
+  return {
+    create: createAction,
+    delete: deleteAction,
+    find: findAction,
+    findMany: findManyAction,
+    update: updateAction,
+    updateDocument: updateDocumentAction,
+  }
 }

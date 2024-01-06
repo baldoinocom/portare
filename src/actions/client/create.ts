@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let client
 
   try {
-    const { data, error } = await action.company.create(company)
+    const { data, error } = await action.company().create(company)
 
     if (data) {
       client = await db.client.create({

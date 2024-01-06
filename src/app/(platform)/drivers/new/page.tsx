@@ -5,8 +5,8 @@ import { Header } from './_components/header'
 
 export default async function Page() {
   const [fleets, aggregates] = await Promise.all([
-    action.fleet.findMany(),
-    action.aggregate.findMany(),
+    action.fleet().findMany(),
+    action.aggregate().findMany(),
   ])
 
   return (

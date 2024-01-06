@@ -22,8 +22,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     const changeData = AggregateWithUniqueDocumentSchema.parse(data)
 
     if (changeData.person) {
-      const { data: createdPerson, error } =
-        await action.person.createWithoutRelationship(changeData.person)
+      const { data: createdPerson, error } = await action
+        .person()
+        .createWithoutRelationship(changeData.person)
 
       if (createdPerson) {
         aggregate = await db.aggregate.update({
@@ -38,12 +39,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }
 
       if (aggregate.companyId) {
-        await action.company.delete({ id: aggregate.companyId })
+        await action.company().delete({ id: aggregate.companyId })
       }
     } else if (changeData.company) {
-      const { data: createdCompany, error } = await action.company.create(
-        changeData.company,
-      )
+      const { data: createdCompany, error } = await action
+        .company()
+        .create(changeData.company)
 
       if (createdCompany) {
         aggregate = await db.aggregate.update({
@@ -61,7 +62,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }
 
       if (aggregate.personId && !aggregate.person?.driver) {
-        await action.person.delete({ id: aggregate.personId })
+        await action.person().delete({ id: aggregate.personId })
       }
     }
 

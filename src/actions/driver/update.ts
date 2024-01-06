@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let driver
 
   try {
-    const { data, error } = await action.person.update({
+    const { data, error } = await action.person().update({
       id: personId,
       ...person,
     })

@@ -9,15 +9,17 @@ export default async function Page({
 }: {
   params: { personId: string }
 }) {
-  const driver = await action.driver.find({ personId: Number(params.personId) })
+  const driver = await action
+    .driver()
+    .find({ personId: Number(params.personId) })
 
   if (!driver.data) {
     return NotFound()
   }
 
   const [fleets, aggregates] = await Promise.all([
-    action.fleet.findMany(),
-    action.aggregate.findMany(),
+    action.fleet().findMany(),
+    action.aggregate().findMany(),
   ])
 
   return (

@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let truck
 
   try {
-    const { data, error } = await action.vehicle.update({ id, ...vehicle })
+    const { data, error } = await action.vehicle().update({ id, ...vehicle })
 
     if (data) {
       truck = await db.truck.update({

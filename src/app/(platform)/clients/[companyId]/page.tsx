@@ -9,7 +9,7 @@ export default async function Page({
 }: {
   params: { companyId: string }
 }) {
-  const client = await action.client.find({
+  const client = await action.client().find({
     companyId: Number(params.companyId),
   })
 

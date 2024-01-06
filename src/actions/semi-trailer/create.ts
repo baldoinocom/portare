@@ -18,7 +18,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let semiTrailer
 
   try {
-    const { error } = await action.trailer.findExistingTrailer({ trailers })
+    const { error } = await action.trailer().findExistingTrailer({ trailers })
 
     if (error) return { error }
 

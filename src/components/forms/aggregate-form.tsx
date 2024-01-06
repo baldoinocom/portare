@@ -51,7 +51,9 @@ export const AggregateForm = ({
     },
   })
 
-  const { execute } = useAction(action.aggregate.create, {
+  const { create, update } = action.aggregate()
+
+  const { execute } = useAction(create, {
     onSuccess: (data) => {
       router.replace(String(data.id))
       toast({
@@ -68,7 +70,7 @@ export const AggregateForm = ({
     },
   })
 
-  const { execute: executeUpdate } = useAction(action.aggregate.update, {
+  const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
         title: 'Cliente atualizado com sucesso',

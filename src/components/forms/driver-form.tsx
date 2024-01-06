@@ -46,7 +46,9 @@ export const DriverForm = ({
     },
   })
 
-  const { execute } = useAction(action.driver.create, {
+  const { create, update } = action.driver()
+
+  const { execute } = useAction(create, {
     onSuccess: (data) => {
       router.replace(String(data.personId))
       toast({
@@ -63,7 +65,7 @@ export const DriverForm = ({
     },
   })
 
-  const { execute: executeUpdate } = useAction(action.driver.update, {
+  const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
         title: 'Motorista atualizado com sucesso',

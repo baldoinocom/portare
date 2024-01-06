@@ -28,7 +28,9 @@ export const FleetForm = ({ initialData }: { initialData?: Fleet }) => {
     defaultValues: nullAsUndefined(initialData),
   })
 
-  const { execute } = useAction(action.fleet.create, {
+  const { create, update } = action.fleet()
+
+  const { execute } = useAction(create, {
     onSuccess: (data) => {
       router.replace(String(data.companyId))
       toast({
@@ -45,7 +47,7 @@ export const FleetForm = ({ initialData }: { initialData?: Fleet }) => {
     },
   })
 
-  const { execute: executeUpdate } = useAction(action.fleet.update, {
+  const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
         title: 'Frota atualizada com sucesso',

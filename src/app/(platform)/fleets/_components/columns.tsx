@@ -15,7 +15,7 @@ export const columns: ColumnDef<Fleet>[] = [
     header: 'CNPJ',
   },
   {
-    accessorKey: 'company.state',
+    accessorKey: 'company.uf',
     header: 'UF',
   },
 ]
