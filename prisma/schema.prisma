@@ -1,0 +1,653 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Log {
+  id        String     @id @default(uuid())
+  action    ActionType
+  model     String
+  data      Json
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  @@map("logs")
+}
+
+enum ActionType {
+  create
+  update
+  delete
+
+  @@map("action_type")
+}
+
+model User {
+  id             String @id @default(uuid())
+  username       String @unique
+  externalUserId String @unique @map("external_user_id")
+
+  personId Int?    @unique @map("person_id")
+  person   Person? @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  groups Group[] @relation("UserGroup", map: "user_group")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([username])
+  @@index([externalUserId])
+  @@index([personId])
+  @@map("users")
+}
+
+model Group {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  roles   Role[] @relation("GroupRole", map: "group_role")
+  members User[] @relation("UserGroup", map: "user_group")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("groups")
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  groups      Group[]      @relation("GroupRole", map: "group_role")
+  permissions Permission[] @relation("RolePermission", map: "role_permission")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("roles")
+}
+
+model Permission {
+  id    String          @id @default(cuid())
+  code  PermissionCode
+  group PermissionGroup
+
+  roles Role[] @relation("RolePermission", map: "role_permission")
+
+  @@unique([code, group])
+  @@map("permissions")
+}
+
+enum PermissionCode {
+  view
+  create
+  update
+  delete
+
+  menu
+}
+
+enum PermissionGroup {
+  groups
+  permissions
+  roles
+
+  trips
+  groupings
+
+  drivers
+
+  aggregates
+  fleets
+  clients
+
+  trucks
+  trailers
+}
+
+model Person {
+  id          Int     @id @default(autoincrement())
+  name        String
+  nickname    String?
+  cpf         String? @unique @db.VarChar(11) // CPF - Cadastro de Pessoas Físicas
+  phoneNumber String? @map("phone_number") @db.VarChar(11)
+
+  fleetId Int?   @map("fleet_id")
+  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+
+  aggregateId Int?       @map("aggregate_id")
+  aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
+
+  user   User?
+  driver Driver?
+
+  aggregateOwner Aggregate? @relation("AggregateOwner", map: "aggregate_owner")
+
+  ticketsAsRequester       Ticket[]       @relation("TicketRequester", map: "ticket_requester")
+  ticketsAsAcceptor        Ticket[]       @relation("TicketAcceptor", map: "ticket_acceptor")
+  notificationsAsRecipient Notification[] @relation("NotificationRecipient", map: "notification_recipient")
+  notificationsAsSender    Notification[] @relation("NotificationSender", map: "notification_sender")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@index([nickname])
+  @@index([cpf])
+  @@index([fleetId])
+  @@index([aggregateId])
+  @@map("people")
+}
+
+model Driver {
+  personId Int    @id @map("person_id")
+  person   Person @relation(fields: [personId], references: [id])
+
+  aso      ASO[]
+  absences AbsentDriver[]
+
+  trips     Trip[]
+  groupings Grouping[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("drivers")
+}
+
+// ASO - Atestado de Saúde Ocupacional
+model ASO {
+  id        Int      @default(autoincrement())
+  expiredAt DateTime @map("expired_at")
+
+  driverId Int    @map("driver_id")
+  driver   Driver @relation(fields: [driverId], references: [personId], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([id, driverId])
+  @@map("aso")
+}
+
+model AbsentDriver {
+  id        Int          @default(autoincrement())
+  note      String?      @db.Text
+  expiredAt DateTime     @map("expired_at")
+  status    DriverStatus
+
+  driverId Int    @map("driver_id")
+  driver   Driver @relation(fields: [driverId], references: [personId], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([id, driverId])
+  @@index([status])
+  @@map("absent_drivers")
+}
+
+enum DriverStatus {
+  leaveOfAbsence     @map("leave_of_absence") // Afastamento
+  medicalCertificate @map("medical_certificate") // Atestado
+  break // Folga
+  vacation // Férias
+
+  @@map("driver_status")
+}
+
+model Company {
+  id        Int     @id @default(autoincrement())
+  name      String
+  tradeName String? @map("trade_name")
+  cnpj      String? @unique @db.VarChar(14) // CNPJ - Cadastro Nacional da Pessoa Jurídica
+  address   String? @db.Text
+  uf        UF?
+
+  client    Client?
+  fleet     Fleet?
+  aggregate Aggregate?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@index([tradeName])
+  @@index([cnpj])
+  @@map("companies")
+}
+
+model Client {
+  companyId Int        @id @map("company_id")
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  type      ClientType @default(both)
+
+  tripsOrigin      Trip[] @relation("OriginCompany", map: "origin_company")
+  tripsDestination Trip[] @relation("DestinationCompany", map: "destination_company")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("clients")
+}
+
+enum ClientType {
+  both // Ambos
+  origin // Origem
+  destination // Destino
+
+  @@map("client_type")
+}
+
+model Fleet {
+  companyId Int     @id @map("company_id")
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  employees  Person[]
+  aggregates Aggregate[]
+  vehicles   Vehicle[]
+  trips      Trip[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("fleets")
+}
+
+model Aggregate {
+  id Int @id @default(autoincrement())
+
+  companyId Int?     @unique @map("company_id")
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  personId Int?    @unique @map("person_id")
+  person   Person? @relation("AggregateOwner", fields: [personId], references: [id], map: "aggregate_owner")
+
+  fleetId Int?   @map("fleet_id")
+  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+
+  employees Person[]
+  vehicles  Vehicle[]
+  trips     Trip[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([companyId])
+  @@index([personId])
+  @@index([fleetId])
+  @@map("aggregates")
+}
+
+enum UF {
+  ac // Acre
+  al // Alagoas
+  ap // Amapá
+  am // Amazonas
+  ba // Bahia
+  ce // Ceará
+  es // Espírito Santo
+  go // Goiás
+  ma // Maranhão
+  mt // Mato Grosso
+  ms // Mato Grosso do Sul
+  mg // Minas Gerais
+  pa // Pará
+  pb // Paraíba
+  pr // Paraná
+  pe // Pernambuco
+  pi // Piauí
+  rj // Rio de Janeiro
+  rn // Rio Grande do Norte
+  rs // Rio Grande do Sul
+  ro // Rondônia
+  rr // Roraima
+  sc // Santa Catarina
+  sp // São Paulo
+  se // Sergipe
+  to // Tocantins
+}
+
+model Brand {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  vehicles Vehicle[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("brands")
+}
+
+model Vehicle {
+  id           Int     @id @default(autoincrement())
+  licensePlate String  @unique @db.VarChar(10)
+  model        String?
+  renavam      String? @unique @db.VarChar(11) // RENAVAM - Registro Nacional de Veículos Automotores
+
+  brandId Int?   @map("brand_id")
+  brand   Brand? @relation(fields: [brandId], references: [id])
+
+  fleetId Int?   @map("fleet_id")
+  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+
+  aggregateId Int?       @map("aggregate_id")
+  aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
+
+  trucks   Truck[]
+  trailers Trailer[]
+
+  stops   StoppedVehicle[]
+  tickets Ticket[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([brandId])
+  @@index([fleetId])
+  @@index([aggregateId])
+  @@map("vehicles")
+}
+
+model StoppedVehicle {
+  id        Int           @default(autoincrement())
+  note      String?       @db.Text
+  expiredAt DateTime      @map("expired_at")
+  status    VehicleStatus
+
+  vehicleId Int     @map("vehicle_id")
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([id, vehicleId])
+  @@map("stopped_vehicles")
+}
+
+enum VehicleStatus {
+  maintenance // Manutenção
+  documentation // Documentação
+
+  @@map("vehicle_status")
+}
+
+model Truck {
+  id Int @id @default(autoincrement())
+
+  vehicleId Int     @map("vehicle_id")
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  trips     Trip[]
+  groupings Grouping[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("trucks")
+}
+
+model Trailer {
+  id          Int     @id @default(autoincrement())
+  fleetNumber String? @unique
+
+  vehicleId Int     @map("vehicle_id")
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  semiTrailerId Int?         @map("semi_trailer_id")
+  SemiTrailer   SemiTrailer? @relation("SemiTrailer", fields: [semiTrailerId], references: [id], map: "semi_trailer")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("trailers")
+}
+
+model SemiTrailer {
+  id Int @id @default(autoincrement())
+
+  configurationId Int                  @map("configuration_id")
+  configuration   TrailerConfiguration @relation(fields: [configurationId], references: [id])
+
+  typeId Int         @map("type_id")
+  type   TrailerType @relation(fields: [typeId], references: [id])
+
+  cargos   Cargo[]   @relation("SemiTrailerCargo", map: "semi_trailer_cargo")
+  trailers Trailer[] @relation("SemiTrailer", map: "semi_trailer")
+
+  certificates TrailerCertificate[]
+  trips        Trip[]
+  groupings    Grouping[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([configurationId])
+  @@index([typeId])
+  @@map("semi_trailers")
+}
+
+model TrailerConfiguration {
+  id               Int    @id @default(autoincrement())
+  name             String @unique
+  numberOfTrailers Int    @default(1) @map("number_of_trailers")
+
+  semiTrailers SemiTrailer[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("trailer_configurations")
+}
+
+model TrailerType {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  semiTrailers SemiTrailer[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("trailer_types")
+}
+
+model Cargo {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  semiTrailers SemiTrailer[] @relation("SemiTrailerCargo", map: "semi_trailer_cargo")
+
+  trips Trip[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("cargos")
+}
+
+model TrailerCertificate {
+  id   Int                    @default(autoincrement())
+  type TrailerCertificateType
+
+  semiTrailerId Int         @map("semi_trailer_id")
+  semiTrailer   SemiTrailer @relation(fields: [semiTrailerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([id, semiTrailerId])
+  @@map("trailer_certificates")
+}
+
+enum TrailerCertificateType {
+  yearly // Anual
+  quarterly // Trimestral
+
+  @@map("trailer_certificate_types")
+}
+
+model Grouping {
+  id Int @id @default(autoincrement())
+
+  driverId Int?    @map("driver_id")
+  driver   Driver? @relation(fields: [driverId], references: [personId], onDelete: Cascade)
+
+  truckId Int?   @map("truck_id")
+  truck   Truck? @relation(fields: [truckId], references: [id], onDelete: Cascade)
+
+  semiTrailerId Int         @map("semi_trailer_id")
+  semiTrailer   SemiTrailer @relation(fields: [semiTrailerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([driverId, truckId, semiTrailerId])
+  @@map("groupings")
+}
+
+model Trip {
+  id         String     @id @default(cuid())
+  scheduled  Boolean    @default(false)
+  order      String?
+  note       String?    @db.Text
+  departedAt DateTime?  @map("departed_at")
+  arrivedAt  DateTime?  @map("arrived_at")
+  status     TripStatus @default(scheduled)
+
+  originId Int?    @map("origin_id")
+  origin   Client? @relation("OriginCompany", fields: [originId], references: [companyId], map: "origin_company")
+
+  destinationId Int?    @map("destination_id")
+  destination   Client? @relation("DestinationCompany", fields: [destinationId], references: [companyId], map: "destination_company")
+
+  driverId Int?    @map("driver_id")
+  driver   Driver? @relation(fields: [driverId], references: [personId])
+
+  truckId Int?   @map("truck_id")
+  truck   Truck? @relation(fields: [truckId], references: [id])
+
+  semiTrailerId Int         @map("semi_trailer_id")
+  semiTrailer   SemiTrailer @relation(fields: [semiTrailerId], references: [id])
+
+  cargoId Int?   @map("cargo_id")
+  cargo   Cargo? @relation(fields: [cargoId], references: [id])
+
+  fleetId Int?   @map("fleet_id")
+  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+
+  aggregateId Int?       @map("aggregate_id")
+  aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
+
+  tickets Ticket[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([scheduled])
+  @@index([status])
+  @@index([originId])
+  @@index([destinationId])
+  @@index([driverId])
+  @@index([truckId])
+  @@index([semiTrailerId])
+  @@index([cargoId])
+  @@index([fleetId])
+  @@index([aggregateId])
+  @@map("trips")
+}
+
+enum TripStatus {
+  scheduled // Agendado
+  loaded // Carregado
+  departure // Partida
+  terminal // Terminal
+  unloaded // Descarregado
+  finished // Finalizado
+  canceled // Cancelado
+
+  @@map("trip_status")
+}
+
+model Ticket {
+  id       String         @id @default(cuid())
+  note     String         @db.Text
+  action   TicketAction
+  reaction TicketReaction @default(pending)
+
+  requesterId Int    @map("requester_id")
+  requester   Person @relation("TicketRequester", fields: [requesterId], references: [id], map: "ticket_requester")
+
+  acceptorId Int?    @map("acceptor_id")
+  acceptor   Person? @relation("TicketAcceptor", fields: [acceptorId], references: [id], map: "ticket_acceptor")
+
+  vehicleId Int?     @map("vehicle_id")
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+
+  tripId String? @map("trip_id")
+  trip   Trip?   @relation(fields: [tripId], references: [id])
+
+  notifications Notification[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([requesterId])
+  @@index([acceptorId])
+  @@index([vehicleId])
+  @@index([tripId])
+  @@map("tickets")
+}
+
+enum TicketAction {
+  maintenanceRequest @map("maintenance_request") // Solicitação de manutenção
+
+  @@map("ticket_action")
+}
+
+enum TicketReaction {
+  pending // Pendente
+  accepted // Aceito
+  denied // Negado
+
+  @@map("ticket_reaction")
+}
+
+model Notification {
+  id     Int              @id @default(autoincrement())
+  readAt DateTime?        @map("read_at")
+  type   NotificationType
+
+  ticketId String? @map("ticket_id")
+  ticket   Ticket? @relation(fields: [ticketId], references: [id])
+
+  recipientId Int    @map("recipient_id")
+  recipient   Person @relation("NotificationRecipient", fields: [recipientId], references: [id], map: "notification_recipient")
+
+  senderId Int?    @map("sender_id")
+  sender   Person? @relation("NotificationSender", fields: [senderId], references: [id], map: "notification_sender")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([ticketId])
+  @@index([recipientId])
+  @@index([senderId])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  server // Servidor
+  ticket // Chamado
+  ticketAnswered @map("ticket_answered") // Chamado respondido
+
+  @@map("notification_type")
+}
