@@ -1,5 +1,5 @@
 import { action } from '@/actions'
-import NotFound from '@/app/(platform)/not-found'
+import { DataNotFound } from '@/app/not-found'
 import { FleetForm } from '@/components/forms/fleet-form'
 import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
@@ -14,7 +14,7 @@ export default async function Page({
     .find({ companyId: Number(params.companyId) })
 
   if (!fleet.data) {
-    return NotFound()
+    return DataNotFound()
   }
 
   return (

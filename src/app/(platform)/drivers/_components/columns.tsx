@@ -1,6 +1,6 @@
 'use client'
 
-import { Fleet } from '@/actions/types'
+import { Driver } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -10,12 +10,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { formatCNPJ } from '@/lib/formatters'
+import { formatCPF, formatPhoneNumber } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const columns: ColumnDef<Fleet>[] = [
+export const columns: ColumnDef<Driver>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -42,8 +42,8 @@ export const columns: ColumnDef<Fleet>[] = [
   },
 
   {
-    id: 'Razão Social',
-    accessorFn: (row) => row.company.name,
+    id: 'Nome Completo',
+    accessorFn: (row) => row.person.name,
     header: ({ column }) => {
       return (
         <Button
@@ -61,8 +61,8 @@ export const columns: ColumnDef<Fleet>[] = [
   },
 
   {
-    id: 'Nome Fantasia',
-    accessorFn: (row) => row.company.tradeName,
+    id: 'Apelido',
+    accessorFn: (row) => row.person.nickname,
     header: ({ column }) => {
       return (
         <Button
@@ -80,8 +80,8 @@ export const columns: ColumnDef<Fleet>[] = [
   },
 
   {
-    id: 'CNPJ',
-    accessorFn: (row) => formatCNPJ(row.company.cnpj),
+    id: 'CPF',
+    accessorFn: (row) => formatCPF(row.person.cpf),
     header: ({ column }) => {
       return (
         <Button
@@ -97,28 +97,9 @@ export const columns: ColumnDef<Fleet>[] = [
   },
 
   {
-    id: 'Endereço',
-    accessorFn: (row) => row.company.address,
+    id: 'Telefone',
+    accessorFn: (row) => formatPhoneNumber(row.person.phoneNumber),
     header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="uppercase">{getValue<string>()}</div>
-    ),
-  },
-
-  {
-    id: 'UF',
-    accessorFn: (row) => row.company.uf,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
     cell: ({ getValue }) => (
       <div className="uppercase">{getValue<string>()}</div>
     ),
@@ -127,7 +108,7 @@ export const columns: ColumnDef<Fleet>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { companyId } = row.original
+      const { personId } = row.original
 
       return (
         <DropdownMenu>
@@ -140,7 +121,7 @@ export const columns: ColumnDef<Fleet>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'fleets/' + companyId}>
+              <Link href={'drivers/' + personId}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

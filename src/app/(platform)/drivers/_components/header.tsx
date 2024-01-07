@@ -12,8 +12,8 @@ import Link from 'next/link'
 
 const tabs = [
   { name: 'Cadastros', href: '#', current: true },
-  { name: 'Ausências', href: '#', current: false },
-  { name: 'A.S.O', href: '#', current: false },
+  // { name: 'Ausências', href: '#', current: false },
+  // { name: 'A.S.O', href: '#', current: false },
 ]
 
 export const Header = () => {

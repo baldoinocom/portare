@@ -1,7 +1,7 @@
 import { action } from '@/actions'
 import { ClientForm } from '@/components/forms/client-form'
 import { Separator } from '@/components/ui/separator'
-import NotFound from '../../not-found'
+import { DataNotFound } from '../../../not-found'
 import { Header } from './_components/header'
 
 export default async function Page({
@@ -9,12 +9,12 @@ export default async function Page({
 }: {
   params: { companyId: string }
 }) {
-  const client = await action.client().find({
-    companyId: Number(params.companyId),
-  })
+  const client = await action
+    .client()
+    .find({ companyId: Number(params.companyId) })
 
   if (!client.data) {
-    return NotFound()
+    return DataNotFound()
   }
 
   return (

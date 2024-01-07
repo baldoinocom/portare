@@ -1,4 +1,4 @@
-export const formatLicensePlate = (licensePlate: string | undefined) => {
+export const formatLicensePlate = (licensePlate: string | undefined | null) => {
   licensePlate = licensePlate?.toUpperCase()
   licensePlate = licensePlate
     ?.replace(/[^A-Za-z0-9]/g, '')
@@ -13,7 +13,7 @@ export const formatLicensePlate = (licensePlate: string | undefined) => {
   return licensePlate
 }
 
-export const formatRenavam = (renavam: string | undefined) => {
+export const formatRenavam = (renavam: string | undefined | null) => {
   renavam = renavam?.replace(/\D/g, '')
   renavam = renavam?.replace(/^(\d{4})(\d)/, '$1 $2')
   renavam = renavam?.replace(/^(\d{4})\s(\d{5})(\d)/, '$1 $2 $3')
@@ -25,7 +25,7 @@ export const formatRenavam = (renavam: string | undefined) => {
   return renavam
 }
 
-export const formatCPF = (cpf: string | undefined) => {
+export const formatCPF = (cpf: string | undefined | null) => {
   cpf = cpf?.replace(/\D/g, '')
   cpf = cpf?.replace(/(\d{3})(\d)/, '$1.$2')
   cpf = cpf?.replace(/(\d{3})(\d)/, '$1.$2')
@@ -33,7 +33,7 @@ export const formatCPF = (cpf: string | undefined) => {
   return cpf
 }
 
-export const formatCNPJ = (cnpj: string | undefined) => {
+export const formatCNPJ = (cnpj: string | undefined | null) => {
   cnpj = cnpj?.replace(/\D/g, '')
   cnpj = cnpj?.replace(/^(\d{2})(\d)/, '$1.$2')
   cnpj = cnpj?.replace(/^(\d{2}).(\d{3})(\d)/, '$1.$2.$3')
@@ -42,14 +42,14 @@ export const formatCNPJ = (cnpj: string | undefined) => {
   return cnpj
 }
 
-export const formatPhoneNumber = (phoneNumber: string | undefined) => {
+export const formatPhoneNumber = (phoneNumber: string | undefined | null) => {
   phoneNumber = phoneNumber?.replace(/\D/g, '')
   phoneNumber = phoneNumber?.replace(/^(\d{2})(\d)/, '($1) $2')
   phoneNumber = phoneNumber?.replace(/(\d{5})(\d)/, '$1-$2')
   return phoneNumber
 }
 
-export const formatUF = (state: string) => {
+export const formatUF = (state: string | undefined | null) => {
   switch (state) {
     case 'ac':
       return 'Acre'

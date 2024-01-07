@@ -11,12 +11,14 @@ const PersonSchema = z.object({
   name: z
     .string({ required_error: 'O nome é obrigatório' })
     .min(3, { message: 'O nome deve ter no mínimo 3 caracteres' })
-    .max(255, { message: 'O nome não pode ter mais de 255 caracteres' }),
+    .max(255, { message: 'O nome não pode ter mais de 255 caracteres' })
+    .toUpperCase(),
 
   nickname: z.optional(
     z
       .string()
-      .max(50, { message: 'O apelido não pode ter mais de 50 caracteres' }),
+      .max(50, { message: 'O apelido não pode ter mais de 50 caracteres' })
+      .toUpperCase(),
   ),
 
   cpf: z.optional(

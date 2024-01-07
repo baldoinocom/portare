@@ -29,10 +29,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     let trailerIds
 
     if (trailers?.length) {
-      const { error } = await action.trailer().findExistingTrailer({
-        id,
-        trailers,
-      })
+      const { error } = await action
+        .trailer()
+        .findExistingTrailer({ id, trailers })
 
       if (error) return { error }
 
@@ -49,7 +48,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
       await db.semiTrailer.update({
         where: { id },
-        data: { trailers: { deleteMany: { semiTrailerId: id } } },
+        data: { trailers: { deleteMany: {} } },
       })
 
       trailerIds = await db.$transaction(

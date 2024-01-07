@@ -17,10 +17,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let client
 
   try {
-    const { error } = await action.company().update({
-      id: companyId,
-      ...company,
-    })
+    const { error } = await action
+      .company()
+      .update({ id: companyId, ...company })
 
     if (error) return { error }
 

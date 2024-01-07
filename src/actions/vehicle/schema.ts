@@ -12,6 +12,7 @@ export const VehicleSchema = z.object({
     .string({ required_error: 'A placa é obrigatória' })
     .min(7, { message: 'A placa deve ter no mínimo 7 caracteres' })
     .max(8, { message: 'A placa não pode ter mais de 8 caracteres' })
+    .toUpperCase()
     .refine(validLicensePlate, {
       message:
         'A placa deve estar no formato antigo (ABC-1234) ou no formato novo (ABC1D23)',
@@ -20,7 +21,8 @@ export const VehicleSchema = z.object({
   model: z.optional(
     z
       .string()
-      .max(255, { message: 'O modelo não pode ter mais de 255 caracteres' }),
+      .max(255, { message: 'O modelo não pode ter mais de 255 caracteres' })
+      .toUpperCase(),
   ),
 
   renavam: z.optional(

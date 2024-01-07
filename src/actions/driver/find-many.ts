@@ -1,12 +1,10 @@
 'use server'
 
+import { Driver } from '@/actions/types'
 import { db } from '@/lib/db'
-import { Driver } from '@prisma/client'
 
 export const findManyAction = async (): Promise<{ data: Driver[] }> => {
-  const drivers = await db.driver.findMany({
-    include: { person: true },
-  })
+  const drivers = await db.driver.findMany({ include: { person: true } })
 
   return { data: drivers }
 }

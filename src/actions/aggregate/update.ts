@@ -24,10 +24,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     if (person) {
       if (find?.personId) {
-        const { error } = await action.person().update({
-          id: find.personId,
-          ...person,
-        })
+        const { error } = await action
+          .person()
+          .update({ id: find.personId, ...person })
 
         if (error) return { error }
       } else {
@@ -45,10 +44,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       })
     } else if (company) {
       if (find?.companyId) {
-        const { error } = await action.company().update({
-          id: find.companyId,
-          ...company,
-        })
+        const { error } = await action
+          .company()
+          .update({ id: find.companyId, ...company })
 
         if (error) return { error }
       } else {

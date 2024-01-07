@@ -1,5 +1,5 @@
 import { action } from '@/actions'
-import NotFound from '@/app/(platform)/not-found'
+import { DataNotFound } from '@/app/not-found'
 import { AggregateForm } from '@/components/forms/aggregate-form'
 import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const aggregate = await action.aggregate().find({ id: Number(params.id) })
 
   if (!aggregate.data) {
-    return NotFound()
+    return DataNotFound()
   }
 
   const fleets = await action.fleet().findMany()

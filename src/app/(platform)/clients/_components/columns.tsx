@@ -1,6 +1,6 @@
 'use client'
 
-import { Fleet } from '@/actions/types'
+import { Client } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -15,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const columns: ColumnDef<Fleet>[] = [
+export const columns: ColumnDef<Client>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -140,7 +140,7 @@ export const columns: ColumnDef<Fleet>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'fleets/' + companyId}>
+              <Link href={'clients/' + companyId}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

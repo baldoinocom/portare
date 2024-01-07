@@ -10,7 +10,8 @@ export const SemiTrailerSchema = z.object({
   model: z.optional(
     z
       .string()
-      .max(255, { message: 'O modelo não pode ter mais de 255 caracteres' }),
+      .max(255, { message: 'O modelo não pode ter mais de 255 caracteres' })
+      .toUpperCase(),
   ),
 
   brandId: z

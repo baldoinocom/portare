@@ -1,5 +1,4 @@
-'use client'
-
+import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -11,9 +10,13 @@ import {
   UserPlus2Icon,
 } from 'lucide-react'
 import Link from 'next/link'
+import { columns } from './_components/columns'
+import { DataTable } from './_components/data-table'
 import { Header } from './_components/header'
 
-export default function Page() {
+export default async function Page() {
+  const drivers = await action.driver().findMany()
+
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
       <Header />
@@ -51,17 +54,23 @@ export default function Page() {
 
           <Separator />
 
-          <EmptyState href="/drivers/new">
-            <UserPlus2Icon
-              strokeWidth={1.2}
-              size={52}
-              className="mx-auto text-muted-foreground"
-            />
+          {!drivers.data.length && (
+            <EmptyState href="/drivers/new">
+              <UserPlus2Icon
+                strokeWidth={1.2}
+                size={52}
+                className="mx-auto text-muted-foreground"
+              />
 
-            <span className="mt-2 block text-sm font-semibold">
-              Cadastrar um novo motorista
-            </span>
-          </EmptyState>
+              <span className="mt-2 block text-sm font-semibold">
+                Cadastrar um novo motorista
+              </span>
+            </EmptyState>
+          )}
+
+          {!!drivers.data.length && (
+            <DataTable columns={columns} data={drivers.data} />
+          )}
         </div>
       </main>
     </div>
