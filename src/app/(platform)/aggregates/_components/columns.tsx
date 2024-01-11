@@ -51,7 +51,7 @@ export const columns: ColumnDef<Aggregate>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           {column.id}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       )
     },
@@ -70,7 +70,7 @@ export const columns: ColumnDef<Aggregate>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           {column.id}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       )
     },
@@ -90,7 +90,7 @@ export const columns: ColumnDef<Aggregate>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           {column.id}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       )
     },
@@ -101,9 +101,7 @@ export const columns: ColumnDef<Aggregate>[] = [
     id: 'Telefone',
     accessorFn: (row) => formatPhoneNumber(row.person?.phoneNumber),
     header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="uppercase">{getValue<string>()}</div>
-    ),
+    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
   },
 
   {
@@ -125,7 +123,7 @@ export const columns: ColumnDef<Aggregate>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           {column.id}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       )
     },

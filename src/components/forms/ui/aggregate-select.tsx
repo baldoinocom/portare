@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { formatCNPJ, formatCPF } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
@@ -30,6 +31,22 @@ export const AggregateSelect = ({
   const { name } = useFormField()
 
   const selectedAggregate = aggregates?.find(({ id }) => id === getValues(name))
+
+  const searchValue = (aggregate: Aggregate) => {
+    return (
+      aggregate.person?.name +
+      ' ' +
+      aggregate.person?.nickname +
+      ' ' +
+      formatCPF(aggregate.person?.cpf) +
+      ' ' +
+      aggregate.company?.name +
+      ' ' +
+      aggregate.company?.tradeName +
+      ' ' +
+      formatCNPJ(aggregate.company?.cnpj)
+    )
+  }
 
   return (
     <Popover>
@@ -55,7 +72,7 @@ export const AggregateSelect = ({
             ) : (
               'Selecione'
             )}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
           </Button>
         </FormControl>
       </PopoverTrigger>
@@ -69,7 +86,7 @@ export const AggregateSelect = ({
               {selectedAggregate && (
                 <>
                   <CommandItem>
-                    <Check className="mr-2 h-4 w-4 shrink-0 opacity-100" />
+                    <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     {selectedAggregate.company && (
                       <CompanyDetailCard company={selectedAggregate.company} />
                     )}
@@ -85,9 +102,9 @@ export const AggregateSelect = ({
                 ?.map((aggregate, index) => (
                   <CommandItem
                     key={index}
-                    value={String(aggregate.id)}
-                    onSelect={(value) =>
-                      setValue(name, Number(value), {
+                    value={searchValue(aggregate)}
+                    onSelect={() =>
+                      setValue(name, aggregate.id, {
                         shouldDirty: true,
                       })
                     }

@@ -53,6 +53,11 @@ export const VehicleSchema = z.object({
 
 const VehicleUpdateSchema = VehicleIdSchema.merge(VehicleSchema.deepPartial())
 
+export const VehicleWithoutRelationshipSchema = VehicleSchema.omit({
+  fleetId: true,
+  aggregateId: true,
+})
+
 export const VehicleWithUniqueRelationshipSchema = VehicleSchema.refine(
   ({ fleetId, aggregateId }) => !fleetId !== !aggregateId,
   {

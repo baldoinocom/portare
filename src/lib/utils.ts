@@ -16,11 +16,13 @@ export const sleep = async (ms: number) => {
 export const findRepeatedStrings = (
   array: (string | undefined | null)[],
 ): (string | undefined | null)[] => {
-  return array.filter(
-    (value, index, array) =>
-      array.findIndex((v) => v?.toUpperCase() === value?.toUpperCase()) !==
-      index,
-  )
+  return array
+    .filter((v) => v)
+    .filter(
+      (value, index, array) =>
+        array.findIndex((v) => v?.toUpperCase() === value?.toUpperCase()) !==
+        index,
+    )
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

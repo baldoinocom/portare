@@ -1,8 +1,8 @@
 'use server'
 
+import { Truck } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
-import { Truck } from '@prisma/client'
 import { z } from 'zod'
 import { TruckIdSchema } from './schema'
 

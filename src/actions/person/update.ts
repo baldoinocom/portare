@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     if (cpf) {
-      const find = await db.person.findFirst({ where: { cpf } })
+      const find = await db.person.findFirst({ where: { NOT: { id }, cpf } })
 
       if (find) {
         return { error: 'Já existe uma pessoa com esse CPF' }

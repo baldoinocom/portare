@@ -8,5 +8,5 @@ export const findManyAction = async (): Promise<{ data: Aggregate[] }> => {
     include: { company: true, person: true, fleet: true },
   })
 
-  return { data: aggregates as Aggregate[] }
+  return { data: aggregates }
 }

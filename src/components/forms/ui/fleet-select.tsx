@@ -16,6 +16,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { formatCNPJ } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
@@ -27,6 +28,16 @@ export const FleetSelect = ({ fleets }: { fleets?: Fleet[] }) => {
   const selectedFleet = fleets?.find(
     ({ companyId }) => companyId === getValues(name),
   )
+
+  const searchValue = (fleet: Fleet) => {
+    return (
+      fleet.company.name +
+      ' ' +
+      fleet.company.tradeName +
+      ' ' +
+      formatCNPJ(fleet.company.cnpj)
+    )
+  }
 
   return (
     <Popover>
@@ -45,7 +56,7 @@ export const FleetSelect = ({ fleets }: { fleets?: Fleet[] }) => {
             ) : (
               'Selecione'
             )}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
           </Button>
         </FormControl>
       </PopoverTrigger>
@@ -59,7 +70,7 @@ export const FleetSelect = ({ fleets }: { fleets?: Fleet[] }) => {
               {selectedFleet && (
                 <>
                   <CommandItem>
-                    <Check className="mr-2 h-4 w-4 shrink-0 opacity-100" />
+                    <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     <CompanyDetailCard company={selectedFleet.company} />
                   </CommandItem>
                   <CommandSeparator className="m-1" />
@@ -70,9 +81,9 @@ export const FleetSelect = ({ fleets }: { fleets?: Fleet[] }) => {
                 ?.map((fleet, index) => (
                   <CommandItem
                     key={index}
-                    value={String(fleet.companyId)}
-                    onSelect={(value) =>
-                      setValue(name, Number(value), {
+                    value={searchValue(fleet)}
+                    onSelect={() =>
+                      setValue(name, fleet.companyId, {
                         shouldDirty: true,
                       })
                     }

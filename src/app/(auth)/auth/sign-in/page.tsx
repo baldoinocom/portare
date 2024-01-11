@@ -2,6 +2,14 @@
 
 import { Button } from '@/components/ui/button'
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
   Form,
   FormControl,
   FormField,
@@ -59,60 +67,68 @@ export default function Page() {
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Logo"
-        />
-
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight">
-          Entrar em sua conta
-        </h2>
+        <img className="mx-auto size-6 w-auto" src="/logo.png" alt="Logo" />
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col space-y-6"
-          >
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Usuário</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <Card>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardHeader>
+                <CardTitle className="font-bold">Entrar</CardTitle>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Senha</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <CardDescription>
+                  Acesse o <strong>portare</strong> sistema de gerenciamento de
+                  transporte, utilizando seu usuário e senha
+                </CardDescription>
+              </CardHeader>
 
-            <FormMessage className="text-center">
-              {form.formState.errors.root?.message}
-            </FormMessage>
+              <CardContent className="flex flex-col space-y-6">
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Usuário</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <Button disabled={form.formState.isSubmitting} type="submit">
-              Entrar
-            </Button>
-          </form>
-        </Form>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Senha</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormMessage className="text-center">
+                  {form.formState.errors.root?.message}
+                </FormMessage>
+              </CardContent>
+
+              <CardFooter>
+                <Button
+                  className="w-full"
+                  disabled={form.formState.isSubmitting}
+                  type="submit"
+                >
+                  Entrar
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
       </div>
     </div>
   )

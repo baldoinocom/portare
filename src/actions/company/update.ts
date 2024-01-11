@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     if (cnpj) {
-      const find = await db.company.findFirst({ where: { cnpj } })
+      const find = await db.company.findFirst({ where: { NOT: { id }, cnpj } })
 
       if (find) {
         return { error: 'Já existe uma empresa com esse CNPJ' }

@@ -1,7 +1,7 @@
 'use server'
 
+import { SemiTrailer } from '@/actions/types'
 import { db } from '@/lib/db'
-import { SemiTrailer } from '@prisma/client'
 
 export const findManyAction = async (): Promise<{ data: SemiTrailer[] }> => {
   const semiTrailers = await db.semiTrailer.findMany({

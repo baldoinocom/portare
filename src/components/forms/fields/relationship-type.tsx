@@ -39,7 +39,7 @@ export const RelationshipType = ({
         render={({ field }) => (
           <FormItem className="flex flex-col">
             <Tabs
-              {...field}
+              value={field.value}
               onValueChange={field.onChange}
               className="flex flex-col space-y-8"
             >

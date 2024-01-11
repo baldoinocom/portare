@@ -73,14 +73,14 @@ export const AggregateForm = ({
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
-        title: 'Cliente atualizado com sucesso',
-        description: 'O cliente foi atualizado com sucesso! 🎉',
+        title: 'Agregado atualizado com sucesso',
+        description: 'O agregado foi atualizado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao atualizar o cliente',
+        title: 'Erro ao atualizar o agregado',
         description: error,
       })
     },

@@ -18,13 +18,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     if (licensePlate) {
-      const find = await db.vehicle.findFirst({ where: { licensePlate } })
+      const find = await db.vehicle.findFirst({
+        where: { NOT: { id }, licensePlate },
+      })
 
       if (find) {
         return { error: 'Já existe um veículo com essa placa' }
       }
     } else if (renavam) {
-      const find = await db.vehicle.findFirst({ where: { renavam } })
+      const find = await db.vehicle.findFirst({
+        where: { NOT: { id }, renavam },
+      })
 
       if (find) {
         return { error: 'Já existe um veículo com esse RENAVAM' }

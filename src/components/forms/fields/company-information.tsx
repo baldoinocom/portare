@@ -130,7 +130,7 @@ export const CompanyInformation = () => {
                       {field.value
                         ? uf.find(({ value }) => value === field.value)?.label
                         : 'Selecione o UF'}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -141,25 +141,25 @@ export const CompanyInformation = () => {
                     <CommandEmpty>Nenhum</CommandEmpty>
                     <CommandGroup>
                       <ScrollArea className="flex max-h-72 flex-col">
-                        {uf.map((uf, index) => (
+                        {uf.map(({ value, label }, index) => (
                           <CommandItem
                             key={index}
-                            value={uf.value}
-                            onSelect={() => {
-                              setValue(field.name, uf.value as UF, {
+                            value={formatUF(value) as string}
+                            onSelect={() =>
+                              setValue(field.name, value, {
                                 shouldDirty: true,
                               })
-                            }}
+                            }
                           >
                             <Check
                               className={cn(
-                                'mr-2 h-4 w-4',
-                                uf.value === field.value
+                                'mr-2 size-4',
+                                value === field.value
                                   ? 'opacity-100'
                                   : 'opacity-0',
                               )}
                             />
-                            {uf.label}
+                            {label}
                           </CommandItem>
                         ))}
                       </ScrollArea>

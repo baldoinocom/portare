@@ -1,8 +1,8 @@
 'use server'
 
+import { SemiTrailer } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
-import { SemiTrailer } from '@prisma/client'
 import { z } from 'zod'
 import { SemiTrailerIdSchema } from './schema'
 

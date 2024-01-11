@@ -1,8 +1,10 @@
 import {
   Building2Icon,
   BuildingIcon,
+  CaravanIcon,
   FactoryIcon,
   HomeIcon,
+  TruckIcon,
   Users2Icon,
 } from 'lucide-react'
 import { MenuItemProps } from './sidebar/menu'
@@ -21,6 +23,8 @@ export const navigation: MenuItemProps[] = [
     href: '/clients',
     icon: Building2Icon,
   },
+  { name: 'Semirreboques', href: '/semi-trailers', icon: CaravanIcon },
+  { name: 'Caminhões', href: '/trucks', icon: TruckIcon },
   // {
   //   name: 'Projects',
   //   icon: HomeIcon,

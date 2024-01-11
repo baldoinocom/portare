@@ -39,11 +39,14 @@ export const SemiTrailerSchema = z.object({
       z.object({
         id: z.number().int().positive(),
       }),
+      { required_error: 'Pelo menos um tipo de carga é obrigatório' },
     )
     .nonempty({ message: 'Pelo menos um tipo de carga é obrigatório' }),
 
   trailers: z
-    .array(TrailerSchema)
+    .array(TrailerSchema, {
+      required_error: 'Pelo menos um reboque é obrigatório',
+    })
     .nonempty({ message: 'Pelo menos um reboque é obrigatório' })
     .superRefine((val, ctx) => {
       const licensePlates = findRepeatedStrings(
