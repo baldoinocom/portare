@@ -46,21 +46,20 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         }
       }
 
-      await db.semiTrailer.update({
-        where: { id },
-        data: { trailers: { deleteMany: {} } },
+      await db.vehicle.deleteMany({
+        where: { trailers: { some: { semiTrailerId: id } } },
       })
 
       trailerIds = await db.$transaction(
         trailers.map(({ vehicle, fleetNumber }) =>
           db.trailer.create({
             data: {
-              fleetNumber,
+              fleetNumber: fleetNumber || null,
               vehicle: {
                 create: {
                   model,
                   licensePlate: vehicle.licensePlate,
-                  renavam: vehicle.renavam,
+                  renavam: vehicle.renavam || null,
                   brand: { connect: { id: brandId } },
                   fleet: { connect: { companyId: fleetId } },
                 },

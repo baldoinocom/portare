@@ -1,9 +1,9 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
+import { DataTable } from '@/components/records/ui/data-table'
 import { Separator } from '@/components/ui/separator'
 import { Building2Icon } from 'lucide-react'
 import { columns } from './_components/columns'
-import { DataTable } from './_components/data-table'
 import { Header } from './_components/header'
 
 export default async function Page() {

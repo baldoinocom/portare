@@ -10,7 +10,7 @@ export const ClientSchema = z.object({
   company: CompanySchema,
 
   type: z.nativeEnum(ClientType, {
-    invalid_type_error: 'Tipo de cliente inválido',
+    invalid_type_error: 'O tipo de cliente é inválido',
     required_error: 'O tipo de cliente é obrigatório',
   }),
 })

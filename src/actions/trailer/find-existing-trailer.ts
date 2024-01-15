@@ -14,16 +14,16 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   const { id, trailers } = data
 
   const licensePlateList = trailers
-    .map((t) => t.vehicle.licensePlate)
-    .filter((f) => f) as string[]
+    .map(({ vehicle }) => vehicle.licensePlate)
+    .filter((value) => value) as string[]
 
   const renavamList = trailers
-    .map((t) => t.vehicle.renavam)
-    .filter((f) => f) as string[]
+    .map(({ vehicle }) => vehicle.renavam)
+    .filter((value) => value) as string[]
 
   const fleetNumberList = trailers
-    .map((t) => t.fleetNumber)
-    .filter((f) => f) as string[]
+    .map(({ fleetNumber }) => fleetNumber)
+    .filter((value) => value) as string[]
 
   const find = await db.trailer.findMany({
     where: {

@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -9,14 +11,24 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 
 const tabs = [
-  { name: 'Cadastros', href: '#', current: true },
-  // { name: 'Reboques', href: '#', current: false },
-  // { name: 'Laudos', href: '#', current: false },
+  { name: 'Cadastros', href: '/semi-trailers' },
+  {
+    name: 'Configurações',
+    href: '/semi-trailers/configurations',
+  },
+  { name: 'Tipos', href: '/semi-trailers/types' },
+  { name: 'Pausas', href: '/semi-trailers/stopped-vehicles' },
 ]
 
 export const Header = () => {
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const current = (href: string) => href === pathname
+
   return (
     <header>
       <div className="flex flex-col gap-1 border-b border-border pb-5 sm:pb-0">
@@ -25,14 +37,21 @@ export const Header = () => {
         </h2>
 
         <div className="sm:hidden">
-          <Select defaultValue={tabs.find((tab) => tab.current)?.name}>
+          <Select defaultValue={tabs.find((tab) => current(tab.href))?.name}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione uma guia" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 {tabs.map((tab, index) => (
-                  <SelectItem key={index} value={tab.name}>
+                  <SelectItem
+                    key={index}
+                    value={tab.name}
+                    onSelect={() => {
+                      alert('cwa')
+                      router.push(tab.href)
+                    }}
+                  >
                     {tab.name}
                   </SelectItem>
                 ))}
@@ -49,7 +68,7 @@ export const Header = () => {
                 variant="ghost"
                 asChild
                 className={cn(
-                  tab.current
+                  current(tab.href)
                     ? 'border-primary text-primary hover:text-primary'
                     : 'border-transparent text-muted-foreground',
                   'whitespace-nowrap rounded-none border-b-2 px-1 pb-4 hover:bg-transparent',

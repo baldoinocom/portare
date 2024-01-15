@@ -16,6 +16,10 @@ const FleetReturnType = Prisma.validator<Prisma.FleetDefaultArgs>()({
   include: { company: true },
 })
 
+const VehicleReturnType = Prisma.validator<Prisma.VehicleDefaultArgs>()({
+  include: { brand: true },
+})
+
 const SemiTrailerReturnType = Prisma.validator<Prisma.SemiTrailerDefaultArgs>()(
   {
     include: {
@@ -33,6 +37,11 @@ const TruckReturnType = Prisma.validator<Prisma.TruckDefaultArgs>()({
   include: { vehicle: { include: { brand: true } } },
 })
 
+const StoppedVehicleReturnType =
+  Prisma.validator<Prisma.StoppedVehicleDefaultArgs>()({
+    include: { vehicle: { include: { brand: true } } },
+  })
+
 export type Driver = Prisma.DriverGetPayload<typeof DriverReturnType>
 
 export type Aggregate = Prisma.AggregateGetPayload<typeof AggregateReturnType>
@@ -41,8 +50,14 @@ export type Client = Prisma.ClientGetPayload<typeof ClientReturnType>
 
 export type Fleet = Prisma.FleetGetPayload<typeof FleetReturnType>
 
+export type Vehicle = Prisma.VehicleGetPayload<typeof VehicleReturnType>
+
 export type SemiTrailer = Prisma.SemiTrailerGetPayload<
   typeof SemiTrailerReturnType
 >
 
 export type Truck = Prisma.TruckGetPayload<typeof TruckReturnType>
+
+export type StoppedVehicle = Prisma.StoppedVehicleGetPayload<
+  typeof StoppedVehicleReturnType
+>

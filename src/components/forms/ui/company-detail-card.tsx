@@ -8,9 +8,7 @@ export const CompanyDetailCard = ({ company }: { company: Company }) => {
         {company?.tradeName}
       </span>
       <span>{company?.name}</span>
-      <span className="text-xs">
-        {company?.cnpj && formatCNPJ(company.cnpj)}
-      </span>
+      <span className="text-xs">{formatCNPJ(company?.cnpj)}</span>
     </div>
   )
 }

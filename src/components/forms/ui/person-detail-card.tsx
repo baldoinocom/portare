@@ -8,7 +8,7 @@ export const PersonDetailCard = ({ person }: { person: Person }) => {
         {person?.nickname}
       </span>
       <span>{person?.name}</span>
-      <span className="text-xs">{person?.cpf && formatCPF(person.cpf)}</span>
+      <span className="text-xs">{formatCPF(person?.cpf)}</span>
     </div>
   )
 }

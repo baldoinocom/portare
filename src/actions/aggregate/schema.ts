@@ -13,7 +13,7 @@ const AggregateSchema = z.object({
   company: z.optional(CompanySchema),
 
   fleetId: z
-    .number({ required_error: 'O vínculo é obrigatório' })
+    .number({ required_error: 'A unidade é obrigatória' })
     .int()
     .positive(),
 })

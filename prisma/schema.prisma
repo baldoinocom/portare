@@ -164,8 +164,9 @@ model Driver {
 
 // ASO - Atestado de Saúde Ocupacional
 model ASO {
-  id        Int      @default(autoincrement())
-  expiredAt DateTime @map("expired_at")
+  id             Int            @default(autoincrement())
+  startedAt      DateTime       @map("started_at")
+  expirationType ExpirationType @map("expiration_type")
 
   driverId Int    @map("driver_id")
   driver   Driver @relation(fields: [driverId], references: [personId], onDelete: Cascade)
@@ -178,10 +179,11 @@ model ASO {
 }
 
 model AbsentDriver {
-  id        Int          @default(autoincrement())
-  note      String?      @db.Text
-  expiredAt DateTime     @map("expired_at")
-  status    DriverStatus
+  id             Int            @default(autoincrement())
+  note           String?        @db.Text
+  startedAt      DateTime       @map("started_at")
+  expirationType ExpirationType @map("expiration_type")
+  status         DriverStatus
 
   driverId Int    @map("driver_id")
   driver   Driver @relation(fields: [driverId], references: [personId], onDelete: Cascade)
@@ -358,10 +360,11 @@ model Vehicle {
 }
 
 model StoppedVehicle {
-  id        Int           @default(autoincrement())
-  note      String?       @db.Text
-  expiredAt DateTime      @map("expired_at")
-  status    VehicleStatus
+  id             Int            @default(autoincrement())
+  note           String?        @db.Text
+  startedAt      DateTime       @map("started_at")
+  expirationType ExpirationType @map("expiration_type")
+  status         VehicleStatus
 
   vehicleId Int     @map("vehicle_id")
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
@@ -405,6 +408,8 @@ model Trailer {
   semiTrailerId Int?         @map("semi_trailer_id")
   SemiTrailer   SemiTrailer? @relation("SemiTrailer", fields: [semiTrailerId], references: [id], map: "semi_trailer")
 
+  certificates TrailerCertificate[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -423,9 +428,8 @@ model SemiTrailer {
   cargos   Cargo[]   @relation("SemiTrailerCargo", map: "semi_trailer_cargo")
   trailers Trailer[] @relation("SemiTrailer", map: "semi_trailer")
 
-  certificates TrailerCertificate[]
-  trips        Trip[]
-  groupings    Grouping[]
+  trips     Trip[]
+  groupings Grouping[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -475,24 +479,23 @@ model Cargo {
 }
 
 model TrailerCertificate {
-  id   Int                    @default(autoincrement())
-  type TrailerCertificateType
+  id             Int            @default(autoincrement())
+  startedAt      DateTime       @map("started_at")
+  expirationType ExpirationType @map("expiration_type")
 
-  semiTrailerId Int         @map("semi_trailer_id")
-  semiTrailer   SemiTrailer @relation(fields: [semiTrailerId], references: [id], onDelete: Cascade)
+  trailerId Int     @map("trailer_id")
+  trailer   Trailer @relation(fields: [trailerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@id([id, semiTrailerId])
+  @@id([id, trailerId])
   @@map("trailer_certificates")
 }
 
-enum TrailerCertificateType {
-  yearly // Anual
-  quarterly // Trimestral
-
-  @@map("trailer_certificate_types")
+enum ExpirationType {
+  quarterly
+  yearly
 }
 
 model Grouping {
@@ -504,8 +507,8 @@ model Grouping {
   truckId Int?   @map("truck_id")
   truck   Truck? @relation(fields: [truckId], references: [id], onDelete: Cascade)
 
-  semiTrailerId Int         @map("semi_trailer_id")
-  semiTrailer   SemiTrailer @relation(fields: [semiTrailerId], references: [id], onDelete: Cascade)
+  semiTrailerId Int?         @map("semi_trailer_id")
+  semiTrailer   SemiTrailer? @relation(fields: [semiTrailerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

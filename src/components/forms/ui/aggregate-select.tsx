@@ -65,6 +65,7 @@ export const AggregateSelect = ({
                 {selectedAggregate.company && (
                   <CompanyDetailCard company={selectedAggregate.company} />
                 )}
+
                 {selectedAggregate.person && (
                   <PersonDetailCard person={selectedAggregate.person} />
                 )}
@@ -90,6 +91,7 @@ export const AggregateSelect = ({
                     {selectedAggregate.company && (
                       <CompanyDetailCard company={selectedAggregate.company} />
                     )}
+
                     {selectedAggregate.person && (
                       <PersonDetailCard person={selectedAggregate.person} />
                     )}
@@ -97,6 +99,7 @@ export const AggregateSelect = ({
                   <CommandSeparator className="m-1" />
                 </>
               )}
+
               {aggregates
                 ?.filter(({ id }) => id !== getValues(name))
                 ?.map((aggregate, index) => (
@@ -113,6 +116,7 @@ export const AggregateSelect = ({
                     {aggregate.company && (
                       <CompanyDetailCard company={aggregate.company} />
                     )}
+
                     {aggregate.person && (
                       <PersonDetailCard person={aggregate.person} />
                     )}

@@ -107,3 +107,25 @@ export const formatUF = (state: string | undefined | null) => {
       return state
   }
 }
+
+export const formatExpirationType = (type: string | undefined | null) => {
+  switch (type) {
+    case 'quarterly':
+      return 'Trimestral'
+    case 'yearly':
+      return 'Anual'
+    default:
+      return type
+  }
+}
+
+export const formatVehicleStatus = (status: string | undefined | null) => {
+  switch (status) {
+    case 'maintenance':
+      return 'Manutenção'
+    case 'documentation':
+      return 'Documentação'
+    default:
+      return status
+  }
+}

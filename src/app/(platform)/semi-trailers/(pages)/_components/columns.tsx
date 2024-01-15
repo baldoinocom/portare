@@ -101,19 +101,9 @@ export const columns: ColumnDef<SemiTrailer>[] = [
   },
 
   {
-    id: 'Tipo de carga',
+    id: 'Tipo de Carga',
     accessorFn: (row) => row.cargos,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="flex flex-wrap gap-2">
         {getValue<SemiTrailer['cargos']>().map(({ name }, index) => (
@@ -152,17 +142,7 @@ export const columns: ColumnDef<SemiTrailer>[] = [
     id: 'Placa',
     accessorFn: (row) =>
       row.trailers?.map(({ vehicle }) => vehicle.licensePlate),
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="flex flex-col gap-2">
         {getValue<string[]>().map((value, index) => (
@@ -174,7 +154,9 @@ export const columns: ColumnDef<SemiTrailer>[] = [
               !value && 'border-muted bg-muted',
             )}
           >
-            <span className={cn(!value && 'opacity-0')}>{String(value)}</span>
+            <span className={cn('w-max', !value && 'opacity-0')}>
+              {String(value)}
+            </span>
           </Badge>
         ))}
       </div>
@@ -185,17 +167,7 @@ export const columns: ColumnDef<SemiTrailer>[] = [
     id: 'Renavam',
     accessorFn: (row) =>
       row.trailers?.map(({ vehicle }) => formatRenavam(vehicle.renavam)),
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="flex flex-col gap-2">
         {getValue<string[]>().map((value, index) => (
@@ -207,7 +179,9 @@ export const columns: ColumnDef<SemiTrailer>[] = [
               !value && 'border-muted bg-muted',
             )}
           >
-            <span className={cn(!value && 'opacity-0')}>{String(value)}</span>
+            <span className={cn('w-max', !value && 'opacity-0')}>
+              {String(value)}
+            </span>
           </Badge>
         ))}
       </div>
@@ -215,21 +189,11 @@ export const columns: ColumnDef<SemiTrailer>[] = [
   },
 
   {
-    id: 'Nº de frota',
+    id: 'Nº de Frota',
     accessorFn: (row) => row.trailers?.map(({ fleetNumber }) => fleetNumber),
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => column.id,
     cell: ({ getValue }) => (
-      <div className="flex flex-col gap-2">
+      <div className="flex shrink-0 flex-col gap-2">
         {getValue<string[]>().map((value, index) => (
           <Badge
             key={index}
@@ -239,7 +203,9 @@ export const columns: ColumnDef<SemiTrailer>[] = [
               !value && 'border-muted bg-muted',
             )}
           >
-            <span className={cn(!value && 'opacity-0')}>{String(value)}</span>
+            <span className={cn('w-max', !value && 'opacity-0')}>
+              {String(value)}
+            </span>
           </Badge>
         ))}
       </div>

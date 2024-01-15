@@ -43,11 +43,11 @@ export const VehicleSchema = z.object({
     .positive(),
 
   fleetId: z.optional(
-    z.number({ required_error: 'O vínculo é obrigatório' }).int().positive(),
+    z.number({ required_error: 'A unidade é obrigatória' }).int().positive(),
   ),
 
   aggregateId: z.optional(
-    z.number({ required_error: 'O vínculo é obrigatório' }).int().positive(),
+    z.number({ required_error: 'A unidade é obrigatória' }).int().positive(),
   ),
 })
 

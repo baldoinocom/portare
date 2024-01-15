@@ -63,13 +63,24 @@ export const SemiTrailerForm = ({
 
   const { toast } = useToast()
 
+  const getTrailerFields = () => {
+    const newLength = Math.max(
+      0,
+      (initialData?.configuration?.numberOfTrailers || 0) -
+        (initialData?.trailers?.length || 0),
+    )
+
+    return initialData?.trailers
+      ?.map((value) => nullAsUndefined(value))
+      ?.concat(Array(newLength).fill({}))
+  }
+
   const form = useForm<z.infer<typeof SemiTrailerSchema>>({
     resolver: zodResolver(SemiTrailerSchema),
     defaultValues: {
       ...nullAsUndefined(initialData),
       ...nullAsUndefined(initialData?.trailers?.at(0)?.vehicle),
-      cargos: initialData?.cargos?.map((value) => nullAsUndefined(value)),
-      trailers: initialData?.trailers?.map((value) => nullAsUndefined(value)),
+      trailers: getTrailerFields(),
     },
   })
 

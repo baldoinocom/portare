@@ -36,7 +36,6 @@ export const CompanySchema = z.object({
   address: z.optional(
     z
       .string()
-      .toUpperCase()
       .max(255, { message: 'O endereço não pode ter mais de 255 caracteres' })
       .toUpperCase(),
   ),
@@ -44,7 +43,7 @@ export const CompanySchema = z.object({
   uf: z.optional(
     z
       .nativeEnum(UF, {
-        invalid_type_error: 'O UF deve ser válido',
+        invalid_type_error: 'O UF é inválido',
       })
       .nullable(),
   ),

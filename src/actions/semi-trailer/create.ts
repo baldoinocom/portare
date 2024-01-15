@@ -37,12 +37,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       trailers.map(({ vehicle, fleetNumber }) =>
         db.trailer.create({
           data: {
-            fleetNumber,
+            fleetNumber: fleetNumber || null,
             vehicle: {
               create: {
                 model,
                 licensePlate: vehicle.licensePlate,
-                renavam: vehicle.renavam,
+                renavam: vehicle.renavam || null,
                 brand: { connect: { id: brandId } },
                 fleet: { connect: { companyId: fleetId } },
               },
