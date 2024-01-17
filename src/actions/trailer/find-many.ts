@@ -1,7 +1,7 @@
 'use server'
 
+import { Trailer } from '@/actions/types'
 import { db } from '@/lib/db'
-import { Trailer } from '@prisma/client'
 
 export const findManyAction = async (): Promise<{ data: Trailer[] }> => {
   const trailers = await db.trailer.findMany({

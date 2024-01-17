@@ -1,6 +1,6 @@
 'use client'
 
-import { Aggregate } from '@/actions/types'
+import { Client } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -10,12 +10,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { formatCNPJ, formatCPF, formatPhoneNumber } from '@/lib/formatters'
+import { formatCNPJ } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const columns: ColumnDef<Aggregate>[] = [
+export const clientColumns: ColumnDef<Client>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -42,8 +42,8 @@ export const columns: ColumnDef<Aggregate>[] = [
   },
 
   {
-    id: 'Nome Pessoal/Razão Social',
-    accessorFn: (row) => row.person?.name || row.company?.name,
+    id: 'Razão Social',
+    accessorFn: (row) => row.company.name,
     header: ({ column }) => {
       return (
         <Button
@@ -61,8 +61,8 @@ export const columns: ColumnDef<Aggregate>[] = [
   },
 
   {
-    id: 'Apelido/Nome Fantasia',
-    accessorFn: (row) => row.person?.nickname || row.company?.tradeName,
+    id: 'Nome Fantasia',
+    accessorFn: (row) => row.company.tradeName,
     header: ({ column }) => {
       return (
         <Button
@@ -80,9 +80,8 @@ export const columns: ColumnDef<Aggregate>[] = [
   },
 
   {
-    id: 'CPF/CNPJ',
-    accessorFn: (row) =>
-      formatCPF(row.person?.cpf) || formatCNPJ(row.company?.cnpj),
+    id: 'CNPJ',
+    accessorFn: (row) => formatCNPJ(row.company.cnpj),
     header: ({ column }) => {
       return (
         <Button
@@ -94,19 +93,12 @@ export const columns: ColumnDef<Aggregate>[] = [
         </Button>
       )
     },
-    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
-  },
-
-  {
-    id: 'Telefone',
-    accessorFn: (row) => formatPhoneNumber(row.person?.phoneNumber),
-    header: ({ column }) => column.id,
     cell: ({ getValue }) => <div>{getValue<string>()}</div>,
   },
 
   {
     id: 'Endereço',
-    accessorFn: (row) => row.company?.address,
+    accessorFn: (row) => row.company.address,
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="uppercase">{getValue<string>()}</div>
@@ -115,7 +107,7 @@ export const columns: ColumnDef<Aggregate>[] = [
 
   {
     id: 'UF',
-    accessorFn: (row) => row.company?.uf,
+    accessorFn: (row) => row.company.uf,
     header: ({ column }) => {
       return (
         <Button
@@ -135,7 +127,7 @@ export const columns: ColumnDef<Aggregate>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { id } = row.original
+      const { companyId } = row.original
 
       return (
         <DropdownMenu>
@@ -148,7 +140,7 @@ export const columns: ColumnDef<Aggregate>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'aggregates/' + id}>
+              <Link href={'clients/' + companyId}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

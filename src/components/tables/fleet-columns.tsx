@@ -1,6 +1,6 @@
 'use client'
 
-import { Truck } from '@/actions/types'
+import { Fleet } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -10,12 +10,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { formatLicensePlate, formatRenavam } from '@/lib/formatters'
+import { formatCNPJ } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const columns: ColumnDef<Truck>[] = [
+export const fleetColumns: ColumnDef<Fleet>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -42,8 +42,8 @@ export const columns: ColumnDef<Truck>[] = [
   },
 
   {
-    id: 'Placa',
-    accessorFn: (row) => formatLicensePlate(row.vehicle.licensePlate),
+    id: 'Razão Social',
+    accessorFn: (row) => row.company.name,
     header: ({ column }) => {
       return (
         <Button
@@ -61,8 +61,8 @@ export const columns: ColumnDef<Truck>[] = [
   },
 
   {
-    id: 'Modelo',
-    accessorFn: (row) => row.vehicle.model,
+    id: 'Nome Fantasia',
+    accessorFn: (row) => row.company.tradeName,
     header: ({ column }) => {
       return (
         <Button
@@ -80,15 +80,34 @@ export const columns: ColumnDef<Truck>[] = [
   },
 
   {
-    id: 'Renavam',
-    accessorFn: (row) => formatRenavam(row.vehicle.renavam),
-    header: ({ column }) => column.id,
+    id: 'CNPJ',
+    accessorFn: (row) => formatCNPJ(row.company.cnpj),
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          {column.id}
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      )
+    },
     cell: ({ getValue }) => <div>{getValue<string>()}</div>,
   },
 
   {
-    id: 'Marca',
-    accessorFn: (row) => row.vehicle.brand?.name,
+    id: 'Endereço',
+    accessorFn: (row) => row.company.address,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div className="uppercase">{getValue<string>()}</div>
+    ),
+  },
+
+  {
+    id: 'UF',
+    accessorFn: (row) => row.company.uf,
     header: ({ column }) => {
       return (
         <Button
@@ -108,7 +127,7 @@ export const columns: ColumnDef<Truck>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { id } = row.original
+      const { companyId } = row.original
 
       return (
         <DropdownMenu>
@@ -121,7 +140,7 @@ export const columns: ColumnDef<Truck>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'trucks/' + id}>
+              <Link href={'fleets/' + companyId}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

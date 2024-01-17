@@ -1,12 +1,16 @@
 'use server'
 
+import { TrailerCertificate } from '@/actions/types'
 import { db } from '@/lib/db'
-import { TrailerCertificate } from '@prisma/client'
 
 export const findManyAction = async (): Promise<{
   data: TrailerCertificate[]
 }> => {
-  const trailerCertificates = await db.trailerCertificate.findMany()
+  const trailerCertificates = await db.trailerCertificate.findMany({
+    include: {
+      trailer: { include: { vehicle: { include: { brand: true } } } },
+    },
+  })
 
   return { data: trailerCertificates }
 }

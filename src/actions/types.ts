@@ -33,6 +33,17 @@ const SemiTrailerReturnType = Prisma.validator<Prisma.SemiTrailerDefaultArgs>()(
   },
 )
 
+const TrailerReturnType = Prisma.validator<Prisma.TrailerDefaultArgs>()({
+  include: { vehicle: { include: { brand: true } } },
+})
+
+const TrailerCertificateReturnType =
+  Prisma.validator<Prisma.TrailerCertificateDefaultArgs>()({
+    include: {
+      trailer: { include: { vehicle: { include: { brand: true } } } },
+    },
+  })
+
 const TruckReturnType = Prisma.validator<Prisma.TruckDefaultArgs>()({
   include: { vehicle: { include: { brand: true } } },
 })
@@ -54,6 +65,12 @@ export type Vehicle = Prisma.VehicleGetPayload<typeof VehicleReturnType>
 
 export type SemiTrailer = Prisma.SemiTrailerGetPayload<
   typeof SemiTrailerReturnType
+>
+
+export type Trailer = Prisma.TrailerGetPayload<typeof TrailerReturnType>
+
+export type TrailerCertificate = Prisma.TrailerCertificateGetPayload<
+  typeof TrailerCertificateReturnType
 >
 
 export type Truck = Prisma.TruckGetPayload<typeof TruckReturnType>

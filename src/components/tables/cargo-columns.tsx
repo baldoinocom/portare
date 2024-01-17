@@ -1,5 +1,7 @@
 'use client'
 
+import { CargoFormDialog } from '@/components/forms/form-dialogs/cargo-form-dialog'
+import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -10,12 +12,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { TrailerType } from '@prisma/client'
+import { Cargo } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
-import { FormDialog } from './form-dialog'
 
-export const columns: ColumnDef<TrailerType>[] = [
+export const cargoColumns: ColumnDef<Cargo>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -83,7 +84,9 @@ export const columns: ColumnDef<TrailerType>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <FormDialog initialData={row.original} />
+          <FormDialogContent>
+            <CargoFormDialog initialData={row.original} />
+          </FormDialogContent>
         </Dialog>
       )
     },

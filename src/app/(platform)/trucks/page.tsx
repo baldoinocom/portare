@@ -1,6 +1,7 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { DataTable } from '@/components/records/ui/data-table'
+import { truckColumns } from '@/components/tables/truck-columns'
+import { DataTable } from '@/components/tables/ui/data-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -11,7 +12,6 @@ import {
   TruckIcon,
 } from 'lucide-react'
 import Link from 'next/link'
-import { columns } from './_components/columns'
 import { Header } from './_components/header'
 
 export default async function Page() {
@@ -69,7 +69,7 @@ export default async function Page() {
           )}
 
           {!!trucks.data.length && (
-            <DataTable columns={columns} data={trucks.data} />
+            <DataTable columns={truckColumns} data={trucks.data} />
           )}
         </div>
       </main>

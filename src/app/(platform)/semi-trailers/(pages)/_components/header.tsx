@@ -20,7 +20,10 @@ const tabs = [
     href: '/semi-trailers/configurations',
   },
   { name: 'Tipos', href: '/semi-trailers/types' },
-  { name: 'Pausas', href: '/semi-trailers/stopped-vehicles' },
+  { name: 'Cargas', href: '/semi-trailers/cargos' },
+  { name: 'Laudos', href: '/semi-trailers/certificates' },
+  { name: 'Paradas', href: '/semi-trailers/stopped' },
+  { name: 'Marcas', href: '/semi-trailers/brands' },
 ]
 
 export const Header = () => {

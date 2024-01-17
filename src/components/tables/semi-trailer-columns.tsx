@@ -17,7 +17,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const columns: ColumnDef<SemiTrailer>[] = [
+export const semiTrailerColumns: ColumnDef<SemiTrailer>[] = [
   {
     id: 'select',
     header: ({ table }) => (

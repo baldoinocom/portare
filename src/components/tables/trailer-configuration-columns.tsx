@@ -1,8 +1,10 @@
 'use client'
 
-import { Driver } from '@/actions/types'
+import { TrailerConfigurationFormDialog } from '@/components/forms/form-dialogs/trailer-configuration-form-dialog'
+import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +12,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { formatCPF, formatPhoneNumber } from '@/lib/formatters'
+import { TrailerConfiguration } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
-import Link from 'next/link'
 
-export const columns: ColumnDef<Driver>[] = [
+export const trailerConfigurationColumns: ColumnDef<TrailerConfiguration>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -42,8 +43,8 @@ export const columns: ColumnDef<Driver>[] = [
   },
 
   {
-    id: 'Nome Completo',
-    accessorFn: (row) => row.person.name,
+    id: 'Nome',
+    accessorFn: (row) => row.name,
     header: ({ column }) => {
       return (
         <Button
@@ -61,27 +62,8 @@ export const columns: ColumnDef<Driver>[] = [
   },
 
   {
-    id: 'Apelido',
-    accessorFn: (row) => row.person.nickname,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
-    cell: ({ getValue }) => (
-      <div className="uppercase">{getValue<string>()}</div>
-    ),
-  },
-
-  {
-    id: 'CPF',
-    accessorFn: (row) => formatCPF(row.person.cpf),
+    id: 'Número de Reboques',
+    accessorFn: (row) => row.numberOfTrailers,
     header: ({ column }) => {
       return (
         <Button
@@ -97,37 +79,32 @@ export const columns: ColumnDef<Driver>[] = [
   },
 
   {
-    id: 'Telefone',
-    accessorFn: (row) => formatPhoneNumber(row.person.phoneNumber),
-    header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="uppercase">{getValue<string>()}</div>
-    ),
-  },
-
-  {
     id: 'actions',
     cell: ({ row }) => {
-      const { personId } = row.original
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={'drivers/' + personId}>
-                <Eye className="mr-2 size-4" />
-                Visualizar
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Dialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="size-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
+              <DialogTrigger asChild>
+                <DropdownMenuItem>
+                  <Eye className="mr-2 size-4" />
+                  Visualizar
+                </DropdownMenuItem>
+              </DialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <FormDialogContent>
+            <TrailerConfigurationFormDialog initialData={row.original} />
+          </FormDialogContent>
+        </Dialog>
       )
     },
     enableHiding: false,

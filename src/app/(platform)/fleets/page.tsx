@@ -1,9 +1,9 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { DataTable } from '@/components/records/ui/data-table'
+import { fleetColumns } from '@/components/tables/fleet-columns'
+import { DataTable } from '@/components/tables/ui/data-table'
 import { Separator } from '@/components/ui/separator'
 import { FactoryIcon } from 'lucide-react'
-import { columns } from './_components/columns'
 import { Header } from './_components/header'
 
 export default async function Page() {
@@ -32,7 +32,7 @@ export default async function Page() {
           )}
 
           {!!fleets.data.length && (
-            <DataTable columns={columns} data={fleets.data} />
+            <DataTable columns={fleetColumns} data={fleets.data} />
           )}
         </div>
       </main>

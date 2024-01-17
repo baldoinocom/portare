@@ -1,6 +1,8 @@
 'use client'
 
-import { StoppedVehicle } from '@/actions/types'
+import { TrailerCertificate } from '@/actions/types'
+import { TrailerCertificateFormDialog } from '@/components/forms/form-dialogs/trailer-certificate-form-dialog'
+import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -11,18 +13,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  formatExpirationType,
-  formatLicensePlate,
-  formatVehicleStatus,
-} from '@/lib/formatters'
+import { formatExpirationType, formatLicensePlate } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
-import { FormDialog } from './form-dialog'
 
-export const columns: ColumnDef<StoppedVehicle>[] = [
+export const trailerCertificateColumns: ColumnDef<TrailerCertificate>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -50,7 +47,26 @@ export const columns: ColumnDef<StoppedVehicle>[] = [
 
   {
     id: 'Placa',
-    accessorFn: (row) => formatLicensePlate(row.vehicle.licensePlate),
+    accessorFn: (row) => formatLicensePlate(row.trailer.vehicle.licensePlate),
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          {column.id}
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      )
+    },
+    cell: ({ getValue }) => (
+      <div className="uppercase">{getValue<string>()}</div>
+    ),
+  },
+
+  {
+    id: 'Nº de Frota',
+    accessorFn: (row) => row.trailer.fleetNumber,
     header: ({ column }) => {
       return (
         <Button
@@ -69,7 +85,7 @@ export const columns: ColumnDef<StoppedVehicle>[] = [
 
   {
     id: 'Data de Início',
-    accessorFn: (row) => format(row.startedAt, 'PP', { locale: ptBR }),
+    accessorFn: (row) => format(row.startedAt, 'PPP', { locale: ptBR }),
     header: ({ column }) => {
       return (
         <Button
@@ -102,30 +118,6 @@ export const columns: ColumnDef<StoppedVehicle>[] = [
   },
 
   {
-    id: 'Status do Veículo',
-    accessorFn: (row) => formatVehicleStatus(row.status),
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
-    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
-  },
-
-  {
-    id: 'Observação',
-    accessorFn: (row) => row.note,
-    header: ({ column }) => column.id,
-    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
-  },
-
-  {
     id: 'actions',
     cell: ({ row }) => {
       return (
@@ -148,7 +140,9 @@ export const columns: ColumnDef<StoppedVehicle>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <FormDialog initialData={row.original} />
+          <FormDialogContent>
+            <TrailerCertificateFormDialog initialData={row.original} />
+          </FormDialogContent>
         </Dialog>
       )
     },

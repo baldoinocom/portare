@@ -1,9 +1,9 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { DataTable } from '@/components/records/ui/data-table'
+import { aggregateColumns } from '@/components/tables/aggregate-columns'
+import { DataTable } from '@/components/tables/ui/data-table'
 import { Separator } from '@/components/ui/separator'
 import { BuildingIcon } from 'lucide-react'
-import { columns } from './_components/columns'
 import { Header } from './_components/header'
 
 export default async function Page() {
@@ -32,7 +32,7 @@ export default async function Page() {
           )}
 
           {!!aggregates.data.length && (
-            <DataTable columns={columns} data={aggregates.data} />
+            <DataTable columns={aggregateColumns} data={aggregates.data} />
           )}
         </div>
       </main>

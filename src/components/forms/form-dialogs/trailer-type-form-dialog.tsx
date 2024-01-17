@@ -4,7 +4,6 @@ import { action } from '@/actions'
 import { TrailerTypeSchema } from '@/actions/trailer-type/schema'
 import { Button } from '@/components/ui/button'
 import {
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -27,7 +26,11 @@ import { TrailerType } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-export const FormDialog = ({ initialData }: { initialData?: TrailerType }) => {
+export const TrailerTypeFormDialog = ({
+  initialData,
+}: {
+  initialData?: TrailerType
+}) => {
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof TrailerTypeSchema>>({
@@ -79,48 +82,46 @@ export const FormDialog = ({ initialData }: { initialData?: TrailerType }) => {
   }
 
   return (
-    <DialogContent className="sm:max-w-[425px]">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <DialogHeader>
-            <DialogTitle>
-              {initialData
-                ? 'Registro do tipo de reboque'
-                : 'Registro de tipo de reboque'}
-            </DialogTitle>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <DialogHeader>
+          <DialogTitle>
+            {initialData
+              ? 'Registro do tipo de reboque'
+              : 'Registro de tipo de reboque'}
+          </DialogTitle>
 
-            <DialogDescription>
-              {initialData
-                ? 'Altere os tipos de reboque'
-                : 'Regstre novos tipos de reboque'}
-            </DialogDescription>
-          </DialogHeader>
+          <DialogDescription>
+            {initialData
+              ? 'Altere os tipos de reboque'
+              : 'Regstre novos tipos de reboque'}
+          </DialogDescription>
+        </DialogHeader>
 
-          <div className="grid gap-4 py-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                    <FormLabel className="text-right">Nome</FormLabel>
-                    <FormControl className="col-span-3">
-                      <Input {...field} className="uppercase" />
-                    </FormControl>
-                  </div>
-                  <FormMessage className="text-right" />
-                </FormItem>
-              )}
-            />
-          </div>
+        <div className="grid gap-4 py-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                  <FormLabel className="text-right">Nome</FormLabel>
+                  <FormControl className="col-span-3">
+                    <Input {...field} className="uppercase" />
+                  </FormControl>
+                </div>
+                <FormMessage className="text-right" />
+              </FormItem>
+            )}
+          />
+        </div>
 
-          <DialogFooter>
-            <Button disabled={form.formState.isSubmitting}>
-              {initialData ? 'Salvar alterações' : 'Salvar'}
-            </Button>
-          </DialogFooter>
-        </form>
-      </Form>
-    </DialogContent>
+        <DialogFooter>
+          <Button disabled={form.formState.isSubmitting}>
+            {initialData ? 'Salvar alterações' : 'Salvar'}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
   )
 }

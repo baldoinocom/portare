@@ -1,6 +1,7 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { DataTable } from '@/components/records/ui/data-table'
+import { driverColumns } from '@/components/tables/driver-columns'
+import { DataTable } from '@/components/tables/ui/data-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -11,7 +12,6 @@ import {
   UserPlus2Icon,
 } from 'lucide-react'
 import Link from 'next/link'
-import { columns } from './_components/columns'
 import { Header } from './_components/header'
 
 export default async function Page() {
@@ -69,7 +69,7 @@ export default async function Page() {
           )}
 
           {!!drivers.data.length && (
-            <DataTable columns={columns} data={drivers.data} />
+            <DataTable columns={driverColumns} data={drivers.data} />
           )}
         </div>
       </main>

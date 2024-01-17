@@ -1,11 +1,12 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { DataTable } from '@/components/records/ui/data-table'
+import { StoppedVehicleFormDialog } from '@/components/forms/form-dialogs/stopped-vehicle-form-dialog'
+import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
+import { stoppedVehicleColumns } from '@/components/tables/stopped-vehicle-columns'
+import { DataTable } from '@/components/tables/ui/data-table'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { PlusIcon } from 'lucide-react'
-import { columns } from './columns'
-import { FormDialog } from './form-dialog'
 import { Header } from './header'
 
 export const StoppedVehicles = async () => {
@@ -31,19 +32,24 @@ export const StoppedVehicles = async () => {
                 />
 
                 <span className="mt-2 block text-sm font-semibold">
-                  Registrar uma nova pausa de veículo
+                  Registrar uma nova parada de veículo
                 </span>
               </EmptyState>
             </DialogTrigger>
           )}
 
           {!!stoppedVehicles.data.length && (
-            <DataTable columns={columns} data={stoppedVehicles.data} />
+            <DataTable
+              columns={stoppedVehicleColumns}
+              data={stoppedVehicles.data}
+            />
           )}
         </div>
       </main>
 
-      <FormDialog vehicles={vehicles.data} />
+      <FormDialogContent>
+        <StoppedVehicleFormDialog vehicles={vehicles.data} />
+      </FormDialogContent>
     </Dialog>
   )
 }

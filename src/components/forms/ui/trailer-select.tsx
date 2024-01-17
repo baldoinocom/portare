@@ -1,5 +1,5 @@
-import { SemiTrailer, Truck, Vehicle } from '@/actions/types'
-import { VehicleDetailCard } from '@/components/forms/ui/vehicle-detail-card'
+import { Trailer } from '@/actions/types'
+import { TrailerDetailCard } from '@/components/forms/ui/trailer-detail-card'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -21,61 +21,21 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const VehicleSelect = ({
-  vehicles,
-  trucks,
-  semiTrailers,
-}: {
-  vehicles?: Vehicle[]
-  trucks?: Truck[]
-  semiTrailers?: SemiTrailer[]
-}) => {
-  if (trucks?.length && semiTrailers?.length) {
-    throw Error('Only one between truck and semi-trailer can be present')
-  }
-
+export const TrailerSelect = ({ trailers }: { trailers?: Trailer[] }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
-  const selectedVehicle = vehicles?.find(({ id }) => id === getValues(name))
+  const selectedTrailer = trailers?.find(({ id }) => id === getValues(name))
 
-  const searchVehicle = (vehicle: Vehicle) => {
+  const searchTrailer = (trailer: Trailer) => {
     return (
-      vehicle.brand?.name +
+      trailer.vehicle.brand?.name +
       ' ' +
-      vehicle.model +
+      trailer.vehicle.model +
       ' ' +
-      formatLicensePlate(vehicle.licensePlate)
+      formatLicensePlate(trailer.vehicle.licensePlate)
     )
   }
-
-  // const selectedSemiTrailer = semiTrailers?.find(
-  //   ({ id }) => id === getValues(name),
-  // )
-
-  // const searchSemiTrailer = (semiTrailer: SemiTrailer) => {
-  //   return (
-  //     semiTrailer?.trailers?.at(0)?.vehicle.brand?.name +
-  //     ' ' +
-  //     semiTrailer?.trailers?.at(0)?.vehicle.model +
-  //     ' ' +
-  //     semiTrailer?.trailers
-  //       .map(({ vehicle }) => formatLicensePlate(vehicle.licensePlate))
-  //       .join(' - ')
-  //   )
-  // }
-
-  // const selectedTruck = trucks?.find(({ id }) => id === getValues(name))
-
-  // const searchTruck = (truck: Truck) => {
-  //   return (
-  //     truck?.vehicle.brand?.name +
-  //     ' ' +
-  //     truck?.vehicle.model +
-  //     ' ' +
-  //     formatLicensePlate(truck?.vehicle.licensePlate)
-  //   )
-  // }
 
   return (
     <Popover>
@@ -89,8 +49,8 @@ export const VehicleSelect = ({
               !getValues(name) && 'text-muted-foreground',
             )}
           >
-            {selectedVehicle ? (
-              <VehicleDetailCard vehicle={selectedVehicle} />
+            {selectedTrailer ? (
+              <TrailerDetailCard trailer={selectedTrailer} />
             ) : (
               'Selecione'
             )}
@@ -105,22 +65,22 @@ export const VehicleSelect = ({
           <CommandEmpty>Nenhum</CommandEmpty>
           <CommandGroup>
             <ScrollArea className="flex max-h-72 flex-col">
-              {selectedVehicle && (
+              {selectedTrailer && (
                 <>
                   <CommandItem>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
-                    <VehicleDetailCard vehicle={selectedVehicle} />
+                    <TrailerDetailCard trailer={selectedTrailer} />
                   </CommandItem>
                   <CommandSeparator className="m-1" />
                 </>
               )}
 
-              {vehicles
+              {trailers
                 ?.filter(({ id }) => id !== getValues(name))
                 ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchVehicle(value)}
+                    value={searchTrailer(value)}
                     onSelect={() =>
                       setValue(name, value.id, {
                         shouldDirty: true,
@@ -128,7 +88,7 @@ export const VehicleSelect = ({
                     }
                   >
                     <div className="w-6" />
-                    <VehicleDetailCard vehicle={value} />
+                    <TrailerDetailCard trailer={value} />
                   </CommandItem>
                 ))}
             </ScrollArea>

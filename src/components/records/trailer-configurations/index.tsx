@@ -1,11 +1,12 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { DataTable } from '@/components/records/ui/data-table'
+import { TrailerConfigurationFormDialog } from '@/components/forms/form-dialogs/trailer-configuration-form-dialog'
+import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
+import { trailerConfigurationColumns } from '@/components/tables/trailer-configuration-columns'
+import { DataTable } from '@/components/tables/ui/data-table'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { PlusIcon } from 'lucide-react'
-import { columns } from './columns'
-import { FormDialog } from './form-dialog'
 import { Header } from './header'
 
 export const TrailerConfigurations = async () => {
@@ -36,12 +37,17 @@ export const TrailerConfigurations = async () => {
           )}
 
           {!!trailerConfigurations.data.length && (
-            <DataTable columns={columns} data={trailerConfigurations.data} />
+            <DataTable
+              columns={trailerConfigurationColumns}
+              data={trailerConfigurations.data}
+            />
           )}
         </div>
       </main>
 
-      <FormDialog />
+      <FormDialogContent>
+        <TrailerConfigurationFormDialog />
+      </FormDialogContent>
     </Dialog>
   )
 }

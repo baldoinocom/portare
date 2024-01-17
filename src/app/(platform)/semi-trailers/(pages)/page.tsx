@@ -1,6 +1,7 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { DataTable } from '@/components/records/ui/data-table'
+import { semiTrailerColumns } from '@/components/tables/semi-trailer-columns'
+import { DataTable } from '@/components/tables/ui/data-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -11,7 +12,6 @@ import {
   RocketIcon,
 } from 'lucide-react'
 import Link from 'next/link'
-import { columns } from './_components/columns'
 
 export default async function Page() {
   const semiTrailers = await action.semiTrailer().findMany()
@@ -65,7 +65,7 @@ export default async function Page() {
         )}
 
         {!!semiTrailers.data.length && (
-          <DataTable columns={columns} data={semiTrailers.data} />
+          <DataTable columns={semiTrailerColumns} data={semiTrailers.data} />
         )}
       </div>
     </main>
