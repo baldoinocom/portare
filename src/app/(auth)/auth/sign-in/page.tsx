@@ -1,5 +1,6 @@
 'use client'
 
+import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -67,7 +68,7 @@ export default function Page() {
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img className="mx-auto size-6 w-auto" src="/logo.png" alt="Logo" />
+        <Logo className="mx-auto w-auto" />
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

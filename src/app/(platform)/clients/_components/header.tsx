@@ -1,5 +1,11 @@
 import { Button } from '@/components/ui/button'
-import { CheckIcon, ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
+import {
+  ClipboardIcon,
+  FlagTriangleLeftIcon,
+  FlagTriangleRightIcon,
+  LandPlotIcon,
+  PlusIcon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export const Header = () => {
@@ -17,15 +23,15 @@ export const Header = () => {
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <CheckIcon className="mr-1.5" />0 Ambos
+              <FlagTriangleLeftIcon className="mr-1.5" />0 Origens
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <RocketIcon className="mr-1.5" />0 Origens
+              <LandPlotIcon className="mr-1.5" />0 Ambos
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <RocketIcon className="mr-1.5" />0 Destinos
+              <FlagTriangleRightIcon className="mr-1.5" />0 Destinos
             </div>
           </div>
         </div>

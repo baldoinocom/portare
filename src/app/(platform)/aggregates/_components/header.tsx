@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button'
 import {
-  Building2Icon,
+  BuildingIcon,
   ClipboardIcon,
   PlusIcon,
+  RocketIcon,
   Users2Icon,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -22,11 +23,15 @@ export const Header = () => {
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
+              <BuildingIcon className="mr-1.5" />0 CNPJ
+            </div>
+
+            <div className="mt-2 flex items-center text-sm text-muted-foreground">
               <Users2Icon className="mr-1.5" />0 CPF
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <Building2Icon className="mr-1.5" />0 CNPJ
+              <RocketIcon className="mr-1.5" />0 Em operação
             </div>
           </div>
         </div>

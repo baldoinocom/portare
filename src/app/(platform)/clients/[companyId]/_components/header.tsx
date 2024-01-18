@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbProps } from '@/components/breadcrumb'
 
 const pages: BreadcrumbProps[] = [
-  { name: 'Origens/Destinos', href: '/clients' },
+  { name: 'Clientes', href: '/clients' },
   { name: 'Cadastro' },
 ]
 

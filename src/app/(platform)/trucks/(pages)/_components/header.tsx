@@ -5,7 +5,7 @@ export const Header = () => {
     <header>
       <div className="flex flex-col gap-1 border-b border-border pb-5 sm:pb-0">
         <h2 className="text-2xl font-bold sm:truncate sm:text-3xl sm:tracking-tight">
-          Semirreboques
+          Caminhões
         </h2>
 
         <TabBar />

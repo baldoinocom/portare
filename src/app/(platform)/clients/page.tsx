@@ -3,7 +3,7 @@ import { EmptyState } from '@/components/empty-state'
 import { clientColumns } from '@/components/tables/client-columns'
 import { DataTable } from '@/components/tables/ui/data-table'
 import { Separator } from '@/components/ui/separator'
-import { Building2Icon } from 'lucide-react'
+import { FactoryIcon } from 'lucide-react'
 import { Header } from './_components/header'
 
 export default async function Page() {
@@ -19,7 +19,7 @@ export default async function Page() {
         <div className="flex flex-col gap-y-8">
           {!clients.data.length && (
             <EmptyState href="/clients/new">
-              <Building2Icon
+              <FactoryIcon
                 strokeWidth={1.2}
                 size={52}
                 className="mx-auto text-muted-foreground"

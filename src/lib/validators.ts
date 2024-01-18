@@ -2,7 +2,7 @@ export const validLicensePlate = (licensePlate: string | undefined) => {
   if (!licensePlate) return true
 
   const isOldFormat = /^[A-Z]{3}-\d{4}$/.test(licensePlate)
-  const isNewFormat = /^[A-Z]{3}\d[A-Z]\d{2}$/.test(licensePlate)
+  const isNewFormat = /^[A-Z]{3}-\d[A-Z]\d{2}$/.test(licensePlate)
 
   if (!(isOldFormat || isNewFormat)) return false
 

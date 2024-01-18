@@ -14,8 +14,7 @@ export const VehicleSchema = z.object({
     .max(8, { message: 'A placa não pode ter mais de 8 caracteres' })
     .toUpperCase()
     .refine(validLicensePlate, {
-      message:
-        'A placa deve estar no formato antigo (ABC-1234) ou no formato novo (ABC1D23)',
+      message: 'A placa deve estar no formato antigo ou no formato novo',
     }),
 
   model: z.optional(

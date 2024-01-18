@@ -1,6 +1,6 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { semiTrailerColumns } from '@/components/tables/semi-trailer-columns'
+import { truckColumns } from '@/components/tables/truck-columns'
 import { DataTable } from '@/components/tables/ui/data-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -8,14 +8,14 @@ import { CheckIcon, ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function Page() {
-  const semiTrailers = await action.semiTrailer().findMany()
+  const trucks = await action.truck().findMany()
 
   return (
     <main>
       <div className="flex flex-col gap-y-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <div className="min-w-0 flex-1">
-            <h1 className="text-2xl font-bold">Cadastro de semirreboques</h1>
+            <h1 className="text-2xl font-bold">Cadastro de Caminhões</h1>
 
             <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
               <div className="mt-2 flex items-center text-sm text-muted-foreground">
@@ -34,7 +34,7 @@ export default async function Page() {
 
           <div className="mt-3 sm:ml-4 sm:mt-0">
             <Button asChild>
-              <Link href="/semi-trailers/new">
+              <Link href="/trucks/new">
                 <PlusIcon className="mr-1.5" />
                 Cadastrar
               </Link>
@@ -44,8 +44,8 @@ export default async function Page() {
 
         <Separator />
 
-        {!semiTrailers.data.length && (
-          <EmptyState href="/semi-trailers/new">
+        {!trucks.data.length && (
+          <EmptyState href="/trucks/new">
             <PlusIcon
               strokeWidth={1.2}
               size={52}
@@ -53,13 +53,13 @@ export default async function Page() {
             />
 
             <span className="mt-2 block text-sm font-semibold">
-              Cadastrar um novo semirreboque
+              Cadastrar um novo caminhão
             </span>
           </EmptyState>
         )}
 
-        {!!semiTrailers.data.length && (
-          <DataTable columns={semiTrailerColumns} data={semiTrailers.data} />
+        {!!trucks.data.length && (
+          <DataTable columns={truckColumns} data={trucks.data} />
         )}
       </div>
     </main>

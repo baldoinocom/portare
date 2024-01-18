@@ -3,29 +3,29 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
-export const Logo = React.forwardRef<
+export const LogoSlogan = React.forwardRef<
   React.ElementRef<typeof Image>,
   Omit<React.ComponentPropsWithoutRef<typeof Image>, 'src' | 'alt'>
->(({ className, height = 237, width = 958, ...props }, ref) => (
+>(({ className, height = 367, width = 958, ...props }, ref) => (
   <>
     <Image
       ref={ref}
       height={height}
       width={width}
-      className={cn('block size-6 dark:hidden', className)}
+      className={cn('block size-9 dark:hidden', className)}
       {...props}
-      src="/logo.png"
-      alt="portare"
+      src="/logo-slogan.png"
+      alt="portare-tms"
     />
     <Image
       ref={ref}
       height={height}
       width={width}
-      className={cn('hidden size-6 dark:block', className)}
+      className={cn('hidden size-9 dark:block', className)}
       {...props}
-      src="/logo-dark.png"
-      alt="portare"
+      src="/logo-slogan-dark.png"
+      alt="portare-tms"
     />
   </>
 ))
-Logo.displayName = 'Logo'
+LogoSlogan.displayName = 'LogoSlogan'

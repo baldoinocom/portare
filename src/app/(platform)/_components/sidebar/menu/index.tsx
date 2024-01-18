@@ -1,3 +1,4 @@
+import { LogoSlogan } from '@/components/logo-slogan'
 import { Button } from '@/components/ui/button'
 import { LucideIcon, SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
@@ -20,7 +21,7 @@ export const Menu = () => {
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-background px-6 pb-4">
       <div className="flex h-16 shrink-0 items-center">
         <div className="px-2">
-          <img className="size-8 w-auto" src="/logo-slogan.png" alt="Logo" />
+          <LogoSlogan className="w-auto" />
         </div>
       </div>
 
