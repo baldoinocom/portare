@@ -1,18 +1,18 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { TrailerCertificateFormDialog } from '@/components/forms/form-dialogs/trailer-certificate-form-dialog'
+import { AbsentDriverFormDialog } from '@/components/forms/form-dialogs/absent-driver-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
-import { trailerCertificateColumns } from '@/components/tables/trailer-certificate-columns'
+import { absentDriverColumns } from '@/components/tables/absent-driver'
 import { DataTable } from '@/components/tables/ui/data-table'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { PlusIcon } from 'lucide-react'
 import { Header } from './header'
 
-export const TrailerCertificates = async () => {
-  const trailerCertificates = await action.trailerCertificate().findMany()
+export const AbsentDrivers = async () => {
+  const absentDrivers = await action.absentDriver().findMany()
 
-  const trailers = await action.trailer().findMany()
+  const drivers = await action.driver().findMany()
 
   return (
     <Dialog>
@@ -22,7 +22,7 @@ export const TrailerCertificates = async () => {
 
       <main>
         <div className="flex flex-col gap-y-8">
-          {!trailerCertificates.data.length && (
+          {!absentDrivers.data.length && (
             <DialogTrigger asChild>
               <EmptyState href="#">
                 <PlusIcon
@@ -32,23 +32,23 @@ export const TrailerCertificates = async () => {
                 />
 
                 <span className="mt-2 block text-sm font-semibold">
-                  Registrar um novo laudo de reboque
+                  Registrar uma nova ausência de motorista
                 </span>
               </EmptyState>
             </DialogTrigger>
           )}
 
-          {!!trailerCertificates.data.length && (
+          {!!absentDrivers.data.length && (
             <DataTable
-              columns={trailerCertificateColumns}
-              data={trailerCertificates.data}
+              columns={absentDriverColumns}
+              data={absentDrivers.data}
             />
           )}
         </div>
       </main>
 
       <FormDialogContent>
-        <TrailerCertificateFormDialog trailers={trailers.data} />
+        <AbsentDriverFormDialog drivers={drivers.data} />
       </FormDialogContent>
     </Dialog>
   )

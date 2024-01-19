@@ -1,9 +1,9 @@
 'use client'
 
 import { action } from '@/actions'
-import { TrailerCertificateSchema } from '@/actions/trailer-certificate/schema'
-import { Trailer, TrailerCertificate } from '@/actions/types'
-import { TrailerSelect } from '@/components/forms/ui/trailer-select'
+import { AbsentDriverSchema } from '@/actions/absent-driver/schema'
+import { AbsentDriver, Driver } from '@/actions/types'
+import { DriverSelect } from '@/components/forms/ui/driver-select'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -32,12 +32,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
-import { formatExpirationType } from '@/lib/formatters'
+import { formatDriverStatus, formatExpirationType } from '@/lib/formatters'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ExpirationType } from '@prisma/client'
+import { DriverStatus, ExpirationType } from '@prisma/client'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ChevronsUpDown } from 'lucide-react'
@@ -49,17 +50,22 @@ const expirationTypes = Object.values(ExpirationType).map((type) => ({
   value: type,
 }))
 
-export const TrailerCertificateFormDialog = ({
+const status = Object.values(DriverStatus).map((status) => ({
+  label: formatDriverStatus(status),
+  value: status,
+}))
+
+export const AbsentDriverFormDialog = ({
   initialData,
-  trailers,
+  drivers,
 }: {
-  initialData?: TrailerCertificate
-  trailers?: Trailer[]
+  initialData?: AbsentDriver
+  drivers?: Driver[]
 }) => {
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof TrailerCertificateSchema>>({
-    resolver: zodResolver(TrailerCertificateSchema),
+  const form = useForm<z.infer<typeof AbsentDriverSchema>>({
+    resolver: zodResolver(AbsentDriverSchema),
     defaultValues: {
       ...nullAsUndefined(initialData),
       startedAt: initialData?.startedAt
@@ -68,19 +74,19 @@ export const TrailerCertificateFormDialog = ({
     },
   })
 
-  const { create, update } = action.trailerCertificate()
+  const { create, update } = action.absentDriver()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
       toast({
-        title: 'Laudo de reboque registrado com sucesso',
-        description: 'O laudo de reboque foi registrado com sucesso! 🎉',
+        title: 'Ausência de motorista registrada com sucesso',
+        description: 'A ausência de motorista foi registrada com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao registrar o laudo de reboque',
+        title: 'Erro ao registrar a ausência de motorista',
         description: error,
       })
     },
@@ -89,20 +95,20 @@ export const TrailerCertificateFormDialog = ({
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
-        title: 'Laudo de reboque atualizado com sucesso',
-        description: 'O laudo de reboque foi atualizado com sucesso! 🎉',
+        title: 'Ausência de motorista atualizada com sucesso',
+        description: 'A ausência de motorista foi atualizada com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao atualizar o laudo de reboque',
+        title: 'Erro ao atualizar a ausência de motorista',
         description: error,
       })
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof TrailerCertificateSchema>) => {
+  const onSubmit = async (values: z.infer<typeof AbsentDriverSchema>) => {
     if (initialData) {
       console.log(values)
       await executeUpdate({ id: initialData.id, ...values })
@@ -117,14 +123,14 @@ export const TrailerCertificateFormDialog = ({
         <DialogHeader>
           <DialogTitle>
             {initialData
-              ? 'Registro do laudo de reboque'
-              : 'Registro de laudo de reboque'}
+              ? 'Registro da ausência de motorista'
+              : 'Registro de ausência de motorista'}
           </DialogTitle>
 
           <DialogDescription>
             {initialData
-              ? 'Altere os laudos de reboque'
-              : 'Regstre novas laudos de reboque'}
+              ? 'Altere as ausências de motorista'
+              : 'Regstre novas ausências de motorista'}
           </DialogDescription>
         </DialogHeader>
 
@@ -132,12 +138,12 @@ export const TrailerCertificateFormDialog = ({
           {!initialData && (
             <FormField
               control={form.control}
-              name="trailerId"
+              name="driverId"
               render={() => (
                 <FormItem>
                   <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                    <FormLabel className="text-right">Reboque</FormLabel>
-                    <TrailerSelect trailers={trailers} />
+                    <FormLabel className="text-right">Motorista</FormLabel>
+                    <DriverSelect drivers={drivers} />
                   </div>
                   <FormMessage className="text-right" />
                 </FormItem>
@@ -219,6 +225,59 @@ export const TrailerCertificateFormDialog = ({
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+                <FormMessage className="text-right" />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                  <FormLabel className="col-span-2 text-right">
+                    Status do motorista
+                  </FormLabel>
+
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="col-span-2">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {status.map(({ value, label }, index) => (
+                        <SelectItem
+                          key={index}
+                          title={label as string}
+                          value={value}
+                        >
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <FormMessage className="text-right" />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem>
+                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                  <FormLabel className="text-right">Observação</FormLabel>
+                  <FormControl className="col-span-3">
+                    <Textarea {...field} />
+                  </FormControl>
                 </div>
                 <FormMessage className="text-right" />
               </FormItem>

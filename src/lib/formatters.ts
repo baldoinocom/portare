@@ -129,3 +129,18 @@ export const formatVehicleStatus = (status: string | undefined | null) => {
       return status
   }
 }
+
+export const formatDriverStatus = (status: string | undefined | null) => {
+  switch (status) {
+    case 'leaveOfAbsence':
+      return 'Afastado'
+    case 'medicalCertificate':
+      return 'Atestado'
+    case 'break':
+      return 'Folga'
+    case 'vacation':
+      return 'Férias'
+    default:
+      return status
+  }
+}

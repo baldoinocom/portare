@@ -197,7 +197,7 @@ model AbsentDriver {
 }
 
 enum DriverStatus {
-  leaveOfAbsence     @map("leave_of_absence") // Afastamento
+  leaveOfAbsence     @map("leave_of_absence") // Afastado
   medicalCertificate @map("medical_certificate") // Atestado
   break // Folga
   vacation // Férias

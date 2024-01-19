@@ -1,9 +1,9 @@
 'use client'
 
 import { action } from '@/actions'
-import { TrailerCertificateSchema } from '@/actions/trailer-certificate/schema'
-import { Trailer, TrailerCertificate } from '@/actions/types'
-import { TrailerSelect } from '@/components/forms/ui/trailer-select'
+import { ASOSchema } from '@/actions/aso/schema'
+import { ASO, Driver } from '@/actions/types'
+import { DriverSelect } from '@/components/forms/ui/driver-select'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -49,17 +49,17 @@ const expirationTypes = Object.values(ExpirationType).map((type) => ({
   value: type,
 }))
 
-export const TrailerCertificateFormDialog = ({
+export const ASOFormDialog = ({
   initialData,
-  trailers,
+  drivers,
 }: {
-  initialData?: TrailerCertificate
-  trailers?: Trailer[]
+  initialData?: ASO
+  drivers?: Driver[]
 }) => {
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof TrailerCertificateSchema>>({
-    resolver: zodResolver(TrailerCertificateSchema),
+  const form = useForm<z.infer<typeof ASOSchema>>({
+    resolver: zodResolver(ASOSchema),
     defaultValues: {
       ...nullAsUndefined(initialData),
       startedAt: initialData?.startedAt
@@ -68,19 +68,19 @@ export const TrailerCertificateFormDialog = ({
     },
   })
 
-  const { create, update } = action.trailerCertificate()
+  const { create, update } = action.aso()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
       toast({
-        title: 'Laudo de reboque registrado com sucesso',
-        description: 'O laudo de reboque foi registrado com sucesso! 🎉',
+        title: 'A.S.O registrado com sucesso',
+        description: 'O A.S.O foi registrado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao registrar o laudo de reboque',
+        title: 'Erro ao registrar o A.S.O',
         description: error,
       })
     },
@@ -89,20 +89,20 @@ export const TrailerCertificateFormDialog = ({
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
-        title: 'Laudo de reboque atualizado com sucesso',
-        description: 'O laudo de reboque foi atualizado com sucesso! 🎉',
+        title: 'A.S.O atualizado com sucesso',
+        description: 'O A.S.O foi atualizado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao atualizar o laudo de reboque',
+        title: 'Erro ao atualizar o A.S.O',
         description: error,
       })
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof TrailerCertificateSchema>) => {
+  const onSubmit = async (values: z.infer<typeof ASOSchema>) => {
     if (initialData) {
       console.log(values)
       await executeUpdate({ id: initialData.id, ...values })
@@ -116,15 +116,11 @@ export const TrailerCertificateFormDialog = ({
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <DialogHeader>
           <DialogTitle>
-            {initialData
-              ? 'Registro do laudo de reboque'
-              : 'Registro de laudo de reboque'}
+            {initialData ? 'Registro do A.S.O' : 'Registro de A.S.O'}
           </DialogTitle>
 
           <DialogDescription>
-            {initialData
-              ? 'Altere os laudos de reboque'
-              : 'Regstre novas laudos de reboque'}
+            {initialData ? 'Altere os A.S.O' : 'Regstre novas A.S.O'}
           </DialogDescription>
         </DialogHeader>
 
@@ -132,12 +128,12 @@ export const TrailerCertificateFormDialog = ({
           {!initialData && (
             <FormField
               control={form.control}
-              name="trailerId"
+              name="driverId"
               render={() => (
                 <FormItem>
                   <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                    <FormLabel className="text-right">Reboque</FormLabel>
-                    <TrailerSelect trailers={trailers} />
+                    <FormLabel className="text-right">Motorista</FormLabel>
+                    <DriverSelect drivers={drivers} />
                   </div>
                   <FormMessage className="text-right" />
                 </FormItem>

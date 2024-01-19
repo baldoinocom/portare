@@ -4,6 +4,15 @@ const DriverReturnType = Prisma.validator<Prisma.DriverDefaultArgs>()({
   include: { person: true },
 })
 
+const ASOReturnType = Prisma.validator<Prisma.ASODefaultArgs>()({
+  include: { driver: { include: { person: true } } },
+})
+
+const AbsentDriverReturnType =
+  Prisma.validator<Prisma.AbsentDriverDefaultArgs>()({
+    include: { driver: { include: { person: true } } },
+  })
+
 const AggregateReturnType = Prisma.validator<Prisma.AggregateDefaultArgs>()({
   include: { company: true, person: true },
 })
@@ -54,6 +63,12 @@ const StoppedVehicleReturnType =
   })
 
 export type Driver = Prisma.DriverGetPayload<typeof DriverReturnType>
+
+export type ASO = Prisma.ASOGetPayload<typeof ASOReturnType>
+
+export type AbsentDriver = Prisma.AbsentDriverGetPayload<
+  typeof AbsentDriverReturnType
+>
 
 export type Aggregate = Prisma.AggregateGetPayload<typeof AggregateReturnType>
 
