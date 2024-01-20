@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -20,8 +20,8 @@ export const ProfileDropdown = () => {
   return (
     <div className="flex items-center gap-x-2">
       <Avatar className="size-10">
-        <AvatarImage src="https://github.com/shadcn.png" alt="avatar" />
-        <AvatarFallback>CN</AvatarFallback>
+        {/* <AvatarImage src="https://github.com/shadcn.png" alt="avatar" /> */}
+        <AvatarFallback>TO</AvatarFallback>
       </Avatar>
 
       <DropdownMenu>
@@ -35,8 +35,8 @@ export const ProfileDropdown = () => {
 
         <DropdownMenuContent className="w-56" align="end">
           <DropdownMenuLabel>
-            <p>Signed in as</p>
-            <p className="font-medium">tom@example.com</p>
+            <p>Nome de usuário</p>
+            <p className="font-medium">tomcook</p>
           </DropdownMenuLabel>
 
           <DropdownMenuSeparator />

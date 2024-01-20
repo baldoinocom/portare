@@ -28,10 +28,4 @@ export const navigation: MenuItemProps[] = [
   },
 ]
 
-export const teams = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: true },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: true },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: true },
-]
-
-export const userNavigation = [{ name: 'Your profile', href: '#' }]
+export const userNavigation = [{ name: 'Seu Perfil', href: '/settings' }]

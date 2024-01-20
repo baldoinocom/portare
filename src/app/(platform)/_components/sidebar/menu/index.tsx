@@ -1,7 +1,5 @@
 import { LogoSlogan } from '@/components/logo-slogan'
-import { Button } from '@/components/ui/button'
-import { LucideIcon, SettingsIcon } from 'lucide-react'
-import Link from 'next/link'
+import { LucideIcon } from 'lucide-react'
 import { ListMenuItem } from './list-menu-item'
 
 export type MenuItemProps = {
@@ -31,17 +29,17 @@ export const Menu = () => {
             <ListMenuItem />
           </li>
 
-          <li className="mt-auto">
+          {/* <li className="mt-auto">
             <Button variant="ghost" asChild className="justify-start">
               <Link
-                href="#"
+                href="/settings"
                 className="group -mx-2 flex w-full gap-x-3 rounded-md text-sm font-semibold hover:bg-accent"
               >
                 <SettingsIcon className="shrink-0" />
-                Settings
+                Configurações
               </Link>
             </Button>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </div>

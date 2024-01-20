@@ -158,7 +158,7 @@ export const DataTable = <TData, TValue>({
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} de{' '}
-          {table.getFilteredRowModel().rows.length} linha(s) selecionada(s)
+          {table.getFilteredRowModel().rows.length} linha(s) selecionado
         </div>
         <div className="space-x-2">
           <Button
