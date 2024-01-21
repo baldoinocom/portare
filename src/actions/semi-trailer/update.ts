@@ -51,10 +51,10 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       })
 
       trailerIds = await db.$transaction(
-        trailers.map(({ vehicle, unitNumber }) =>
+        trailers.map(({ vehicle, fleetNumber }) =>
           db.trailer.create({
             data: {
-              unitNumber: unitNumber || null,
+              fleetNumber: fleetNumber || null,
               vehicle: {
                 create: {
                   model,
