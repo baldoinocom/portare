@@ -11,9 +11,9 @@ export default async function Page({ params }: { params: { id: string } }) {
     return DataNotFound()
   }
 
-  const [brands, fleets, aggregates] = await Promise.all([
+  const [brands, units, aggregates] = await Promise.all([
     action.brand().findMany(),
-    action.fleet().findMany(),
+    action.unit().findMany(),
     action.aggregate().findMany(),
   ])
 
@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <TruckForm
           initialData={truck.data}
           brands={brands.data}
-          fleets={fleets.data}
+          units={units.data}
           aggregates={aggregates.data}
         />
       </main>

@@ -1,5 +1,5 @@
 export enum RelationshipTypeEnum {
-  fleet = 'fleet',
+  unit = 'unit',
   aggregate = 'aggregate',
 }
 

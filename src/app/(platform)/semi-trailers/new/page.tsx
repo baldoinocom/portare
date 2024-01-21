@@ -4,13 +4,13 @@ import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
 
 export default async function Page() {
-  const [brands, trailerTypes, cargos, trailerConfigurations, fleets] =
+  const [brands, trailerTypes, cargos, trailerConfigurations, units] =
     await Promise.all([
       action.brand().findMany(),
       action.trailerType().findMany(),
       action.cargo().findMany(),
       action.trailerConfiguration().findMany(),
-      action.fleet().findMany(),
+      action.unit().findMany(),
     ])
 
   return (
@@ -25,7 +25,7 @@ export default async function Page() {
           trailerTypes={trailerTypes.data}
           cargos={cargos.data}
           trailerConfigurations={trailerConfigurations.data}
-          fleets={fleets.data}
+          units={units.data}
         />
       </main>
     </div>

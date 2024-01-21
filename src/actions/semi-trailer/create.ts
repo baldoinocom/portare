@@ -12,7 +12,7 @@ type InputType = z.infer<typeof SemiTrailerSchema>
 type ReturnType = ActionState<InputType, SemiTrailer>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { model, brandId, fleetId, configurationId, typeId, cargos, trailers } =
+  const { model, brandId, unitId, configurationId, typeId, cargos, trailers } =
     data
 
   let semiTrailer
@@ -34,17 +34,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
 
     const trailerIds = await db.$transaction(
-      trailers.map(({ vehicle, fleetNumber }) =>
+      trailers.map(({ vehicle, unitNumber }) =>
         db.trailer.create({
           data: {
-            fleetNumber: fleetNumber || null,
+            unitNumber: unitNumber || null,
             vehicle: {
               create: {
                 model,
                 licensePlate: vehicle.licensePlate,
                 renavam: vehicle.renavam || null,
                 brand: { connect: { id: brandId } },
-                fleet: { connect: { companyId: fleetId } },
+                unit: { connect: { companyId: unitId } },
               },
             },
           },
@@ -65,7 +65,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         type: true,
         cargos: true,
         trailers: {
-          include: { vehicle: { include: { brand: true, fleet: true } } },
+          include: { vehicle: { include: { brand: true, unit: true } } },
         },
       },
     })

@@ -22,11 +22,20 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { Brand } from '@prisma/client'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
+
+const axles = [{ label: 'Normal' }, { label: '4 Eixos', value: 4 }]
 
 export const VehicleInformation = ({ brands }: { brands?: Brand[] }) => {
   const { control, setValue } = useFormContext<{
@@ -127,6 +136,79 @@ export const VehicleInformation = ({ brands }: { brands?: Brand[] }) => {
               <FormLabel>Modelo</FormLabel>
               <FormControl>
                 <Input {...field} className="uppercase" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="sm:col-span-3">
+        <FormField
+          control={control}
+          name="vehicle.year"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ano</FormLabel>
+              <FormControl>
+                <InputMask {...field} mask="9999" placeholder="2024" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="sm:col-span-4">
+        <FormField
+          control={control}
+          name="vehicle.axle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Eixos</FormLabel>
+
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={String(field.value)}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o eixo" />
+                  </SelectTrigger>
+                </FormControl>
+
+                <SelectContent>
+                  {axles.map(({ value, label }, index) => (
+                    <SelectItem
+                      key={index}
+                      title={label as string}
+                      value={String(value)}
+                    >
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="sm:col-span-4">
+        <FormField
+          control={control}
+          name="vehicle.chassis"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Chassi</FormLabel>
+              <FormControl>
+                <InputMask
+                  {...field}
+                  mask="*** ****** ** ******"
+                  placeholder="1AB 123AB1 CD 123456"
+                  className="uppercase"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

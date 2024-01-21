@@ -1,8 +1,8 @@
 import { PersonWithRelationshipTypeSchema } from '@/actions/person/schema'
-import { Aggregate, Fleet } from '@/actions/types'
+import { Aggregate, Unit } from '@/actions/types'
 import { VehicleWithRelationshipTypeSchema } from '@/actions/vehicle/schema'
 import { AggregateSelect } from '@/components/forms/ui/aggregate-select'
-import { FleetSelect } from '@/components/forms/ui/fleet-select'
+import { UnitSelect } from '@/components/forms/ui/unit-select'
 import {
   FormField,
   FormItem,
@@ -15,11 +15,11 @@ import { z } from 'zod'
 
 export const RelationshipType = ({
   type,
-  fleets,
+  units,
   aggregates,
 }: {
   type: 'person' | 'vehicle'
-  fleets?: Fleet[]
+  units?: Unit[]
   aggregates?: Aggregate[]
 }) => {
   const { control } = useFormContext<{
@@ -44,7 +44,7 @@ export const RelationshipType = ({
               className="flex flex-col space-y-8"
             >
               <TabsList className="flex">
-                <TabsTrigger value="fleet" className="w-full">
+                <TabsTrigger value="unit" className="w-full">
                   Frota
                 </TabsTrigger>
 
@@ -53,16 +53,14 @@ export const RelationshipType = ({
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="fleet">
+              <TabsContent value="unit">
                 <FormField
                   control={control}
-                  name={
-                    type === 'person' ? 'person.fleetId' : 'vehicle.fleetId'
-                  }
+                  name={type === 'person' ? 'person.unitId' : 'vehicle.unitId'}
                   render={() => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Frota</FormLabel>
-                      <FleetSelect fleets={fleets} />
+                      <FormLabel>Unidade</FormLabel>
+                      <UnitSelect units={units} />
                       <FormMessage />
                     </FormItem>
                   )}

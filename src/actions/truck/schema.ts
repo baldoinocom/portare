@@ -10,10 +10,12 @@ export const TruckIdSchema = z.object({
 
 export const TruckSchema = z.object({
   vehicle: VehicleWithUniqueRelationshipSchema,
+
+  compressor: z.optional(z.boolean().default(false)),
 })
 
-export const TruckWithRelationshipTypeSchema = z.object({
-  vehicle: VehicleWithRelationshipTypeSchema,
-})
+export const TruckWithRelationshipTypeSchema = TruckSchema.pick({
+  compressor: true,
+}).merge(z.object({ vehicle: VehicleWithRelationshipTypeSchema }))
 
 export const TruckUpdateSchema = TruckIdSchema.merge(TruckSchema.deepPartial())

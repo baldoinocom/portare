@@ -2,11 +2,11 @@
 
 import { action } from '@/actions'
 import { SemiTrailerSchema } from '@/actions/semi-trailer/schema'
-import { Fleet, SemiTrailer } from '@/actions/types'
-import { FleetSelect } from '@/components/forms/ui/fleet-select'
+import { SemiTrailer, Unit } from '@/actions/types'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
+import { UnitSelect } from '@/components/forms/ui/unit-select'
 import { InputMask } from '@/components/input-mask'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -33,6 +33,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
@@ -44,20 +51,22 @@ import { useRouter } from 'next/navigation'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+const axles = [{ label: 'Normal' }, { label: '4 Eixos', value: 4 }]
+
 export const SemiTrailerForm = ({
   initialData,
   brands,
   trailerTypes,
   cargos,
   trailerConfigurations,
-  fleets,
+  units,
 }: {
   initialData?: SemiTrailer
   brands?: Brand[]
   trailerTypes?: TrailerType[]
   cargos?: Cargo[]
   trailerConfigurations?: TrailerConfiguration[]
-  fleets?: Fleet[]
+  units?: Unit[]
 }) => {
   const router = useRouter()
 
@@ -241,6 +250,42 @@ export const SemiTrailerForm = ({
                       <FormControl>
                         <Input {...field} className="uppercase" />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="sm:col-span-4">
+                <FormField
+                  control={form.control}
+                  name="axle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Eixos</FormLabel>
+
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={String(field.value)}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o eixo" />
+                          </SelectTrigger>
+                        </FormControl>
+
+                        <SelectContent>
+                          {axles.map(({ value, label }, index) => (
+                            <SelectItem
+                              key={index}
+                              title={label as string}
+                              value={String(value)}
+                            >
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -588,11 +633,11 @@ export const SemiTrailerForm = ({
               <div className="sm:col-span-4">
                 <FormField
                   control={form.control}
-                  name="fleetId"
+                  name="unitId"
                   render={() => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Unidade</FormLabel>
-                      <FleetSelect fleets={fleets} />
+                      <UnitSelect units={units} />
                       <FormMessage />
                     </FormItem>
                   )}

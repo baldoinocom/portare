@@ -11,14 +11,14 @@ type InputType = z.infer<typeof AbsentDriverUpdateSchema>
 type ReturnType = ActionState<InputType, AbsentDriver>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { id, driverId, startedAt, expirationType, status, note } = data
+  const { id, driverId, startedAt, endedAt, status, note } = data
 
   let absentDriver
 
   try {
     absentDriver = await db.absentDriver.update({
       where: { id_driverId: { id, driverId } },
-      data: { startedAt, expirationType, status, note },
+      data: { startedAt, endedAt, status, note },
     })
   } catch (error) {
     return { error: 'Ocorreu um erro ao atualizar, tente novamente mais tarde' }

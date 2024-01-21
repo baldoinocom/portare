@@ -1,5 +1,5 @@
+import { deleteAction } from '../trips/delete'
 import { createAction } from './create'
-import { deleteAction } from './delete'
 import { findAction } from './find'
 import { findManyAction } from './find-many'
 import { updateAction } from './update'

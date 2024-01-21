@@ -2,14 +2,14 @@
 
 import { action } from '@/actions'
 import { AggregateWithDocumentTypeSchema } from '@/actions/aggregate/schema'
-import { Aggregate, Fleet } from '@/actions/types'
+import { Aggregate, Unit } from '@/actions/types'
 import { CompanyInformation } from '@/components/forms/fields/company-information'
 import { PersonalInformation } from '@/components/forms/fields/personal-information'
 import { DocumentTypeCard } from '@/components/forms/ui/document-type-card'
-import { FleetSelect } from '@/components/forms/ui/fleet-select'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
+import { UnitSelect } from '@/components/forms/ui/unit-select'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -32,10 +32,10 @@ import { z } from 'zod'
 
 export const AggregateForm = ({
   initialData,
-  fleets,
+  units,
 }: {
   initialData?: Aggregate
-  fleets?: Fleet[]
+  units?: Unit[]
 }) => {
   const router = useRouter()
 
@@ -210,11 +210,11 @@ export const AggregateForm = ({
               <div className="sm:col-span-4">
                 <FormField
                   control={form.control}
-                  name="fleetId"
+                  name="unitId"
                   render={() => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Unidade</FormLabel>
-                      <FleetSelect fleets={fleets} />
+                      <UnitSelect units={units} />
                       <FormMessage />
                     </FormItem>
                   )}

@@ -2,15 +2,23 @@
 
 import { action } from '@/actions'
 import { TruckWithRelationshipTypeSchema } from '@/actions/truck/schema'
-import { Aggregate, Fleet, Truck } from '@/actions/types'
+import { Aggregate, Truck, Unit } from '@/actions/types'
 import { RelationshipType } from '@/components/forms/fields/relationship-type'
 import { VehicleInformation } from '@/components/forms/fields/vehicle-information'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
 import { Button } from '@/components/ui/button'
-import { Form } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { RelationshipTypeEnum } from '@/lib/enums'
@@ -24,12 +32,12 @@ import { z } from 'zod'
 export const TruckForm = ({
   initialData,
   brands,
-  fleets,
+  units,
   aggregates,
 }: {
   initialData?: Truck
   brands: Brand[]
-  fleets?: Fleet[]
+  units?: Unit[]
   aggregates?: Aggregate[]
 }) => {
   const router = useRouter()
@@ -44,7 +52,7 @@ export const TruckForm = ({
         ...nullAsUndefined(initialData?.vehicle),
         relationshipType: initialData?.vehicle?.aggregateId
           ? RelationshipTypeEnum.aggregate
-          : RelationshipTypeEnum.fleet,
+          : RelationshipTypeEnum.unit,
       },
     },
   })
@@ -117,16 +125,52 @@ export const TruckForm = ({
 
           <FormSession>
             <div>
-              <h2 className="text-base font-semibold">Unidade</h2>
+              <h2 className="text-base font-semibold">Detalhes do caminhão</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Informe a unidade
+                Informe os detalhes do caminhão
+              </p>
+            </div>
+
+            <FormFields>
+              <div className="sm:col-span-5">
+                <FormField
+                  control={form.control}
+                  name="compressor"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">Compressor</FormLabel>
+                        <FormDescription>
+                          Informe se o caminhão possui compressor
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </FormFields>
+          </FormSession>
+
+          <Separator />
+
+          <FormSession>
+            <div>
+              <h2 className="text-base font-semibold">Proprietário</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Informe o proprietário do veículo
               </p>
             </div>
 
             <FormFields>
               <RelationshipType
                 type="vehicle"
-                fleets={fleets}
+                units={units}
                 aggregates={aggregates}
               />
             </FormFields>

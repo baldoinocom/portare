@@ -4,8 +4,8 @@ import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
 
 export default async function Page() {
-  const [fleets, aggregates] = await Promise.all([
-    action.fleet().findMany(),
+  const [units, aggregates] = await Promise.all([
+    action.unit().findMany(),
     action.aggregate().findMany(),
   ])
 
@@ -16,7 +16,7 @@ export default async function Page() {
       <Separator />
 
       <main>
-        <DriverForm fleets={fleets.data} aggregates={aggregates.data} />
+        <DriverForm units={units.data} aggregates={aggregates.data} />
       </main>
     </div>
   )

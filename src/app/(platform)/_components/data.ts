@@ -3,6 +3,7 @@ import {
   BuildingIcon,
   FactoryIcon,
   HomeIcon,
+  MapPinnedIcon,
   TruckIcon,
   Users2Icon,
 } from 'lucide-react'
@@ -10,14 +11,7 @@ import { MenuItemProps } from './sidebar/menu'
 
 export const navigation: MenuItemProps[] = [
   { name: 'Início', href: '/', icon: HomeIcon },
-  { name: 'Frotas', href: '/fleets', icon: Building2Icon },
-  { name: 'Clientes', href: '/clients', icon: FactoryIcon },
-  {
-    name: 'Agregados',
-    href: '/aggregates',
-    icon: BuildingIcon,
-  },
-  { name: 'Motoristas', href: '/drivers', icon: Users2Icon },
+  { name: 'Viagens', href: '/trips', icon: MapPinnedIcon },
   {
     name: 'Veículos',
     icon: TruckIcon,
@@ -26,6 +20,14 @@ export const navigation: MenuItemProps[] = [
       { name: 'Semirreboques', href: '/semi-trailers' },
     ],
   },
+  { name: 'Motoristas', href: '/drivers', icon: Users2Icon },
+  {
+    name: 'Agregados',
+    href: '/aggregates',
+    icon: BuildingIcon,
+  },
+  { name: 'Origens/Destinos', href: '/clients', icon: FactoryIcon },
+  { name: 'Unidades', href: '/units', icon: Building2Icon },
 ]
 
 export const userNavigation = [{ name: 'Seu Perfil', href: '/settings' }]

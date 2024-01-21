@@ -21,15 +21,15 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     .map(({ vehicle }) => vehicle.renavam)
     .filter((value) => value) as string[]
 
-  const fleetNumberList = trailers
-    .map(({ fleetNumber }) => fleetNumber)
+  const unitNumberList = trailers
+    .map(({ unitNumber }) => unitNumber)
     .filter((value) => value) as string[]
 
   const find = await db.trailer.findMany({
     where: {
       NOT: { id },
       OR: [
-        { fleetNumber: { in: fleetNumberList } },
+        { unitNumber: { in: unitNumberList } },
         {
           vehicle: {
             OR: [
@@ -41,7 +41,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       ],
     },
     select: {
-      fleetNumber: true,
+      unitNumber: true,
       vehicle: { select: { licensePlate: true, renavam: true } },
     },
   })
@@ -70,13 +70,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
   }
 
-  const repeatedFleetNumber = findRepeatedStrings(
-    find.map(({ fleetNumber }) => fleetNumber),
+  const repeatedUnitNumber = findRepeatedStrings(
+    find.map(({ unitNumber }) => unitNumber),
   )
 
-  if (repeatedFleetNumber.length) {
+  if (repeatedUnitNumber.length) {
     return {
-      error: `Já existe um reboque com esse número de frota (${repeatedFleetNumber.join(
+      error: `Já existe um reboque com esse número de unidade (${repeatedUnitNumber.join(
         ', ',
       )})`,
     }

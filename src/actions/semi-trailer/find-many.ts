@@ -10,7 +10,7 @@ export const findManyAction = async (): Promise<{ data: SemiTrailer[] }> => {
       type: true,
       cargos: true,
       trailers: {
-        include: { vehicle: { include: { brand: true, fleet: true } } },
+        include: { vehicle: { include: { brand: true, unit: true } } },
       },
     },
   })

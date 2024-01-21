@@ -6,7 +6,7 @@ import { db } from '@/lib/db'
 export const findManyAction = async (): Promise<{ data: Truck[] }> => {
   const trucks = await db.truck.findMany({
     include: {
-      vehicle: { include: { brand: true, fleet: true, aggregate: true } },
+      vehicle: { include: { brand: true, unit: true, aggregate: true } },
     },
   })
 

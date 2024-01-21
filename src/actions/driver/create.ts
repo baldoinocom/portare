@@ -12,16 +12,24 @@ type InputType = z.infer<typeof DriverSchema>
 type ReturnType = ActionState<InputType, Driver>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { person } = data
+  const { person, cnh } = data
 
   let driver
 
   try {
+    if (cnh) {
+      const find = await db.driver.findFirst({ where: { cnh } })
+
+      if (find) {
+        return { error: 'Já existe um motorista com essa CNH' }
+      }
+    }
+
     const { data, error } = await action.person().create(person)
 
     if (data) {
       driver = await db.driver.create({
-        data: { person: { connect: { id: data.id } } },
+        data: { person: { connect: { id: data.id } }, cnh },
         include: { person: true },
       })
     } else {

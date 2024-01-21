@@ -1,11 +1,11 @@
 'use client'
 
 import { action } from '@/actions'
-import { AbsentDriverSchema } from '@/actions/absent-driver/schema'
+import { AbsentDriverWithDateRangeSchema } from '@/actions/absent-driver/schema'
 import { AbsentDriver, Driver } from '@/actions/types'
 import { DriverSelect } from '@/components/forms/ui/driver-select'
+import { StartAndEndDateSelect } from '@/components/forms/ui/start-and-end-date-select'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import {
   DialogDescription,
   DialogFooter,
@@ -21,11 +21,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -35,20 +30,12 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
-import { formatDriverStatus, formatExpirationType } from '@/lib/formatters'
-import { cn, nullAsUndefined } from '@/lib/utils'
+import { formatDriverStatus } from '@/lib/formatters'
+import { nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DriverStatus, ExpirationType } from '@prisma/client'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { ChevronsUpDown } from 'lucide-react'
+import { DriverStatus } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-
-const expirationTypes = Object.values(ExpirationType).map((type) => ({
-  label: formatExpirationType(type),
-  value: type,
-}))
 
 const status = Object.values(DriverStatus).map((status) => ({
   label: formatDriverStatus(status),
@@ -64,8 +51,8 @@ export const AbsentDriverFormDialog = ({
 }) => {
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof AbsentDriverSchema>>({
-    resolver: zodResolver(AbsentDriverSchema),
+  const form = useForm<z.infer<typeof AbsentDriverWithDateRangeSchema>>({
+    resolver: zodResolver(AbsentDriverWithDateRangeSchema),
     defaultValues: {
       ...nullAsUndefined(initialData),
       startedAt: initialData?.startedAt
@@ -108,7 +95,9 @@ export const AbsentDriverFormDialog = ({
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof AbsentDriverSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof AbsentDriverWithDateRangeSchema>,
+  ) => {
     if (initialData) {
       console.log(values)
       await executeUpdate({ id: initialData.id, ...values })
@@ -154,77 +143,13 @@ export const AbsentDriverFormDialog = ({
           <FormField
             control={form.control}
             name="startedAt"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                  <FormLabel className="col-span-2 text-right">
-                    Data de início
+                  <FormLabel className="text-right">
+                    Data de início e fim
                   </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl className="col-span-2">
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            'justify-between',
-                            !field.value && 'text-muted-foreground',
-                          )}
-                        >
-                          {field.value
-                            ? format(field.value, 'PP', { locale: ptBR })
-                            : 'Escolha uma data'}
-                          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-
-                    <PopoverContent className="p-0" align="end">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date: Date) => date < new Date('2000-01-01')}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="expirationType"
-            render={({ field }) => (
-              <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                  <FormLabel className="col-span-2 text-right">
-                    Tipo de expiração
-                  </FormLabel>
-
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className="col-span-2">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o tipo" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {expirationTypes.map(({ value, label }, index) => (
-                        <SelectItem
-                          key={index}
-                          title={label as string}
-                          value={value}
-                        >
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <StartAndEndDateSelect />
                 </div>
                 <FormMessage className="text-right" />
               </FormItem>
@@ -250,6 +175,7 @@ export const AbsentDriverFormDialog = ({
                         <SelectValue placeholder="Selecione o status" />
                       </SelectTrigger>
                     </FormControl>
+
                     <SelectContent>
                       {status.map(({ value, label }, index) => (
                         <SelectItem

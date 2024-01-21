@@ -1,6 +1,6 @@
 import { RelationshipTypeEnum } from '@/lib/enums'
 import { extractNumber } from '@/lib/utils'
-import { validLicensePlate, validRenavam } from '@/lib/validators'
+import { validChassis, validLicensePlate, validRenavam } from '@/lib/validators'
 import { z } from 'zod'
 
 export const VehicleIdSchema = z.object({
@@ -24,6 +24,34 @@ export const VehicleSchema = z.object({
       .toUpperCase(),
   ),
 
+  year: z.optional(
+    z.string().refine(({ length }) => !length || length === 4, {
+      message: 'O ano deve ter exatamente 4 dígitos',
+    }),
+  ),
+
+  axle: z.optional(
+    z.coerce
+      .number()
+      .int()
+      .refine(({ toString: { length } }) => !length || length === 1, {
+        message: 'O número deve ter no mínimo 1 e no máximo 9 eixos',
+      }),
+  ),
+
+  chassis: z.optional(
+    z
+      .string()
+      .toUpperCase()
+      .transform((value) => value?.replace(/\s/g, ''))
+      .refine(({ length }) => !length || length === 17, {
+        message: 'O chassi deve ter exatamente 17 caracteres',
+      })
+      .refine((value) => validChassis(value), {
+        message: 'O chassi deve ser válido',
+      }),
+  ),
+
   renavam: z.optional(
     z
       .string()
@@ -41,33 +69,33 @@ export const VehicleSchema = z.object({
     .int()
     .positive(),
 
-  fleetId: z.optional(
+  unitId: z.optional(
     z.number({ required_error: 'A unidade é obrigatória' }).int().positive(),
   ),
 
   aggregateId: z.optional(
-    z.number({ required_error: 'A unidade é obrigatória' }).int().positive(),
+    z.number({ required_error: 'O agregado é obrigatório' }).int().positive(),
   ),
 })
 
 const VehicleUpdateSchema = VehicleIdSchema.merge(VehicleSchema.deepPartial())
 
 export const VehicleWithoutRelationshipSchema = VehicleSchema.omit({
-  fleetId: true,
+  unitId: true,
   aggregateId: true,
 })
 
 export const VehicleWithUniqueRelationshipSchema = VehicleSchema.refine(
-  ({ fleetId, aggregateId }) => !fleetId !== !aggregateId,
+  ({ unitId, aggregateId }) => !unitId !== !aggregateId,
   {
-    message: 'Apenas um entre frota e agregado deve estar presente',
+    message: 'Apenas um entre unidade e agregado deve estar presente',
   },
 )
 
 export const VehicleWithNullableRelationshipSchema = VehicleUpdateSchema.refine(
-  ({ fleetId, aggregateId }) => !(fleetId && aggregateId),
+  ({ unitId, aggregateId }) => !(unitId && aggregateId),
   {
-    message: 'Apenas um entre frota e agregado deve estar presente',
+    message: 'Apenas um entre unidade e agregado deve estar presente',
   },
 )
 
@@ -77,9 +105,9 @@ export const VehicleWithRelationshipTypeSchema = z
     [
       z
         .object({
-          relationshipType: z.literal(RelationshipTypeEnum.fleet),
+          relationshipType: z.literal(RelationshipTypeEnum.unit),
         })
-        .merge(VehicleSchema.pick({ fleetId: true }).required()),
+        .merge(VehicleSchema.pick({ unitId: true }).required()),
 
       z
         .object({
@@ -89,4 +117,4 @@ export const VehicleWithRelationshipTypeSchema = z
     ],
     { required_error: 'O tipo de vínculo é obrigatório' },
   )
-  .and(VehicleSchema.omit({ fleetId: true, aggregateId: true }))
+  .and(VehicleSchema.omit({ unitId: true, aggregateId: true }))

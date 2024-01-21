@@ -12,7 +12,7 @@ type InputType = z.infer<typeof TruckUpdateSchema>
 type ReturnType = ActionState<InputType, Truck>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { id, vehicle } = data
+  const { id, vehicle, compressor } = data
 
   let truck
 
@@ -22,9 +22,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     if (data) {
       truck = await db.truck.update({
         where: { id },
-        data: {},
+        data: { compressor },
         include: {
-          vehicle: { include: { brand: true, fleet: true, aggregate: true } },
+          vehicle: { include: { brand: true, unit: true, aggregate: true } },
         },
       })
     } else {

@@ -11,14 +11,14 @@ type InputType = z.infer<typeof StoppedVehicleUpdateSchema>
 type ReturnType = ActionState<InputType, StoppedVehicle>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { id, vehicleId, startedAt, expirationType, status, note } = data
+  const { id, vehicleId, startedAt, endedAt, status, note } = data
 
   let stoppedVehicle
 
   try {
     stoppedVehicle = await db.stoppedVehicle.update({
       where: { id_vehicleId: { id, vehicleId } },
-      data: { startedAt, expirationType, status, note },
+      data: { startedAt, endedAt, status, note },
     })
   } catch (error) {
     return { error: 'Ocorreu um erro ao atualizar, tente novamente mais tarde' }

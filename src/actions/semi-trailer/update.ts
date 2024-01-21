@@ -16,7 +16,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     id,
     model,
     brandId,
-    fleetId,
+    unitId,
     configurationId,
     typeId,
     cargos,
@@ -51,17 +51,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       })
 
       trailerIds = await db.$transaction(
-        trailers.map(({ vehicle, fleetNumber }) =>
+        trailers.map(({ vehicle, unitNumber }) =>
           db.trailer.create({
             data: {
-              fleetNumber: fleetNumber || null,
+              unitNumber: unitNumber || null,
               vehicle: {
                 create: {
                   model,
                   licensePlate: vehicle.licensePlate,
                   renavam: vehicle.renavam || null,
                   brand: { connect: { id: brandId } },
-                  fleet: { connect: { companyId: fleetId } },
+                  unit: { connect: { companyId: unitId } },
                 },
               },
             },
@@ -88,7 +88,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         type: true,
         cargos: true,
         trailers: {
-          include: { vehicle: { include: { brand: true, fleet: true } } },
+          include: { vehicle: { include: { brand: true, unit: true } } },
         },
       },
     })

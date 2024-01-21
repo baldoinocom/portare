@@ -11,7 +11,17 @@ type InputType = z.infer<typeof VehicleWithUniqueRelationshipSchema>
 type ReturnType = ActionState<InputType, Vehicle>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { licensePlate, model, renavam, brandId, fleetId, aggregateId } = data
+  const {
+    licensePlate,
+    model,
+    year,
+    axle,
+    chassis,
+    renavam,
+    brandId,
+    unitId,
+    aggregateId,
+  } = data
 
   let vehicle
 
@@ -34,10 +44,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       data: {
         licensePlate,
         model,
+        year,
+        axle,
+        chassis,
         renavam,
         brandId,
-        fleetId,
-        aggregateId: fleetId ? null : aggregateId,
+        unitId,
+        aggregateId: unitId ? null : aggregateId,
       },
     })
   } catch (error) {

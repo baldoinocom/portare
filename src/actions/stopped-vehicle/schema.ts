@@ -1,4 +1,4 @@
-import { ExpirationType, VehicleStatus } from '@prisma/client'
+import { VehicleStatus } from '@prisma/client'
 import { z } from 'zod'
 
 export const StoppedVehicleIdSchema = z.object({
@@ -7,7 +7,7 @@ export const StoppedVehicleIdSchema = z.object({
   vehicleId: z.number().int().positive(),
 })
 
-export const StoppedVehicleSchema = z.object({
+const StoppedVehicleSchema = z.object({
   vehicleId: z
     .number({ required_error: 'O veículo é obrigatório' })
     .int()
@@ -18,9 +18,9 @@ export const StoppedVehicleSchema = z.object({
     required_error: 'A data de início é obrigatória',
   }),
 
-  expirationType: z.nativeEnum(ExpirationType, {
-    invalid_type_error: 'O tipo de expiração é inválido',
-    required_error: 'O tipo de expiração é obrigatório',
+  endedAt: z.coerce.date({
+    invalid_type_error: 'A data de fim é inválida',
+    required_error: 'A data de fim é obrigatória',
   }),
 
   status: z.nativeEnum(VehicleStatus, {
@@ -37,7 +37,27 @@ export const StoppedVehicleSchema = z.object({
 
 export const StoppedVehicleUpdateSchema = StoppedVehicleIdSchema.merge(
   StoppedVehicleSchema.omit({ vehicleId: true }).deepPartial(),
-).refine(({ startedAt, expirationType }) => !startedAt === !expirationType, {
-  message:
-    'É necessário informar a data de início e o tipo de expiração para atualizar',
+)
+  .refine(({ startedAt, endedAt }) => !startedAt === !endedAt, {
+    path: ['startedAt'],
+    message: 'É necessário informar a data de início e de fim para atualizar',
+  })
+  .refine(
+    ({ startedAt, endedAt }) =>
+      startedAt && endedAt ? startedAt <= endedAt : true,
+    {
+      path: ['startedAt'],
+      message: 'A data de início deve ser anterior à data de fim',
+    },
+  )
+
+export const StoppedVehicleWithDateRangeSchema = StoppedVehicleSchema.refine(
+  ({ startedAt, endedAt }) => startedAt && endedAt,
+  {
+    path: ['startedAt'],
+    message: 'A data de início e de fim são obrigatórias',
+  },
+).refine(({ startedAt, endedAt }) => startedAt <= endedAt, {
+  path: ['startedAt'],
+  message: 'A data de início deve ser anterior à data de fim',
 })

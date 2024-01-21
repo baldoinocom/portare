@@ -29,6 +29,24 @@ export const validRenavam = (renavam: string | undefined) => {
   return result === parseInt(renavam.charAt(renavam.length - 1))
 }
 
+export const validChassis = (chassis: string | undefined) => {
+  if (!chassis) return true
+
+  chassis = chassis.replace(/[^\d]/g, '')
+  if (chassis.length !== 17) return false
+
+  return !/^(\d)\1+$/.test(chassis)
+}
+
+export const validCNH = (cnh: string | undefined) => {
+  if (!cnh) return true
+
+  cnh = cnh.replace(/[^\d]/g, '')
+  if (cnh.length !== 11) return false
+
+  return !/^(\d)\1+$/.test(cnh)
+}
+
 export const validCPF = (cpf: string | undefined) => {
   if (!cpf) return true
 

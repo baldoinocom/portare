@@ -12,7 +12,7 @@ type InputType = z.infer<typeof AggregateWithNullableDocumentSchema>
 type ReturnType = ActionState<InputType, Aggregate>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { id, person, company, fleetId } = data
+  const { id, person, company, unitId } = data
 
   let aggregate
 
@@ -39,7 +39,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
       aggregate = await db.aggregate.update({
         where: { id },
-        data: { fleet: { update: { companyId: fleetId } } },
+        data: { unit: { update: { companyId: unitId } } },
         include: { person: true },
       })
     } else if (company) {
@@ -59,7 +59,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
       aggregate = await db.aggregate.update({
         where: { id },
-        data: { fleet: { update: { companyId: fleetId } } },
+        data: { unit: { update: { companyId: unitId } } },
         include: { company: true },
       })
     }

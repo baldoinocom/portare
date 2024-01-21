@@ -6,7 +6,6 @@ import { cargoAction } from './cargo'
 import { clientAction } from './client'
 import { companyAction } from './company'
 import { driverAction } from './driver'
-import { fleetAction } from './fleet'
 import { personAction } from './person'
 import { semiTrailerAction } from './semi-trailer'
 import { stoppedVehicleAction } from './stopped-vehicle'
@@ -14,7 +13,9 @@ import { trailerAction } from './trailer'
 import { trailerCertificateAction } from './trailer-certificate'
 import { trailerConfigurationAction } from './trailer-configuration'
 import { trailerTypeAction } from './trailer-type'
+import { tripAction } from './trips'
 import { truckAction } from './truck'
+import { unitAction } from './unit'
 import { vehicleAction } from './vehicle'
 
 export const action = {
@@ -26,7 +27,6 @@ export const action = {
   client: clientAction,
   company: companyAction,
   driver: driverAction,
-  fleet: fleetAction,
   person: personAction,
   semiTrailer: semiTrailerAction,
   stoppedVehicle: stoppedVehicleAction,
@@ -34,6 +34,8 @@ export const action = {
   trailerCertificate: trailerCertificateAction,
   trailerConfiguration: trailerConfigurationAction,
   trailerType: trailerTypeAction,
+  trip: tripAction,
   truck: truckAction,
+  unit: unitAction,
   vehicle: vehicleAction,
 }

@@ -4,9 +4,9 @@ import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
 
 export default async function Page() {
-  const [brands, fleets, aggregates] = await Promise.all([
+  const [brands, units, aggregates] = await Promise.all([
     action.brand().findMany(),
-    action.fleet().findMany(),
+    action.unit().findMany(),
     action.aggregate().findMany(),
   ])
 
@@ -19,7 +19,7 @@ export default async function Page() {
       <main>
         <TruckForm
           brands={brands.data}
-          fleets={fleets.data}
+          units={units.data}
           aggregates={aggregates.data}
         />
       </main>

@@ -13,11 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  formatExpirationType,
-  formatLicensePlate,
-  formatVehicleStatus,
-} from '@/lib/formatters'
+import { formatLicensePlate, formatVehicleStatus } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -86,8 +82,8 @@ export const stoppedVehicleColumns: ColumnDef<StoppedVehicle>[] = [
   },
 
   {
-    id: 'Tipo de Expiração',
-    accessorFn: (row) => formatExpirationType(row.expirationType),
+    id: 'Data de Fim',
+    accessorFn: (row) => format(row.endedAt, 'PPP', { locale: ptBR }),
     header: ({ column }) => {
       return (
         <Button

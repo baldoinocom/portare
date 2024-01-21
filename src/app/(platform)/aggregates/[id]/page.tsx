@@ -11,7 +11,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     return DataNotFound()
   }
 
-  const fleets = await action.fleet().findMany()
+  const units = await action.unit().findMany()
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <Separator />
 
       <main>
-        <AggregateForm initialData={aggregate.data} fleets={fleets.data} />
+        <AggregateForm initialData={aggregate.data} units={units.data} />
       </main>
     </div>
   )

@@ -17,8 +17,8 @@ export default async function Page({
     return DataNotFound()
   }
 
-  const [fleets, aggregates] = await Promise.all([
-    action.fleet().findMany(),
+  const [units, aggregates] = await Promise.all([
+    action.unit().findMany(),
     action.aggregate().findMany(),
   ])
 
@@ -31,7 +31,7 @@ export default async function Page({
       <main>
         <DriverForm
           initialData={driver.data}
-          fleets={fleets.data}
+          units={units.data}
           aggregates={aggregates.data}
         />
       </main>

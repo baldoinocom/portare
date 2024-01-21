@@ -40,7 +40,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ExpirationType } from '@prisma/client'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ChevronsUpDown } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -167,7 +167,7 @@ export const TrailerCertificateFormDialog = ({
                           {field.value
                             ? format(field.value, 'PP', { locale: ptBR })
                             : 'Escolha uma data'}
-                          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                          <CalendarIcon className="ml-2 size-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -207,6 +207,7 @@ export const TrailerCertificateFormDialog = ({
                         <SelectValue placeholder="Selecione o tipo" />
                       </SelectTrigger>
                     </FormControl>
+
                     <SelectContent>
                       {expirationTypes.map(({ value, label }, index) => (
                         <SelectItem

@@ -12,7 +12,7 @@ const AggregateSchema = z.object({
 
   company: z.optional(CompanySchema),
 
-  fleetId: z
+  unitId: z
     .number({ required_error: 'A unidade é obrigatória' })
     .int()
     .positive(),

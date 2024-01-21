@@ -2,14 +2,22 @@
 
 import { action } from '@/actions'
 import { DriverWithRelationshipTypeSchema } from '@/actions/driver/schema'
-import { Aggregate, Driver, Fleet } from '@/actions/types'
+import { Aggregate, Driver, Unit } from '@/actions/types'
 import { PersonalInformation } from '@/components/forms/fields/personal-information'
 import { RelationshipType } from '@/components/forms/fields/relationship-type'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
+import { InputMask } from '@/components/input-mask'
 import { Button } from '@/components/ui/button'
-import { Form } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
@@ -22,11 +30,11 @@ import { z } from 'zod'
 
 export const DriverForm = ({
   initialData,
-  fleets,
+  units,
   aggregates,
 }: {
   initialData?: Driver
-  fleets?: Fleet[]
+  units?: Unit[]
   aggregates?: Aggregate[]
 }) => {
   const router = useRouter()
@@ -41,7 +49,7 @@ export const DriverForm = ({
         ...nullAsUndefined(initialData?.person),
         relationshipType: initialData?.person?.aggregateId
           ? RelationshipTypeEnum.aggregate
-          : RelationshipTypeEnum.fleet,
+          : RelationshipTypeEnum.unit,
       },
     },
   })
@@ -112,6 +120,39 @@ export const DriverForm = ({
 
           <FormSession>
             <div>
+              <h2 className="text-base font-semibold">Detalhes do motorista</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Informe os detalhes do motorista
+              </p>
+            </div>
+
+            <FormFields>
+              <div className="sm:col-span-4">
+                <FormField
+                  control={form.control}
+                  name="cnh"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>CNH</FormLabel>
+                      <FormControl>
+                        <InputMask
+                          {...field}
+                          mask="99999999999"
+                          placeholder="12345678987"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </FormFields>
+          </FormSession>
+
+          <Separator />
+
+          <FormSession>
+            <div>
               <h2 className="text-base font-semibold">Tipo de motorista</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Informe o tipo de motorista
@@ -121,7 +162,7 @@ export const DriverForm = ({
             <FormFields>
               <RelationshipType
                 type="person"
-                fleets={fleets}
+                units={units}
                 aggregates={aggregates}
               />
             </FormFields>

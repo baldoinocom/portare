@@ -12,7 +12,7 @@ type InputType = z.infer<typeof AggregateWithUniqueDocumentSchema>
 type ReturnType = ActionState<InputType, Aggregate>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { person, company, fleetId } = data
+  const { person, company, unitId } = data
 
   let aggregate
 
@@ -26,9 +26,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         aggregate = await db.aggregate.create({
           data: {
             person: { connect: { id: data.id } },
-            fleet: { connect: { companyId: fleetId } },
+            unit: { connect: { companyId: unitId } },
           },
-          include: { person: true, fleet: true },
+          include: { person: true, unit: true },
         })
       } else {
         return { error }
@@ -40,9 +40,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         aggregate = await db.aggregate.create({
           data: {
             company: { connect: { id: data.id } },
-            fleet: { connect: { companyId: fleetId } },
+            unit: { connect: { companyId: unitId } },
           },
-          include: { company: true, fleet: true },
+          include: { company: true, unit: true },
         })
       } else {
         return { error }

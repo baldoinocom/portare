@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     aggregate = await db.aggregate.findUniqueOrThrow({
       where: { id },
-      include: { company: true, person: true, fleet: true },
+      include: { company: true, person: true, unit: true },
     })
   } catch (error) {
     return {

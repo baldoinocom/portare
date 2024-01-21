@@ -40,33 +40,33 @@ const PersonSchema = z.object({
       }),
   ),
 
-  fleetId: z.optional(
-    z.number({ required_error: 'O vínculo é obrigatório' }).int().positive(),
+  unitId: z.optional(
+    z.number({ required_error: 'A unidade é obrigatória' }).int().positive(),
   ),
 
   aggregateId: z.optional(
-    z.number({ required_error: 'O vínculo é obrigatório' }).int().positive(),
+    z.number({ required_error: 'O aggregado é obrigatório' }).int().positive(),
   ),
 })
 
 const PersonUpdateSchema = PersonIdSchema.merge(PersonSchema.deepPartial())
 
 export const PersonWithoutRelationshipSchema = PersonSchema.omit({
-  fleetId: true,
+  unitId: true,
   aggregateId: true,
 })
 
 export const PersonWithUniqueRelationshipSchema = PersonSchema.refine(
-  ({ fleetId, aggregateId }) => !fleetId !== !aggregateId,
+  ({ unitId, aggregateId }) => !unitId !== !aggregateId,
   {
-    message: 'Apenas um entre frota e agregado deve estar presente',
+    message: 'Apenas um entre unidade e agregado deve estar presente',
   },
 )
 
 export const PersonWithNullableRelationshipSchema = PersonUpdateSchema.refine(
-  ({ fleetId, aggregateId }) => !(fleetId && aggregateId),
+  ({ unitId, aggregateId }) => !(unitId && aggregateId),
   {
-    message: 'Apenas um entre frota e agregado deve estar presente',
+    message: 'Apenas um entre unidade e agregado deve estar presente',
   },
 )
 
@@ -76,9 +76,9 @@ export const PersonWithRelationshipTypeSchema = z
     [
       z
         .object({
-          relationshipType: z.literal(RelationshipTypeEnum.fleet),
+          relationshipType: z.literal(RelationshipTypeEnum.unit),
         })
-        .merge(PersonSchema.pick({ fleetId: true }).required()),
+        .merge(PersonSchema.pick({ unitId: true }).required()),
 
       z
         .object({

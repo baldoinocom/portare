@@ -12,7 +12,7 @@ datasource db {
 }
 
 model Log {
-  id        String     @id @default(uuid())
+  id        BigInt     @id @default(autoincrement())
   action    ActionType
   model     String
   data      Json
@@ -92,6 +92,8 @@ enum PermissionCode {
   delete
 
   menu
+
+  @@map("permission_code")
 }
 
 enum PermissionGroup {
@@ -105,11 +107,13 @@ enum PermissionGroup {
   drivers
 
   aggregates
-  fleets
+  units
   clients
 
   trucks
   trailers
+
+  @@map("permission_group")
 }
 
 model Person {
@@ -119,8 +123,8 @@ model Person {
   cpf         String? @unique @db.VarChar(11) // CPF - Cadastro de Pessoas Físicas
   phoneNumber String? @map("phone_number") @db.VarChar(11)
 
-  fleetId Int?   @map("fleet_id")
-  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+  unitId Int?  @map("unit_id")
+  unit   Unit? @relation(fields: [unitId], references: [companyId])
 
   aggregateId Int?       @map("aggregate_id")
   aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
@@ -141,7 +145,7 @@ model Person {
   @@index([name])
   @@index([nickname])
   @@index([cpf])
-  @@index([fleetId])
+  @@index([unitId])
   @@index([aggregateId])
   @@map("people")
 }
@@ -149,6 +153,8 @@ model Person {
 model Driver {
   personId Int    @id @map("person_id")
   person   Person @relation(fields: [personId], references: [id])
+
+  cnh String? @unique @db.VarChar(11) // CNH - Carteira Nacional de Habilitação
 
   aso      ASO[]
   absences AbsentDriver[]
@@ -179,11 +185,11 @@ model ASO {
 }
 
 model AbsentDriver {
-  id             Int            @default(autoincrement())
-  note           String?        @db.Text
-  startedAt      DateTime       @map("started_at")
-  expirationType ExpirationType @map("expiration_type")
-  status         DriverStatus
+  id        Int          @default(autoincrement())
+  note      String?      @db.Text
+  startedAt DateTime     @map("started_at")
+  endedAt   DateTime     @map("ended_at")
+  status    DriverStatus
 
   driverId Int    @map("driver_id")
   driver   Driver @relation(fields: [driverId], references: [personId], onDelete: Cascade)
@@ -214,7 +220,7 @@ model Company {
   uf        UF?
 
   client    Client?
-  fleet     Fleet?
+  unit      Unit?
   aggregate Aggregate?
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -248,7 +254,7 @@ enum ClientType {
   @@map("client_type")
 }
 
-model Fleet {
+model Unit {
   companyId Int     @id @map("company_id")
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
@@ -260,7 +266,7 @@ model Fleet {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("fleets")
+  @@map("units")
 }
 
 model Aggregate {
@@ -272,8 +278,8 @@ model Aggregate {
   personId Int?    @unique @map("person_id")
   person   Person? @relation("AggregateOwner", fields: [personId], references: [id], map: "aggregate_owner")
 
-  fleetId Int?   @map("fleet_id")
-  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+  unitId Int?  @map("unit_id")
+  unit   Unit? @relation(fields: [unitId], references: [companyId])
 
   employees Person[]
   vehicles  Vehicle[]
@@ -284,10 +290,11 @@ model Aggregate {
 
   @@index([companyId])
   @@index([personId])
-  @@index([fleetId])
+  @@index([unitId])
   @@map("aggregates")
 }
 
+// UF - Unidade Federativa
 enum UF {
   ac // Acre
   al // Alagoas
@@ -333,13 +340,16 @@ model Vehicle {
   id           Int     @id @default(autoincrement())
   licensePlate String  @unique @db.VarChar(10)
   model        String?
+  year         String? @db.VarChar(4)
+  axle         Int?
+  chassis      String? @unique @db.VarChar(17)
   renavam      String? @unique @db.VarChar(11) // RENAVAM - Registro Nacional de Veículos Automotores
 
   brandId Int?   @map("brand_id")
   brand   Brand? @relation(fields: [brandId], references: [id])
 
-  fleetId Int?   @map("fleet_id")
-  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+  unitId Int?  @map("unit_id")
+  unit   Unit? @relation(fields: [unitId], references: [companyId])
 
   aggregateId Int?       @map("aggregate_id")
   aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
@@ -354,17 +364,17 @@ model Vehicle {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([brandId])
-  @@index([fleetId])
+  @@index([unitId])
   @@index([aggregateId])
   @@map("vehicles")
 }
 
 model StoppedVehicle {
-  id             Int            @default(autoincrement())
-  note           String?        @db.Text
-  startedAt      DateTime       @map("started_at")
-  expirationType ExpirationType @map("expiration_type")
-  status         VehicleStatus
+  id        Int           @default(autoincrement())
+  note      String?       @db.Text
+  startedAt DateTime      @map("started_at")
+  endedAt   DateTime      @map("ended_at")
+  status    VehicleStatus
 
   vehicleId Int     @map("vehicle_id")
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
@@ -384,7 +394,8 @@ enum VehicleStatus {
 }
 
 model Truck {
-  id Int @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
+  compressor Boolean @default(false)
 
   vehicleId Int     @map("vehicle_id")
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
@@ -396,24 +407,6 @@ model Truck {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("trucks")
-}
-
-model Trailer {
-  id          Int     @id @default(autoincrement())
-  fleetNumber String? @unique
-
-  vehicleId Int     @map("vehicle_id")
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-
-  semiTrailerId Int?         @map("semi_trailer_id")
-  SemiTrailer   SemiTrailer? @relation("SemiTrailer", fields: [semiTrailerId], references: [id], map: "semi_trailer")
-
-  certificates TrailerCertificate[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("trailers")
 }
 
 model SemiTrailer {
@@ -437,6 +430,24 @@ model SemiTrailer {
   @@index([configurationId])
   @@index([typeId])
   @@map("semi_trailers")
+}
+
+model Trailer {
+  id          Int     @id @default(autoincrement())
+  fleetNumber String? @unique
+
+  vehicleId Int     @map("vehicle_id")
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  semiTrailerId Int?         @map("semi_trailer_id")
+  SemiTrailer   SemiTrailer? @relation("SemiTrailer", fields: [semiTrailerId], references: [id], map: "semi_trailer")
+
+  certificates TrailerCertificate[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("trailers")
 }
 
 model TrailerConfiguration {
@@ -494,8 +505,10 @@ model TrailerCertificate {
 }
 
 enum ExpirationType {
-  quarterly
-  yearly
+  quarterly // Trimestral
+  yearly // Anual
+
+  @@map("expiration_type")
 }
 
 model Grouping {
@@ -544,8 +557,8 @@ model Trip {
   cargoId Int?   @map("cargo_id")
   cargo   Cargo? @relation(fields: [cargoId], references: [id])
 
-  fleetId Int?   @map("fleet_id")
-  fleet   Fleet? @relation(fields: [fleetId], references: [companyId])
+  unitId Int?  @map("unit_id")
+  unit   Unit? @relation(fields: [unitId], references: [companyId])
 
   aggregateId Int?       @map("aggregate_id")
   aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
@@ -563,7 +576,7 @@ model Trip {
   @@index([truckId])
   @@index([semiTrailerId])
   @@index([cargoId])
-  @@index([fleetId])
+  @@index([unitId])
   @@index([aggregateId])
   @@map("trips")
 }

@@ -35,6 +35,7 @@ export const TabBar = () => {
           <SelectTrigger>
             <SelectValue placeholder="Selecione uma guia" />
           </SelectTrigger>
+
           <SelectContent>
             <SelectGroup>
               {tabs.map((tab, index) => (
