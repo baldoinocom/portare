@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { Vehicle } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -29,25 +30,29 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     if (licensePlate) {
       const find = await db.vehicle.findFirst({ where: { licensePlate } })
 
-      if (find) {
-        return { error: 'Já existe um veículo com essa placa' }
-      }
-    } else if (renavam) {
+      if (find) return { error: 'Já existe um veículo com essa placa' }
+    }
+
+    if (chassis) {
+      const find = await db.vehicle.findFirst({ where: { chassis } })
+
+      if (find) return { error: 'Já existe um veículo com esse chassi' }
+    }
+
+    if (renavam) {
       const find = await db.vehicle.findFirst({ where: { renavam } })
 
-      if (find) {
-        return { error: 'Já existe um veículo com esse RENAVAM' }
-      }
+      if (find) return { error: 'Já existe um veículo com esse RENAVAM' }
     }
 
     vehicle = await db.vehicle.create({
       data: {
         licensePlate,
-        model,
-        year,
+        model: emptyAsNull(model),
+        year: emptyAsNull(year),
         axle,
-        chassis,
-        renavam,
+        chassis: emptyAsNull(chassis),
+        renavam: emptyAsNull(renavam),
         brandId,
         unitId,
         aggregateId: unitId ? null : aggregateId,

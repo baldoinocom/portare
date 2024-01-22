@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { Company } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -26,7 +27,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     company = await db.company.update({
       where: { id },
-      data: { name, tradeName, cnpj, address, uf },
+      data: {
+        name,
+        tradeName: emptyAsNull(tradeName),
+        cnpj: emptyAsNull(cnpj),
+        address: emptyAsNull(address),
+        uf,
+      },
     })
   } catch (error) {
     return { error: 'Ocorreu um erro ao atualizar, tente novamente mais tarde' }

@@ -1,6 +1,6 @@
 'use client'
 
-import { Driver } from '@/actions/types'
+import { DriverInclude } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -15,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const driverColumns: ColumnDef<Driver>[] = [
+export const driverColumns: ColumnDef<DriverInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (

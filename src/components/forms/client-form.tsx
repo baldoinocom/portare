@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { ClientSchema } from '@/actions/client/schema'
-import { Client } from '@/actions/types'
+import { ClientInclude } from '@/actions/types'
 import { CompanyInformation } from '@/components/forms/fields/company-information'
 import { ClientTypeCard } from '@/components/forms/ui/client-type-card'
 import { FormAlert } from '@/components/forms/ui/form-alert'
@@ -26,7 +26,11 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-export const ClientForm = ({ initialData }: { initialData?: Client }) => {
+export const ClientForm = ({
+  initialData,
+}: {
+  initialData?: ClientInclude
+}) => {
   const router = useRouter()
 
   const { toast } = useToast()
@@ -86,6 +90,7 @@ export const ClientForm = ({ initialData }: { initialData?: Client }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-12">
+          {JSON.stringify(form.formState.errors)}
           <FormSession>
             <div>
               <h2 className="text-base font-semibold">

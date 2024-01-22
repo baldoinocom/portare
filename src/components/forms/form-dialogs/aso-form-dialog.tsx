@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { ASOSchema } from '@/actions/aso/schema'
-import { ASO, Driver } from '@/actions/types'
+import { ASOInclude, DriverInclude } from '@/actions/types'
 import { DriverSelect } from '@/components/forms/ui/driver-select'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -53,8 +53,8 @@ export const ASOFormDialog = ({
   initialData,
   drivers,
 }: {
-  initialData?: ASO
-  drivers?: Driver[]
+  initialData?: ASOInclude
+  drivers?: DriverInclude[]
 }) => {
   const { toast } = useToast()
 

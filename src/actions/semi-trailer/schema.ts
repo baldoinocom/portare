@@ -9,6 +9,7 @@ export const SemiTrailerIdSchema = z.object({
 
 export const SemiTrailerSchema = VehicleSchema.pick({
   model: true,
+  year: true,
   axle: true,
 }).merge(
   z.object({
@@ -57,6 +58,20 @@ export const SemiTrailerSchema = VehicleSchema.pick({
             message: `As placas (${licensePlates.join(
               ', ',
             )}) estão sendo utilizadas em mais de um reboque`,
+          })
+        }
+      })
+      .superRefine((val, ctx) => {
+        const chassis = findRepeatedStrings(
+          val.map(({ vehicle: { chassis } }) => chassis),
+        )
+
+        if (chassis.length) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Os chassis (${chassis.join(
+              ', ',
+            )}) estão sendo utilizados em mais de um reboque`,
           })
         }
       })

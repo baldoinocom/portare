@@ -1,10 +1,10 @@
-import { SemiTrailer } from '@/actions/types'
+import { SemiTrailerInclude } from '@/actions/types'
 import { formatLicensePlate } from '@/lib/formatters'
 
 export const SemiTrailerDetailCard = ({
   semiTrailer,
 }: {
-  semiTrailer: SemiTrailer
+  semiTrailer: SemiTrailerInclude
 }) => {
   return (
     <div className="flex flex-col items-start uppercase">

@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -11,45 +11,32 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
+import { nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ChevronDownIcon } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark'], {
-    required_error: 'Please select a theme.',
-  }),
-  font: z.enum(['inter', 'manrope', 'system'], {
-    invalid_type_error: 'Select a font',
-    required_error: 'Please select a font.',
+    required_error: 'Selecione um tema para o painel',
   }),
 })
 
-type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
+export function AppearanceForm({
+  initialData,
+}: {
+  initialData?: { theme: 'light' | 'dark' }
+}) {
+  const { setTheme } = useTheme()
 
-// This can come from your database or API.
-const defaultValues: Partial<AppearanceFormValues> = {
-  theme: 'light',
-}
-
-export function AppearanceForm() {
-  const form = useForm<AppearanceFormValues>({
+  const form = useForm<z.infer<typeof appearanceFormSchema>>({
     resolver: zodResolver(appearanceFormSchema),
-    defaultValues,
+    defaultValues: nullAsUndefined(initialData),
   })
 
-  function onSubmit(data: AppearanceFormValues) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  const onSubmit = (data: z.infer<typeof appearanceFormSchema>) => {
+    setTheme(data.theme)
   }
 
   return (
@@ -57,43 +44,13 @@ export function AppearanceForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="font"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Font</FormLabel>
-              <div className="relative w-max">
-                <FormControl>
-                  <select
-                    className={cn(
-                      buttonVariants({ variant: 'outline' }),
-                      'w-[200px] appearance-none bg-transparent font-normal',
-                    )}
-                    {...field}
-                  >
-                    <option value="inter">Inter</option>
-                    <option value="manrope">Manrope</option>
-                    <option value="system">System</option>
-                  </select>
-                </FormControl>
-                <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
-              </div>
-              <FormDescription>
-                Set the font you want to use in the dashboard.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="theme"
           render={({ field }) => (
             <FormItem className="space-y-1">
-              <FormLabel>Theme</FormLabel>
-              <FormDescription>
-                Select the theme for the dashboard.
-              </FormDescription>
+              <FormLabel>Tema</FormLabel>
+              <FormDescription>Selecione o tema para o painel</FormDescription>
               <FormMessage />
+
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
@@ -121,10 +78,11 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className="block w-full p-2 text-center font-normal">
-                      Light
+                      Claro
                     </span>
                   </FormLabel>
                 </FormItem>
+
                 <FormItem>
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                     <FormControl>
@@ -147,7 +105,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className="block w-full p-2 text-center font-normal">
-                      Dark
+                      Escuro
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -156,7 +114,7 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type="submit">Update preferences</Button>
+        <Button>Atualizar preferências</Button>
       </form>
     </Form>
   )

@@ -4,6 +4,7 @@ import { action } from '@/actions'
 import { DriverSchema } from '@/actions/driver/schema'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { Driver } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -29,7 +30,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     if (data) {
       driver = await db.driver.create({
-        data: { person: { connect: { id: data.id } }, cnh },
+        data: { person: { connect: { id: data.id } }, cnh: emptyAsNull(cnh) },
         include: { person: true },
       })
     } else {

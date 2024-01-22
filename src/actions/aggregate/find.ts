@@ -1,13 +1,13 @@
 'use server'
 
-import { Aggregate } from '@/actions/types'
+import { AggregateInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { AggregateIdSchema } from './schema'
 
 type InputType = z.infer<typeof AggregateIdSchema>
-type ReturnType = ActionState<InputType, Aggregate>
+type ReturnType = ActionState<InputType, AggregateInclude>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { id } = data

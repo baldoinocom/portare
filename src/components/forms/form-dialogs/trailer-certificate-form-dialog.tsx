@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { TrailerCertificateSchema } from '@/actions/trailer-certificate/schema'
-import { Trailer, TrailerCertificate } from '@/actions/types'
+import { TrailerCertificateInclude, TrailerInclude } from '@/actions/types'
 import { TrailerSelect } from '@/components/forms/ui/trailer-select'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -53,8 +53,8 @@ export const TrailerCertificateFormDialog = ({
   initialData,
   trailers,
 }: {
-  initialData?: TrailerCertificate
-  trailers?: Trailer[]
+  initialData?: TrailerCertificateInclude
+  trailers?: TrailerInclude[]
 }) => {
   const { toast } = useToast()
 

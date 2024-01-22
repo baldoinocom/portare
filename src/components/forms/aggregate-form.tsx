@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { AggregateWithDocumentTypeSchema } from '@/actions/aggregate/schema'
-import { Aggregate, Unit } from '@/actions/types'
+import { AggregateInclude, UnitInclude } from '@/actions/types'
 import { CompanyInformation } from '@/components/forms/fields/company-information'
 import { PersonalInformation } from '@/components/forms/fields/personal-information'
 import { DocumentTypeCard } from '@/components/forms/ui/document-type-card'
@@ -34,8 +34,8 @@ export const AggregateForm = ({
   initialData,
   units,
 }: {
-  initialData?: Aggregate
-  units?: Unit[]
+  initialData?: AggregateInclude
+  units?: UnitInclude[]
 }) => {
   const router = useRouter()
 

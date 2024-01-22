@@ -1,9 +1,11 @@
 'use server'
 
-import { AbsentDriver } from '@/actions/types'
+import { AbsentDriverInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 
-export const findManyAction = async (): Promise<{ data: AbsentDriver[] }> => {
+export const findManyAction = async (): Promise<{
+  data: AbsentDriverInclude[]
+}> => {
   const absentDrivers = await db.absentDriver.findMany({
     include: { driver: { include: { person: true } } },
   })

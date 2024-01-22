@@ -16,6 +16,7 @@ import { trailerTypeAction } from './trailer-type'
 import { tripAction } from './trips'
 import { truckAction } from './truck'
 import { unitAction } from './unit'
+import { userAction } from './user'
 import { vehicleAction } from './vehicle'
 
 export const action = {
@@ -37,5 +38,6 @@ export const action = {
   trip: tripAction,
   truck: truckAction,
   unit: unitAction,
+  user: userAction,
   vehicle: vehicleAction,
 }

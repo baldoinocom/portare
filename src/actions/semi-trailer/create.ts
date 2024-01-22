@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { SemiTrailer } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -12,8 +13,16 @@ type InputType = z.infer<typeof SemiTrailerSchema>
 type ReturnType = ActionState<InputType, SemiTrailer>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { model, brandId, unitId, configurationId, typeId, cargos, trailers } =
-    data
+  const {
+    model,
+    axle,
+    brandId,
+    unitId,
+    configurationId,
+    typeId,
+    cargos,
+    trailers,
+  } = data
 
   let semiTrailer
 
@@ -37,12 +46,14 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       trailers.map(({ vehicle, fleetNumber }) =>
         db.trailer.create({
           data: {
-            fleetNumber: fleetNumber || null,
+            fleetNumber: emptyAsNull(fleetNumber),
             vehicle: {
               create: {
                 model,
+                axle,
                 licensePlate: vehicle.licensePlate,
-                renavam: vehicle.renavam || null,
+                chassis: emptyAsNull(vehicle.chassis),
+                renavam: emptyAsNull(vehicle.renavam),
                 brand: { connect: { id: brandId } },
                 unit: { connect: { companyId: unitId } },
               },

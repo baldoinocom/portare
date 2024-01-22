@@ -1,10 +1,10 @@
 'use server'
 
-import { TrailerCertificate } from '@/actions/types'
+import { TrailerCertificateInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 
 export const findManyAction = async (): Promise<{
-  data: TrailerCertificate[]
+  data: TrailerCertificateInclude[]
 }> => {
   const trailerCertificates = await db.trailerCertificate.findMany({
     include: {

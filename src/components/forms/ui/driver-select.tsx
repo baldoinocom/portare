@@ -1,4 +1,4 @@
-import { Driver } from '@/actions/types'
+import { DriverInclude } from '@/actions/types'
 import { DriverDetailCard } from '@/components/forms/ui/driver-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const DriverSelect = ({ drivers }: { drivers?: Driver[] }) => {
+export const DriverSelect = ({ drivers }: { drivers?: DriverInclude[] }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -29,7 +29,7 @@ export const DriverSelect = ({ drivers }: { drivers?: Driver[] }) => {
     ({ personId }) => personId === getValues(name),
   )
 
-  const searchDriver = (driver: Driver) => {
+  const searchDriver = (driver: DriverInclude) => {
     return (
       driver.person.name +
       ' ' +

@@ -1,4 +1,4 @@
-import { Aggregate } from '@/actions/types'
+import { AggregateInclude } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
 import { PersonDetailCard } from '@/components/forms/ui/person-detail-card'
 import { Button } from '@/components/ui/button'
@@ -25,14 +25,14 @@ import { useFormContext } from 'react-hook-form'
 export const AggregateSelect = ({
   aggregates,
 }: {
-  aggregates?: Aggregate[]
+  aggregates?: AggregateInclude[]
 }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
   const selectedAggregate = aggregates?.find(({ id }) => id === getValues(name))
 
-  const searchValue = (aggregate: Aggregate) => {
+  const searchValue = (aggregate: AggregateInclude) => {
     return (
       aggregate.person?.name +
       ' ' +

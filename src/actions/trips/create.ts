@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { Trip } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -30,8 +31,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     trip = await db.trip.create({
       data: {
-        order,
-        note,
+        order: emptyAsNull(order),
+        note: emptyAsNull(note),
         departedAt,
         arrivedAt,
         status,

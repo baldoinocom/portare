@@ -29,7 +29,7 @@ const StoppedVehicleSchema = z.object({
   }),
 
   note: z.optional(
-    z.string().max(255, {
+    z.string().trim().max(255, {
       message: 'A observação não pode ter mais de 255 caracteres',
     }),
   ),

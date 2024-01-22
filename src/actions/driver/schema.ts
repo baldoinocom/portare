@@ -15,6 +15,7 @@ export const DriverSchema = z.object({
   cnh: z.optional(
     z
       .string()
+      .trim()
       .refine(({ length }) => !length || length === 11, {
         message: 'O CNH deve ter exatamente 11 dígitos',
       })

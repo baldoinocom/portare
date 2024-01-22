@@ -1,13 +1,13 @@
 'use server'
 
-import { Truck } from '@/actions/types'
+import { TruckInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { TruckIdSchema } from './schema'
 
 type InputType = z.infer<typeof TruckIdSchema>
-type ReturnType = ActionState<InputType, Truck>
+type ReturnType = ActionState<InputType, TruckInclude>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { id } = data

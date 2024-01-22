@@ -1,6 +1,6 @@
 'use client'
 
-import { SemiTrailer } from '@/actions/types'
+import { SemiTrailerInclude } from '@/actions/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -17,7 +17,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const semiTrailerColumns: ColumnDef<SemiTrailer>[] = [
+export const semiTrailerColumns: ColumnDef<SemiTrailerInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -106,7 +106,7 @@ export const semiTrailerColumns: ColumnDef<SemiTrailer>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="flex flex-wrap gap-2">
-        {getValue<SemiTrailer['cargos']>().map(({ name }, index) => (
+        {getValue<SemiTrailerInclude['cargos']>().map(({ name }, index) => (
           <Badge
             key={index}
             variant="outline"

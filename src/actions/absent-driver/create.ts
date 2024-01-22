@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { AbsentDriver } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -17,7 +18,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     absentDriver = await db.absentDriver.create({
-      data: { driverId, startedAt, endedAt, status, note },
+      data: { driverId, startedAt, endedAt, status, note: emptyAsNull(note) },
     })
   } catch (error) {
     return { error: 'Ocorreu um erro ao criar, tente novamente mais tarde' }

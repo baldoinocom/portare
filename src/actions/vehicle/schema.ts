@@ -10,9 +10,10 @@ export const VehicleIdSchema = z.object({
 export const VehicleSchema = z.object({
   licensePlate: z
     .string({ required_error: 'A placa é obrigatória' })
+    .trim()
+    .toUpperCase()
     .min(7, { message: 'A placa deve ter no mínimo 7 caracteres' })
     .max(8, { message: 'A placa não pode ter mais de 8 caracteres' })
-    .toUpperCase()
     .refine(validLicensePlate, {
       message: 'A placa deve estar no formato antigo ou no formato novo',
     }),
@@ -20,14 +21,18 @@ export const VehicleSchema = z.object({
   model: z.optional(
     z
       .string()
-      .max(255, { message: 'O modelo não pode ter mais de 255 caracteres' })
-      .toUpperCase(),
+      .trim()
+      .toUpperCase()
+      .max(255, { message: 'O modelo não pode ter mais de 255 caracteres' }),
   ),
 
   year: z.optional(
-    z.string().refine(({ length }) => !length || length === 4, {
-      message: 'O ano deve ter exatamente 4 dígitos',
-    }),
+    z
+      .string()
+      .trim()
+      .refine(({ length }) => !length || length === 4, {
+        message: 'O ano deve ter exatamente 4 dígitos',
+      }),
   ),
 
   axle: z.optional(
@@ -42,6 +47,7 @@ export const VehicleSchema = z.object({
   chassis: z.optional(
     z
       .string()
+      .trim()
       .toUpperCase()
       .transform((value) => value?.replace(/\s/g, ''))
       .refine(({ length }) => !length || length === 17, {
@@ -55,6 +61,7 @@ export const VehicleSchema = z.object({
   renavam: z.optional(
     z
       .string()
+      .trim()
       .transform(extractNumber)
       .refine(({ length }) => !length || length === 11, {
         message: 'O RENAVAM deve ter exatamente 11 dígitos',

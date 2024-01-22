@@ -1,4 +1,8 @@
-import { SemiTrailer, Truck, Vehicle } from '@/actions/types'
+import {
+  SemiTrailerInclude,
+  TruckInclude,
+  VehicleInclude,
+} from '@/actions/types'
 import { VehicleDetailCard } from '@/components/forms/ui/vehicle-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,9 +30,9 @@ export const VehicleSelect = ({
   trucks,
   semiTrailers,
 }: {
-  vehicles?: Vehicle[]
-  trucks?: Truck[]
-  semiTrailers?: SemiTrailer[]
+  vehicles?: VehicleInclude[]
+  trucks?: TruckInclude[]
+  semiTrailers?: SemiTrailerInclude[]
 }) => {
   if (trucks?.length && semiTrailers?.length) {
     throw Error('Only one between truck and semi-trailer can be present')
@@ -39,7 +43,7 @@ export const VehicleSelect = ({
 
   const selectedVehicle = vehicles?.find(({ id }) => id === getValues(name))
 
-  const searchVehicle = (vehicle: Vehicle) => {
+  const searchVehicle = (vehicle: VehicleInclude) => {
     return (
       vehicle.brand?.name +
       ' ' +

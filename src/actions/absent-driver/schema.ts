@@ -29,10 +29,9 @@ const AbsentDriverSchema = z.object({
   }),
 
   note: z.optional(
-    z
-      .string()
-      .max(255, { message: 'A observação não pode ter mais de 255 caracteres' })
-      .toUpperCase(),
+    z.string().trim().max(255, {
+      message: 'A observação não pode ter mais de 255 caracteres',
+    }),
   ),
 })
 

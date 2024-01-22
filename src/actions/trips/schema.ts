@@ -9,11 +9,12 @@ export const TripSchema = z.object({
   order: z.optional(
     z
       .string()
+      .trim()
       .max(255, { message: 'A ordem não pode ter mais de 255 caracteres' }),
   ),
 
   note: z.optional(
-    z.string().max(255, {
+    z.string().trim().max(255, {
       message: 'A observação não pode ter mais de 255 caracteres',
     }),
   ),

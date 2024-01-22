@@ -1,7 +1,10 @@
 import { Separator } from '@/components/ui/separator'
+import { currentUser } from '@/lib/auth-service'
 import { ProfileForm } from './profile-form'
 
-export default function Page() {
+export default async function Page() {
+  const user = await currentUser()
+
   return (
     <div className="space-y-6">
       <div>
@@ -13,7 +16,7 @@ export default function Page() {
 
       <Separator />
 
-      <ProfileForm />
+      <ProfileForm initialData={user.person} />
     </div>
   )
 }

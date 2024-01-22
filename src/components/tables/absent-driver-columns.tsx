@@ -1,6 +1,6 @@
 'use client'
 
-import { AbsentDriver } from '@/actions/types'
+import { AbsentDriverInclude } from '@/actions/types'
 import { AbsentDriverFormDialog } from '@/components/forms/form-dialogs/absent-driver-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,7 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 
-export const absentDriverColumns: ColumnDef<AbsentDriver>[] = [
+export const absentDriverColumns: ColumnDef<AbsentDriverInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (

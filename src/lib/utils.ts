@@ -25,6 +25,16 @@ export const findRepeatedStrings = (
     )
 }
 
+export const emptyAsNull = <T>(
+  value: T | null | undefined,
+): T | null | undefined => {
+  if (typeof value !== 'undefined') {
+    if (!value || (typeof value === 'string' && !value.trim())) return null
+  }
+
+  return value
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyObject = { [key: string]: any }
 

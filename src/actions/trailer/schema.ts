@@ -6,13 +6,18 @@ export const TrailerIdSchema = z.object({
 })
 
 export const TrailerSchema = z.object({
-  vehicle: VehicleSchema.pick({ licensePlate: true, renavam: true }),
+  vehicle: VehicleSchema.pick({
+    licensePlate: true,
+    chassis: true,
+    renavam: true,
+  }),
 
   fleetNumber: z.optional(
     z
       .string({
         invalid_type_error: 'O número da frota deve conter apenas dígitos',
       })
+      .trim()
       .max(4, {
         message: 'O número da frota não pode ter mais de 4 caracteres',
       }),

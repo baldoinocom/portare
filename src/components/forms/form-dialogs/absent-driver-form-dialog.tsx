@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { AbsentDriverWithDateRangeSchema } from '@/actions/absent-driver/schema'
-import { AbsentDriver, Driver } from '@/actions/types'
+import { AbsentDriverInclude, DriverInclude } from '@/actions/types'
 import { DriverSelect } from '@/components/forms/ui/driver-select'
 import { StartAndEndDateSelect } from '@/components/forms/ui/start-and-end-date-select'
 import { Button } from '@/components/ui/button'
@@ -46,8 +46,8 @@ export const AbsentDriverFormDialog = ({
   initialData,
   drivers,
 }: {
-  initialData?: AbsentDriver
-  drivers?: Driver[]
+  initialData?: AbsentDriverInclude
+  drivers?: DriverInclude[]
 }) => {
   const { toast } = useToast()
 

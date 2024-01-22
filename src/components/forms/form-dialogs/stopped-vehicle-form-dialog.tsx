@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { StoppedVehicleWithDateRangeSchema } from '@/actions/stopped-vehicle/schema'
-import { StoppedVehicle, Vehicle } from '@/actions/types'
+import { StoppedVehicleInclude, VehicleInclude } from '@/actions/types'
 import { StartAndEndDateSelect } from '@/components/forms/ui/start-and-end-date-select'
 import { VehicleSelect } from '@/components/forms/ui/vehicle-select'
 import { Button } from '@/components/ui/button'
@@ -46,8 +46,8 @@ export const StoppedVehicleFormDialog = ({
   initialData,
   vehicles,
 }: {
-  initialData?: StoppedVehicle
-  vehicles?: Vehicle[]
+  initialData?: StoppedVehicleInclude
+  vehicles?: VehicleInclude[]
 }) => {
   const { toast } = useToast()
 

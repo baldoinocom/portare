@@ -1,4 +1,4 @@
-import { Trailer } from '@/actions/types'
+import { TrailerInclude } from '@/actions/types'
 import { TrailerDetailCard } from '@/components/forms/ui/trailer-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,13 +21,17 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const TrailerSelect = ({ trailers }: { trailers?: Trailer[] }) => {
+export const TrailerSelect = ({
+  trailers,
+}: {
+  trailers?: TrailerInclude[]
+}) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
   const selectedTrailer = trailers?.find(({ id }) => id === getValues(name))
 
-  const searchTrailer = (trailer: Trailer) => {
+  const searchTrailer = (trailer: TrailerInclude) => {
     return (
       trailer.vehicle.brand?.name +
       ' ' +

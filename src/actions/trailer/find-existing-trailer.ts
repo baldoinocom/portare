@@ -17,6 +17,10 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     .map(({ vehicle }) => vehicle.licensePlate)
     .filter((value) => value) as string[]
 
+  const chassisList = trailers
+    .map(({ vehicle }) => vehicle.chassis)
+    .filter((value) => value) as string[]
+
   const renavamList = trailers
     .map(({ vehicle }) => vehicle.renavam)
     .filter((value) => value) as string[]
@@ -29,20 +33,21 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     where: {
       NOT: { id },
       OR: [
-        { fleetNumber: { in: fleetNumberList } },
         {
           vehicle: {
             OR: [
               { licensePlate: { in: licensePlateList } },
+              { chassis: { in: chassisList } },
               { renavam: { in: renavamList } },
             ],
           },
         },
+        { fleetNumber: { in: fleetNumberList } },
       ],
     },
     select: {
+      vehicle: { select: { licensePlate: true, chassis: true, renavam: true } },
       fleetNumber: true,
-      vehicle: { select: { licensePlate: true, renavam: true } },
     },
   })
 
@@ -53,6 +58,18 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   if (repeatedLicensePlate.length) {
     return {
       error: `Já existe um veículo com essa placa (${repeatedLicensePlate.join(
+        ', ',
+      )})`,
+    }
+  }
+
+  const repeatedChassis = findRepeatedStrings(
+    find.map(({ vehicle: { renavam } }) => renavam),
+  )
+
+  if (repeatedChassis.length) {
+    return {
+      error: `Já existe um veículo com esse chassi (${repeatedChassis.join(
         ', ',
       )})`,
     }

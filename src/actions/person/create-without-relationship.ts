@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { Person } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -25,7 +26,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
 
     person = await db.person.create({
-      data: { name, nickname, cpf, phoneNumber },
+      data: {
+        name,
+        nickname: emptyAsNull(nickname),
+        cpf: emptyAsNull(cpf),
+        phoneNumber: emptyAsNull(phoneNumber),
+      },
     })
   } catch (error) {
     return { error: 'Ocorreu um erro ao criar, tente novamente mais tarde' }

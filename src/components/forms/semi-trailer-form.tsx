@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { SemiTrailerSchema } from '@/actions/semi-trailer/schema'
-import { SemiTrailer, Unit } from '@/actions/types'
+import { SemiTrailerInclude, UnitInclude } from '@/actions/types'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
@@ -61,12 +61,12 @@ export const SemiTrailerForm = ({
   trailerConfigurations,
   units,
 }: {
-  initialData?: SemiTrailer
+  initialData?: SemiTrailerInclude
   brands?: Brand[]
   trailerTypes?: TrailerType[]
   cargos?: Cargo[]
   trailerConfigurations?: TrailerConfiguration[]
-  units?: Unit[]
+  units?: UnitInclude[]
 }) => {
   const router = useRouter()
 
@@ -249,6 +249,22 @@ export const SemiTrailerForm = ({
                       <FormLabel>Modelo</FormLabel>
                       <FormControl>
                         <Input {...field} className="uppercase" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="sm:col-span-3">
+                <FormField
+                  control={form.control}
+                  name="year"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ano</FormLabel>
+                      <FormControl>
+                        <InputMask {...field} mask="9999" placeholder="2024" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

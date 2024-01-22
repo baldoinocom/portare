@@ -1,6 +1,6 @@
 'use client'
 
-import { Unit } from '@/actions/types'
+import { UnitInclude } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -15,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const unitColumns: ColumnDef<Unit>[] = [
+export const unitColumns: ColumnDef<UnitInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (

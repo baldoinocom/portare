@@ -1,6 +1,6 @@
 'use client'
 
-import { Aggregate } from '@/actions/types'
+import { AggregateInclude } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -15,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const aggregateColumns: ColumnDef<Aggregate>[] = [
+export const aggregateColumns: ColumnDef<AggregateInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (

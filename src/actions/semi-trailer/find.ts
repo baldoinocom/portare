@@ -1,13 +1,13 @@
 'use server'
 
-import { SemiTrailer } from '@/actions/types'
+import { SemiTrailerInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { SemiTrailerIdSchema } from './schema'
 
 type InputType = z.infer<typeof SemiTrailerIdSchema>
-type ReturnType = ActionState<InputType, SemiTrailer>
+type ReturnType = ActionState<InputType, SemiTrailerInclude>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { id } = data

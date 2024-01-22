@@ -1,13 +1,13 @@
 'use server'
 
-import { Driver } from '@/actions/types'
+import { DriverInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { DriverIdSchema } from './schema'
 
 type InputType = z.infer<typeof DriverIdSchema>
-type ReturnType = ActionState<InputType, Driver>
+type ReturnType = ActionState<InputType, DriverInclude>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { personId } = data

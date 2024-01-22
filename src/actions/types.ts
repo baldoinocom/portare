@@ -1,5 +1,9 @@
 import { Prisma } from '@prisma/client'
 
+const UserReturnType = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: { person: true },
+})
+
 const DriverReturnType = Prisma.validator<Prisma.DriverDefaultArgs>()({
   include: { person: true },
 })
@@ -62,34 +66,38 @@ const StoppedVehicleReturnType =
     include: { vehicle: { include: { brand: true } } },
   })
 
-export type Driver = Prisma.DriverGetPayload<typeof DriverReturnType>
+export type UserInclude = Prisma.UserGetPayload<typeof UserReturnType>
 
-export type ASO = Prisma.ASOGetPayload<typeof ASOReturnType>
+export type DriverInclude = Prisma.DriverGetPayload<typeof DriverReturnType>
 
-export type AbsentDriver = Prisma.AbsentDriverGetPayload<
+export type ASOInclude = Prisma.ASOGetPayload<typeof ASOReturnType>
+
+export type AbsentDriverInclude = Prisma.AbsentDriverGetPayload<
   typeof AbsentDriverReturnType
 >
 
-export type Aggregate = Prisma.AggregateGetPayload<typeof AggregateReturnType>
+export type AggregateInclude = Prisma.AggregateGetPayload<
+  typeof AggregateReturnType
+>
 
-export type Client = Prisma.ClientGetPayload<typeof ClientReturnType>
+export type ClientInclude = Prisma.ClientGetPayload<typeof ClientReturnType>
 
-export type Unit = Prisma.UnitGetPayload<typeof UnitReturnType>
+export type UnitInclude = Prisma.UnitGetPayload<typeof UnitReturnType>
 
-export type Vehicle = Prisma.VehicleGetPayload<typeof VehicleReturnType>
+export type VehicleInclude = Prisma.VehicleGetPayload<typeof VehicleReturnType>
 
-export type SemiTrailer = Prisma.SemiTrailerGetPayload<
+export type SemiTrailerInclude = Prisma.SemiTrailerGetPayload<
   typeof SemiTrailerReturnType
 >
 
-export type Trailer = Prisma.TrailerGetPayload<typeof TrailerReturnType>
+export type TrailerInclude = Prisma.TrailerGetPayload<typeof TrailerReturnType>
 
-export type TrailerCertificate = Prisma.TrailerCertificateGetPayload<
+export type TrailerCertificateInclude = Prisma.TrailerCertificateGetPayload<
   typeof TrailerCertificateReturnType
 >
 
-export type Truck = Prisma.TruckGetPayload<typeof TruckReturnType>
+export type TruckInclude = Prisma.TruckGetPayload<typeof TruckReturnType>
 
-export type StoppedVehicle = Prisma.StoppedVehicleGetPayload<
+export type StoppedVehicleInclude = Prisma.StoppedVehicleGetPayload<
   typeof StoppedVehicleReturnType
 >

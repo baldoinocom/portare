@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { TruckWithRelationshipTypeSchema } from '@/actions/truck/schema'
-import { Aggregate, Truck, Unit } from '@/actions/types'
+import { AggregateInclude, TruckInclude, UnitInclude } from '@/actions/types'
 import { RelationshipType } from '@/components/forms/fields/relationship-type'
 import { VehicleInformation } from '@/components/forms/fields/vehicle-information'
 import { FormAlert } from '@/components/forms/ui/form-alert'
@@ -35,10 +35,10 @@ export const TruckForm = ({
   units,
   aggregates,
 }: {
-  initialData?: Truck
+  initialData?: TruckInclude
   brands: Brand[]
-  units?: Unit[]
-  aggregates?: Aggregate[]
+  units?: UnitInclude[]
+  aggregates?: AggregateInclude[]
 }) => {
   const router = useRouter()
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { Truck } from '@/actions/types'
+import { TruckInclude } from '@/actions/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -15,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 
-export const truckColumns: ColumnDef<Truck>[] = [
+export const truckColumns: ColumnDef<TruckInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (

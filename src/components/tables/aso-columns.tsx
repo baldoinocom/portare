@@ -1,6 +1,6 @@
 'use client'
 
-import { ASO } from '@/actions/types'
+import { ASOInclude } from '@/actions/types'
 import { ASOFormDialog } from '@/components/forms/form-dialogs/aso-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
@@ -23,7 +23,7 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 
-export const ASOColumns: ColumnDef<ASO>[] = [
+export const ASOColumns: ColumnDef<ASOInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (

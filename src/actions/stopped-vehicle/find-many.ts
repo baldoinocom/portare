@@ -1,9 +1,11 @@
 'use server'
 
-import { StoppedVehicle } from '@/actions/types'
+import { StoppedVehicleInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 
-export const findManyAction = async (): Promise<{ data: StoppedVehicle[] }> => {
+export const findManyAction = async (): Promise<{
+  data: StoppedVehicleInclude[]
+}> => {
   const stoppedVehicles = await db.stoppedVehicle.findMany({
     include: { vehicle: { include: { brand: true } } },
   })

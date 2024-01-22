@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { DriverWithRelationshipTypeSchema } from '@/actions/driver/schema'
-import { Aggregate, Driver, Unit } from '@/actions/types'
+import { AggregateInclude, DriverInclude, UnitInclude } from '@/actions/types'
 import { PersonalInformation } from '@/components/forms/fields/personal-information'
 import { RelationshipType } from '@/components/forms/fields/relationship-type'
 import { FormAlert } from '@/components/forms/ui/form-alert'
@@ -33,9 +33,9 @@ export const DriverForm = ({
   units,
   aggregates,
 }: {
-  initialData?: Driver
-  units?: Unit[]
-  aggregates?: Aggregate[]
+  initialData?: DriverInclude
+  units?: UnitInclude[]
+  aggregates?: AggregateInclude[]
 }) => {
   const router = useRouter()
 

@@ -25,7 +25,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-const formSchema = z.object({
+const signInFormSchema = z.object({
   username: z
     .string({ required_error: 'O nome de usuário é obrigatório' })
     .min(2, { message: 'O nome de usuário deve ter no mínimo 2 caracteres' })
@@ -45,11 +45,11 @@ export default function Page() {
   const searchParams = useSearchParams()
   const redirectUrl = searchParams?.get('redirect_url')
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signInFormSchema>>({
+    resolver: zodResolver(signInFormSchema),
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof signInFormSchema>) => {
     try {
       const result = await signIn?.create({
         identifier: values.username,

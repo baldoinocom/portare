@@ -1,13 +1,13 @@
 'use server'
 
-import { Client } from '@/actions/types'
+import { ClientInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { ClientIdSchema } from './schema'
 
 type InputType = z.infer<typeof ClientIdSchema>
-type ReturnType = ActionState<InputType, Client>
+type ReturnType = ActionState<InputType, ClientInclude>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { companyId } = data

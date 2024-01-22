@@ -1,20 +1,26 @@
+'use client'
+
 import { Separator } from '@/components/ui/separator'
+import { useTheme } from 'next-themes'
 import { AppearanceForm } from './appearance-form'
 
 export default function Page() {
+  const { theme } = useTheme()
+
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Appearance</h3>
+        <h3 className="text-lg font-medium">Aparência</h3>
         <p className="text-sm text-muted-foreground">
-          Customize the appearance of the app. Automatically switch between day
-          and night themes.
+          Personalize a aparência do aplicativo
         </p>
       </div>
 
       <Separator />
 
-      <AppearanceForm />
+      {theme && (
+        <AppearanceForm initialData={{ theme: theme as 'dark' | 'light' }} />
+      )}
     </div>
   )
 }

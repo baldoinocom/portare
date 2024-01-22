@@ -2,11 +2,21 @@
 
 import { action } from '@/actions'
 import { TripSchema } from '@/actions/trips/schema'
+import { ClientInclude } from '@/actions/types'
+import { ClientSelect } from '@/components/forms/ui/client-select'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
 import { Button } from '@/components/ui/button'
-import { Form } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
@@ -17,7 +27,15 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-export const TripForm = ({ initialData }: { initialData?: Trip }) => {
+export const TripForm = ({
+  initialData,
+  origins,
+  destinations,
+}: {
+  initialData?: Trip
+  origins?: ClientInclude[]
+  destinations?: ClientInclude[]
+}) => {
   const router = useRouter()
 
   const { toast } = useToast()
@@ -83,7 +101,64 @@ export const TripForm = ({ initialData }: { initialData?: Trip }) => {
             </div>
 
             <FormFields>
-              <div></div>
+              <div className="sm:col-span-4">
+                <FormField
+                  control={form.control}
+                  name="order"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ordem</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </FormFields>
+          </FormSession>
+
+          <Separator />
+
+          <FormSession>
+            <div>
+              <h2 className="text-base font-semibold">
+                Empresa de origem e destino
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Informe a empresa de origem e destino da viagem
+              </p>
+            </div>
+
+            <FormFields>
+              <div className="sm:col-span-4">
+                <FormField
+                  control={form.control}
+                  name="originId"
+                  render={() => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Origem</FormLabel>
+                      <ClientSelect clients={origins} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="sm:col-span-4">
+                <FormField
+                  control={form.control}
+                  name="originId"
+                  render={() => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Destino</FormLabel>
+                      <ClientSelect clients={destinations} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </FormFields>
           </FormSession>
 

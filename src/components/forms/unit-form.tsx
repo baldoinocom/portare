@@ -1,7 +1,7 @@
 'use client'
 
 import { action } from '@/actions'
-import { Unit } from '@/actions/types'
+import { UnitInclude } from '@/actions/types'
 import { UnitSchema } from '@/actions/unit/schema'
 import { CompanyInformation } from '@/components/forms/fields/company-information'
 import { FormAlert } from '@/components/forms/ui/form-alert'
@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-export const UnitForm = ({ initialData }: { initialData?: Unit }) => {
+export const UnitForm = ({ initialData }: { initialData?: UnitInclude }) => {
   const router = useRouter()
 
   const { toast } = useToast()

@@ -14,10 +14,6 @@ const sidebarNavItems = [
     title: 'Aparência',
     href: '/settings/appearance',
   },
-  {
-    title: 'Notificações',
-    href: '/settings/notifications',
-  },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {

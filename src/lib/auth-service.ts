@@ -1,12 +1,16 @@
+import { UserInclude } from '@/actions/types'
 import { db } from '@/lib/db'
-import { currentUser } from '@clerk/nextjs'
+import { currentUser as currentUserClerk } from '@clerk/nextjs'
 
-export const getSelf = async () => {
-  const self = await currentUser()
+export const currentUser = async (): Promise<UserInclude> => {
+  const clerkUser = await currentUserClerk()
 
-  if (!self || !self.username) throw new Error('Unauthorized')
+  if (!clerkUser || !clerkUser.username) throw new Error('Unauthorized')
 
-  const user = await db.user.findUnique({ where: { externalUserId: self.id } })
+  const user = await db.user.findUnique({
+    where: { externalUserId: clerkUser.id },
+    include: { person: true },
+  })
 
   if (!user) throw new Error('Not found')
 

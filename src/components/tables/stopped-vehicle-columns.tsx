@@ -1,6 +1,6 @@
 'use client'
 
-import { StoppedVehicle } from '@/actions/types'
+import { StoppedVehicleInclude } from '@/actions/types'
 import { StoppedVehicleFormDialog } from '@/components/forms/form-dialogs/stopped-vehicle-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,7 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
 
-export const stoppedVehicleColumns: ColumnDef<StoppedVehicle>[] = [
+export const stoppedVehicleColumns: ColumnDef<StoppedVehicleInclude>[] = [
   {
     id: 'select',
     header: ({ table }) => (
