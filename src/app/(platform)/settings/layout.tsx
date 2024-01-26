@@ -22,8 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="space-y-0.5">
         <h2 className="text-2xl font-bold tracking-tight">Configurações</h2>
         <p className="text-muted-foreground">
-          Gerencie as configurações da sua conta e defina as preferências de
-          e-mail
+          Gerencie as informações do seu perfil e as configurações da sua conta
         </p>
       </div>
 

@@ -15,7 +15,7 @@ export default async function Page() {
       <div className="flex flex-col gap-y-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <div className="min-w-0 flex-1">
-            <h1 className="text-2xl font-bold">Cadastro de Caminhões</h1>
+            <h1 className="text-2xl font-bold">Cadastro de caminhões</h1>
 
             <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
               <div className="mt-2 flex items-center text-sm text-muted-foreground">

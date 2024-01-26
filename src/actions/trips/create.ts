@@ -6,9 +6,9 @@ import { emptyAsNull } from '@/lib/utils'
 import { Trip } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { TripSchema } from './schema'
+import { TripStepsSchema } from './schema'
 
-type InputType = z.infer<typeof TripSchema>
+type InputType = z.infer<typeof TripStepsSchema>
 type ReturnType = ActionState<InputType, Trip>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -53,4 +53,4 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   return { data: trip }
 }
 
-export const createAction = safeAction(TripSchema, handler)
+export const createAction = safeAction(TripStepsSchema, handler)

@@ -9,7 +9,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'portare',
-  description: 'portare-tms',
+  description: 'TMS - Sistema de gerenciamento de transporte',
   icons: favicons,
 }
 

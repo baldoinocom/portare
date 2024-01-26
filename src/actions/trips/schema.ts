@@ -5,7 +5,7 @@ export const TripIdSchema = z.object({
   id: z.string().cuid(),
 })
 
-export const TripSchema = z.object({
+const TripSchema = z.object({
   order: z.optional(
     z
       .string()
@@ -19,6 +19,11 @@ export const TripSchema = z.object({
     }),
   ),
 
+  status: z.nativeEnum(TripStatus, {
+    invalid_type_error: 'O status é inválido',
+    required_error: 'O status é obrigatório',
+  }),
+
   departedAt: z.coerce.date({
     invalid_type_error: 'A data de partida é inválida',
     required_error: 'A data de partida é obrigatória',
@@ -27,11 +32,6 @@ export const TripSchema = z.object({
   arrivedAt: z.coerce.date({
     invalid_type_error: 'A data de chegada é inválida',
     required_error: 'A data de chegada é obrigatória',
-  }),
-
-  status: z.nativeEnum(TripStatus, {
-    invalid_type_error: 'O status é inválido',
-    required_error: 'O status é obrigatório',
   }),
 
   originId: z
@@ -66,3 +66,43 @@ export const TripSchema = z.object({
 })
 
 export const TripUpdateSchema = TripIdSchema.merge(TripSchema.deepPartial())
+  .refine(({ departedAt, arrivedAt }) => !departedAt === !arrivedAt, {
+    path: ['departedAt'],
+    message:
+      'É necessário informar a data de partida e de chegada para atualizar',
+  })
+  .refine(
+    ({ departedAt, arrivedAt }) =>
+      departedAt && arrivedAt ? departedAt <= arrivedAt : true,
+    {
+      path: ['departedAt'],
+      message: 'A data de partida deve ser anterior à data de chegada',
+    },
+  )
+
+export const TripStartStepSchema = TripSchema.pick({
+  status: true,
+  order: true,
+  note: true,
+  originId: true,
+  destinationId: true,
+  departedAt: true,
+  arrivedAt: true,
+})
+  .refine(({ departedAt, arrivedAt }) => departedAt && arrivedAt, {
+    path: ['departedAt'],
+    message: 'A data de partida e de chegada são obrigatórias',
+  })
+  .refine(({ departedAt, arrivedAt }) => departedAt <= arrivedAt, {
+    path: ['departedAt'],
+    message: 'A data de partida deve ser anterior à data de chegada',
+  })
+
+export const TripEndStepSchema = TripSchema.pick({
+  driverId: true,
+  truckId: true,
+  semiTrailerId: true,
+  cargoId: true,
+})
+
+export const TripStepsSchema = TripStartStepSchema.and(TripEndStepSchema)

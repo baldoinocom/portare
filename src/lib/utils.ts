@@ -39,9 +39,9 @@ export const emptyAsNull = <T>(
 type AnyObject = { [key: string]: any }
 
 export const nullAsUndefined = (
-  value: AnyObject | undefined,
+  value: AnyObject | null | undefined,
 ): AnyObject | undefined => {
-  if (value === undefined) {
+  if (value === undefined || value === null) {
     return undefined
   }
 

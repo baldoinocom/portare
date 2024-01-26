@@ -144,3 +144,24 @@ export const formatDriverStatus = (status: string | undefined | null) => {
       return status
   }
 }
+
+export const formatTripStatus = (status: string | undefined | null) => {
+  switch (status) {
+    case 'scheduled':
+      return 'Agendado'
+    case 'loaded':
+      return 'Carregado'
+    case 'departure':
+      return 'Partida'
+    case 'terminal':
+      return 'Terminal'
+    case 'unloaded':
+      return 'Descarregado'
+    case 'finished':
+      return 'Finalizado'
+    case 'canceled':
+      return 'Cancelado'
+    default:
+      return status
+  }
+}

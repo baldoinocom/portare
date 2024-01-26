@@ -9,7 +9,7 @@ const InputMask = React.forwardRef<HTMLInputElement, Props>(
         {/* eslint-disable-next-line */}
         {/* @ts-ignore */}
         {(inputProps) => {
-          return <Input ref={ref} {...inputProps} />
+          return <Input ref={ref} {...inputProps} {...props} />
         }}
       </ReactInputMask>
     )

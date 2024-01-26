@@ -31,7 +31,7 @@ export const ProfileForm = ({
 
   const form = useForm<z.infer<typeof PersonWithoutRelationshipSchema>>({
     resolver: zodResolver(PersonWithoutRelationshipSchema),
-    defaultValues: initialData ? nullAsUndefined(initialData) : undefined,
+    defaultValues: nullAsUndefined(initialData),
     mode: 'onChange',
   })
 
@@ -69,11 +69,7 @@ export const ProfileForm = ({
             <FormItem>
               <FormLabel>Nome</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  disabled={!initialData}
-                  className="uppercase"
-                />
+                <Input {...field} disabled className="uppercase" />
               </FormControl>
               <FormDescription>
                 Este é o seu nome de exibição público
@@ -113,7 +109,7 @@ export const ProfileForm = ({
               <FormControl>
                 <InputMask
                   {...field}
-                  disabled={!initialData}
+                  disabled
                   mask="999.999.999-99"
                   placeholder="123.456.789-87"
                 />
@@ -141,7 +137,10 @@ export const ProfileForm = ({
             </FormItem>
           )}
         />
-        {form.formState.isDirty && <Button>Atualizar perfil</Button>}
+
+        {initialData && form.formState.isDirty && (
+          <Button>Atualizar perfil</Button>
+        )}
       </form>
     </Form>
   )
