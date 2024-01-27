@@ -65,9 +65,6 @@ export const ASOFormDialog = ({
       startedAt: initialData?.startedAt
         ? new Date(initialData?.startedAt)
         : new Date(),
-      endedAt: initialData?.endedAt
-        ? new Date(initialData?.endedAt)
-        : new Date(),
     },
   })
 
