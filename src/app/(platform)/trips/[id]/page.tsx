@@ -1,7 +1,8 @@
 import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
-import { TripForm } from '@/components/forms/trip-form'
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import Link from 'next/link'
 import { Header } from './_components/header'
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -17,8 +18,31 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       <Separator />
 
-      <main>
-        <TripForm initialData={trip.data} />
+      <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-6 lg:px-8">
+        <div className="py-16">
+          <div className="text-center">
+            <p className="text-base font-semibold text-primary">
+              Em desenvolvimento
+            </p>
+            <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
+              Manutenção
+            </h1>
+            <p className="mt-2 text-base text-muted-foreground">
+              Em breve esta página estará disponível
+            </p>
+            <div className="mt-6">
+              <Button variant="ghost">
+                <Link
+                  href="/trips"
+                  className="text-base font-medium text-primary"
+                >
+                  Voltar para viagens
+                  <span> &rarr;</span>
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   )

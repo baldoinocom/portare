@@ -1,5 +1,5 @@
-import { VehicleInclude } from '@/actions/types'
-import { VehicleDetailCard } from '@/components/forms/ui/vehicle-detail-card'
+import { TruckInclude } from '@/actions/types'
+import { TruckDetailCard } from '@/components/forms/ui/truck-detail-card'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -21,23 +21,19 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const VehicleSelect = ({
-  vehicles,
-}: {
-  vehicles?: VehicleInclude[]
-}) => {
+export const TruckSelect = ({ trucks }: { trucks?: TruckInclude[] }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
-  const selectedVehicle = vehicles?.find(({ id }) => id === getValues(name))
+  const selectedTruck = trucks?.find(({ id }) => id === getValues(name))
 
-  const searchVehicle = (vehicle: VehicleInclude) => {
+  const searchTruck = (truck: TruckInclude) => {
     return (
-      vehicle.brand?.name +
+      truck?.vehicle.brand?.name +
       ' ' +
-      vehicle.model +
+      truck?.vehicle.model +
       ' ' +
-      formatLicensePlate(vehicle.licensePlate)
+      formatLicensePlate(truck?.vehicle.licensePlate)
     )
   }
 
@@ -53,8 +49,8 @@ export const VehicleSelect = ({
               !getValues(name) && 'text-muted-foreground',
             )}
           >
-            {selectedVehicle ? (
-              <VehicleDetailCard vehicle={selectedVehicle} />
+            {selectedTruck ? (
+              <TruckDetailCard truck={selectedTruck} />
             ) : (
               'Selecione'
             )}
@@ -63,28 +59,28 @@ export const VehicleSelect = ({
         </FormControl>
       </PopoverTrigger>
 
-      <PopoverContent className="p-0" align="end">
+      <PopoverContent className="p-0">
         <Command>
           <CommandInput placeholder="Pesquisar" />
           <CommandEmpty>Nenhum</CommandEmpty>
           <CommandGroup>
             <ScrollArea className="flex max-h-72 flex-col">
-              {selectedVehicle && (
+              {selectedTruck && (
                 <>
                   <CommandItem>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
-                    <VehicleDetailCard vehicle={selectedVehicle} />
+                    <TruckDetailCard truck={selectedTruck} />
                   </CommandItem>
                   <CommandSeparator className="m-1" />
                 </>
               )}
 
-              {vehicles
+              {trucks
                 ?.filter(({ id }) => id !== getValues(name))
                 ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchVehicle(value)}
+                    value={searchTruck(value)}
                     onSelect={() =>
                       setValue(name, value.id, {
                         shouldDirty: true,
@@ -92,7 +88,7 @@ export const VehicleSelect = ({
                     }
                   >
                     <div className="w-6" />
-                    <VehicleDetailCard vehicle={value} />
+                    <TruckDetailCard truck={value} />
                   </CommandItem>
                 ))}
             </ScrollArea>

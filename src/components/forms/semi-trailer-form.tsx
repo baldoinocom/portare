@@ -395,7 +395,7 @@ export const SemiTrailerForm = ({
                   name="cargos"
                   render={() => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Tipos de carga</FormLabel>
+                      <FormLabel>Carga</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -424,7 +424,7 @@ export const SemiTrailerForm = ({
                                     ))}
                                 </div>
                               ) : (
-                                'Selecione o tipo de carga'
+                                'Selecione a carga'
                               )}
                               <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                             </Button>

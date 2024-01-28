@@ -90,7 +90,6 @@ export const ClientForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-12">
-          {JSON.stringify(form.formState.errors)}
           <FormSession>
             <div>
               <h2 className="text-base font-semibold">

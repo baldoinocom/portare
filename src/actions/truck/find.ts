@@ -18,7 +18,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     truck = await db.truck.findUniqueOrThrow({
       where: { id },
       include: {
-        vehicle: { include: { brand: true, unit: true, aggregate: true } },
+        vehicle: {
+          include: {
+            brand: true,
+            unit: { include: { company: true } },
+            aggregate: { include: { person: true, company: true } },
+          },
+        },
       },
     })
   } catch (error) {

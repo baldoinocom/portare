@@ -61,7 +61,7 @@ export const DriverSelect = ({ drivers }: { drivers?: DriverInclude[] }) => {
         </FormControl>
       </PopoverTrigger>
 
-      <PopoverContent className="p-0" align="end">
+      <PopoverContent className="p-0">
         <Command>
           <CommandInput placeholder="Pesquisar" />
           <CommandEmpty>Nenhum</CommandEmpty>

@@ -1,5 +1,5 @@
-import { VehicleInclude } from '@/actions/types'
-import { VehicleDetailCard } from '@/components/forms/ui/vehicle-detail-card'
+import { SemiTrailerInclude } from '@/actions/types'
+import { SemiTrailerDetailCard } from '@/components/forms/ui/semi-trailer-detail-card'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -21,23 +21,27 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const VehicleSelect = ({
-  vehicles,
+export const SemiTrailerSelect = ({
+  semiTrailers,
 }: {
-  vehicles?: VehicleInclude[]
+  semiTrailers?: SemiTrailerInclude[]
 }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
-  const selectedVehicle = vehicles?.find(({ id }) => id === getValues(name))
+  const selectedSemiTrailer = semiTrailers?.find(
+    ({ id }) => id === getValues(name),
+  )
 
-  const searchVehicle = (vehicle: VehicleInclude) => {
+  const searchSemiTrailer = (semiTrailer: SemiTrailerInclude) => {
     return (
-      vehicle.brand?.name +
+      semiTrailer?.trailers?.at(0)?.vehicle.brand?.name +
       ' ' +
-      vehicle.model +
+      semiTrailer?.trailers?.at(0)?.vehicle.model +
       ' ' +
-      formatLicensePlate(vehicle.licensePlate)
+      semiTrailer?.trailers
+        .map(({ vehicle }) => formatLicensePlate(vehicle.licensePlate))
+        .join(' - ')
     )
   }
 
@@ -53,8 +57,8 @@ export const VehicleSelect = ({
               !getValues(name) && 'text-muted-foreground',
             )}
           >
-            {selectedVehicle ? (
-              <VehicleDetailCard vehicle={selectedVehicle} />
+            {selectedSemiTrailer ? (
+              <SemiTrailerDetailCard semiTrailer={selectedSemiTrailer} />
             ) : (
               'Selecione'
             )}
@@ -63,28 +67,28 @@ export const VehicleSelect = ({
         </FormControl>
       </PopoverTrigger>
 
-      <PopoverContent className="p-0" align="end">
+      <PopoverContent className="p-0">
         <Command>
           <CommandInput placeholder="Pesquisar" />
           <CommandEmpty>Nenhum</CommandEmpty>
           <CommandGroup>
             <ScrollArea className="flex max-h-72 flex-col">
-              {selectedVehicle && (
+              {selectedSemiTrailer && (
                 <>
                   <CommandItem>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
-                    <VehicleDetailCard vehicle={selectedVehicle} />
+                    <SemiTrailerDetailCard semiTrailer={selectedSemiTrailer} />
                   </CommandItem>
                   <CommandSeparator className="m-1" />
                 </>
               )}
 
-              {vehicles
+              {semiTrailers
                 ?.filter(({ id }) => id !== getValues(name))
                 ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchVehicle(value)}
+                    value={searchSemiTrailer(value)}
                     onSelect={() =>
                       setValue(name, value.id, {
                         shouldDirty: true,
@@ -92,7 +96,7 @@ export const VehicleSelect = ({
                     }
                   >
                     <div className="w-6" />
-                    <VehicleDetailCard vehicle={value} />
+                    <SemiTrailerDetailCard semiTrailer={value} />
                   </CommandItem>
                 ))}
             </ScrollArea>

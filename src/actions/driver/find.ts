@@ -17,7 +17,14 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     driver = await db.driver.findUniqueOrThrow({
       where: { personId },
-      include: { person: true },
+      include: {
+        person: {
+          include: {
+            unit: { include: { company: true } },
+            aggregate: { include: { person: true, company: true } },
+          },
+        },
+      },
     })
   } catch (error) {
     return {

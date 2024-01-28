@@ -1,8 +1,19 @@
+import { action } from '@/actions'
+import { TripForm } from '@/components/forms/trip-form'
 import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
-import { TripForm } from '@/components/forms/trip-form'
 
-export default function Page() {
+export default async function Page() {
+  const [origins, destinations, drivers, trucks, semiTrailers, cargos] =
+    await Promise.all([
+      action.client().findMany(),
+      action.client().findMany(),
+      action.driver().findMany(),
+      action.truck().findMany(),
+      action.semiTrailer().findMany(),
+      action.cargo().findMany(),
+    ])
+
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
       <Header />
@@ -10,7 +21,14 @@ export default function Page() {
       <Separator />
 
       <main>
-        <TripForm />
+        <TripForm
+          origins={origins.data}
+          destinations={destinations.data}
+          drivers={drivers.data}
+          trucks={trucks.data}
+          semiTrailers={semiTrailers.data}
+          cargos={cargos.data}
+        />
       </main>
     </div>
   )

@@ -1,41 +1,44 @@
+import { TripSteps } from '@/lib/enums'
+
 const steps = [
-  { id: 'Etapa 1', name: 'Programação', href: '#', status: 'active' },
-  {
-    id: 'Etapa 2',
-    name: 'Informações da viagem',
-    href: '#',
-    status: 'disabled',
-  },
-  { id: 'Etapa 3', name: 'Resumo', href: '#', status: 'disabled' },
+  { id: 1, name: 'Programação' },
+  { id: 2, name: 'Informações da viagem' },
+  { id: 3, name: 'Resumo' },
 ]
 
-export const TripFormSteps = () => {
+export const TripFormSteps = ({
+  step,
+  onStep,
+}: {
+  step: TripSteps
+  onStep?: (step: TripSteps) => void
+}) => {
   return (
     <nav aria-label="Progress">
       <ol role="list" className="space-y-4 md:flex md:space-x-8 md:space-y-0">
-        {steps.map((step) => (
-          <li key={step.name} className="md:flex-1">
-            {step.status === 'active' ? (
-              <a
-                href={step.href}
-                className="flex flex-col border-l-4 border-primary py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+        {steps.map((item, index) => (
+          <li key={index} className="md:flex-1">
+            {String(item.id) <= step ? (
+              <div
+                onClick={() => onStep && onStep(String(item.id) as TripSteps)}
+                className="flex cursor-pointer flex-col border-l-4 border-primary py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
                 aria-current="step"
               >
                 <span className="border-primary text-sm font-medium">
-                  {step.id}
+                  Etapa {item.id}
                 </span>
-                <span className="text-sm font-medium">{step.name}</span>
-              </a>
+                <span className="text-sm font-medium">{item.name}</span>
+              </div>
             ) : (
-              <a
-                href={step.href}
-                className="group flex flex-col border-l-4 border-border py-2 pl-4 hover:border-muted-foreground md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+              <div
+                onClick={() => onStep && onStep(String(item.id) as TripSteps)}
+                className="group flex cursor-pointer flex-col border-l-4 border-border py-2 pl-4 hover:border-muted-foreground md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
               >
                 <span className="text-sm font-medium text-muted-foreground group-hover:text-accent-foreground">
-                  {step.id}
+                  Etapa {item.id}
                 </span>
-                <span className="text-sm font-medium">{step.name}</span>
-              </a>
+                <span className="text-sm font-medium">{item.name}</span>
+              </div>
             )}
           </li>
         ))}
@@ -44,30 +47,36 @@ export const TripFormSteps = () => {
   )
 }
 
-export const TripFormStepsFooter = () => {
+export const TripFormStepsFooter = ({
+  step,
+  onStep,
+}: {
+  step: TripSteps
+  onStep?: (step: TripSteps) => void
+}) => {
   return (
     <nav className="flex items-center justify-center" aria-label="Progress">
       <p className="text-sm font-medium">
-        Etapa {steps.filter((step) => step.status === 'active').length} de{' '}
+        Etapa {steps.filter((item) => String(item.id) <= step).length} de{' '}
         {steps.length}
       </p>
       <ol role="list" className="ml-8 flex items-center space-x-5">
-        {steps.map((step) => (
-          <li key={step.name}>
-            {step.status === 'active' ? (
-              <a
-                href={step.href}
-                className="block h-2.5 w-2.5 rounded-full bg-primary hover:bg-muted"
+        {steps.map((item, index) => (
+          <li key={index}>
+            {String(item.id) <= step ? (
+              <div
+                onClick={() => onStep && onStep(String(item.id) as TripSteps)}
+                className="block size-2.5 cursor-pointer rounded-full bg-primary hover:bg-muted"
               >
-                <span className="sr-only">{step.name}</span>
-              </a>
+                <span className="sr-only">{item.name}</span>
+              </div>
             ) : (
-              <a
-                href={step.href}
-                className="block h-2.5 w-2.5 rounded-full bg-border hover:bg-muted-foreground"
+              <div
+                onClick={() => onStep && onStep(String(item.id) as TripSteps)}
+                className="block size-2.5 cursor-pointer rounded-full bg-border hover:bg-muted-foreground"
               >
-                <span className="sr-only">{step.name}</span>
-              </a>
+                <span className="sr-only">{item.name}</span>
+              </div>
             )}
           </li>
         ))}

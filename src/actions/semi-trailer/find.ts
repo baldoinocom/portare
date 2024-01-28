@@ -22,7 +22,11 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         type: true,
         cargos: true,
         trailers: {
-          include: { vehicle: { include: { brand: true, unit: true } } },
+          include: {
+            vehicle: {
+              include: { brand: true, unit: { include: { company: true } } },
+            },
+          },
         },
       },
     })

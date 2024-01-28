@@ -1,3 +1,4 @@
+import { TripSteps } from '@/lib/enums'
 import { TripStatus } from '@prisma/client'
 import { z } from 'zod'
 
@@ -5,7 +6,7 @@ export const TripIdSchema = z.object({
   id: z.string().cuid(),
 })
 
-const TripSchema = z.object({
+export const TripSchema = z.object({
   order: z.optional(
     z
       .string()
@@ -65,44 +66,25 @@ const TripSchema = z.object({
     .positive(),
 })
 
-export const TripUpdateSchema = TripIdSchema.merge(TripSchema.deepPartial())
-  .refine(({ departedAt, arrivedAt }) => !departedAt === !arrivedAt, {
-    path: ['departedAt'],
-    message:
-      'É necessário informar a data de partida e de chegada para atualizar',
-  })
-  .refine(
-    ({ departedAt, arrivedAt }) =>
-      departedAt && arrivedAt ? departedAt <= arrivedAt : true,
-    {
-      path: ['departedAt'],
-      message: 'A data de partida deve ser anterior à data de chegada',
-    },
-  )
-
-export const TripStartStepSchema = TripSchema.pick({
-  status: true,
-  order: true,
-  note: true,
-  originId: true,
-  destinationId: true,
-  departedAt: true,
-  arrivedAt: true,
-})
-  .refine(({ departedAt, arrivedAt }) => departedAt && arrivedAt, {
-    path: ['departedAt'],
-    message: 'A data de partida e de chegada são obrigatórias',
-  })
-  .refine(({ departedAt, arrivedAt }) => departedAt <= arrivedAt, {
-    path: ['departedAt'],
-    message: 'A data de partida deve ser anterior à data de chegada',
-  })
-
-export const TripEndStepSchema = TripSchema.pick({
-  driverId: true,
-  truckId: true,
-  semiTrailerId: true,
-  cargoId: true,
+export const TripUpdateSchema = TripIdSchema.merge(
+  TripSchema.deepPartial(),
+).refine(({ departedAt, arrivedAt }) => !departedAt === !arrivedAt, {
+  path: ['departedAt'],
+  message:
+    'É necessário informar a data de partida e de chegada para atualizar',
 })
 
-export const TripStepsSchema = TripStartStepSchema.and(TripEndStepSchema)
+export const TripWithStepSchema = z.discriminatedUnion('step', [
+  z.object({ step: z.literal(TripSteps.one) }).merge(
+    TripSchema.omit({
+      driverId: true,
+      truckId: true,
+      semiTrailerId: true,
+      cargoId: true,
+    }),
+  ),
+
+  z.object({ step: z.literal(TripSteps.two) }).merge(TripSchema),
+
+  z.object({ step: z.literal(TripSteps.three) }).merge(TripSchema),
+])
