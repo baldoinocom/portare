@@ -109,3 +109,24 @@ const StoppedVehicleReturnType =
 export type StoppedVehicleInclude = Prisma.StoppedVehicleGetPayload<
   typeof StoppedVehicleReturnType
 >
+
+const TripReturnType = Prisma.validator<Prisma.TripDefaultArgs>()({
+  include: {
+    origin: { include: { company: true } },
+    destination: { include: { company: true } },
+    driver: { include: { person: true } },
+    truck: { include: { vehicle: { include: { brand: true } } } },
+    semiTrailer: {
+      include: {
+        type: true,
+        configuration: true,
+        cargos: true,
+        trailers: { include: { vehicle: { include: { brand: true } } } },
+      },
+    },
+    cargo: true,
+    unit: { include: { company: true } },
+    aggregate: { include: { person: true, company: true } },
+  },
+})
+export type TripInclude = Prisma.TripGetPayload<typeof TripReturnType>

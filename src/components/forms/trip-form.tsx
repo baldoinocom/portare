@@ -6,6 +6,7 @@ import {
   ClientInclude,
   DriverInclude,
   SemiTrailerInclude,
+  TripInclude,
   TruckInclude,
 } from '@/actions/types'
 import { ClientSelect } from '@/components/forms/ui/client-select'
@@ -65,7 +66,7 @@ import {
 } from '@/lib/formatters'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Cargo, Trip, TripStatus } from '@prisma/client'
+import { Cargo, TripStatus } from '@prisma/client'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Check, ChevronsUpDown } from 'lucide-react'
@@ -90,7 +91,7 @@ export const TripForm = ({
   semiTrailers,
   cargos,
 }: {
-  initialData?: Trip
+  initialData?: TripInclude
   origins?: ClientInclude[]
   destinations?: ClientInclude[]
   drivers?: DriverInclude[]

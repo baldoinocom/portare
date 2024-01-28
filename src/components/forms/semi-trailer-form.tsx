@@ -153,12 +153,19 @@ export const SemiTrailerForm = ({
   })
 
   const onSubmit = async (values: z.infer<typeof SemiTrailerSchema>) => {
+    if (!isLS) values.axle = null
+
     if (initialData) {
       await executeUpdate({ id: initialData.id, ...values })
     } else {
       await execute(values)
     }
   }
+
+  const isLS =
+    trailerConfigurations?.find(
+      ({ id }) => id === form.getValues('configurationId'),
+    )?.name === 'LS'
 
   return (
     <Form {...form}>
@@ -266,42 +273,6 @@ export const SemiTrailerForm = ({
                       <FormControl>
                         <InputMask {...field} mask="9999" placeholder="2024" />
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="sm:col-span-4">
-                <FormField
-                  control={form.control}
-                  name="axle"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Eixos</FormLabel>
-
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={String(field.value)}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione o eixo" />
-                          </SelectTrigger>
-                        </FormControl>
-
-                        <SelectContent>
-                          {axles.map(({ value, label }, index) => (
-                            <SelectItem
-                              key={index}
-                              title={label as string}
-                              value={String(value)}
-                            >
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -546,6 +517,44 @@ export const SemiTrailerForm = ({
                   )}
                 />
               </div>
+
+              {isLS && (
+                <div className="sm:col-span-4">
+                  <FormField
+                    control={form.control}
+                    name="axle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Eixos</FormLabel>
+
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={String(field.value)}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione o eixo" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            {axles.map(({ value, label }, index) => (
+                              <SelectItem
+                                key={index}
+                                title={label as string}
+                                value={String(value)}
+                              >
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
             </FormFields>
           </FormSession>
 

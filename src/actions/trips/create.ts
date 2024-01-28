@@ -29,6 +29,31 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let trip
 
   try {
+    if (truckId && semiTrailerId) {
+      const truckAxle = (
+        await db.truck.findUnique({
+          where: { id: truckId },
+          select: { vehicle: { select: { axle: true } } },
+        })
+      )?.vehicle?.axle
+
+      const trailerAxle = (
+        await db.semiTrailer.findUnique({
+          where: { id: semiTrailerId },
+          select: {
+            trailers: { select: { vehicle: { select: { axle: true } } } },
+          },
+        })
+      )?.trailers?.at(0)?.vehicle.axle
+
+      if (truckAxle === 4 && trailerAxle === 4) {
+        return {
+          error:
+            'O número de eixos do caminhão e do semirreboque não coincidem',
+        }
+      }
+    }
+
     trip = await db.trip.create({
       data: {
         order: emptyAsNull(order),

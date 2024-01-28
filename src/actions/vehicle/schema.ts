@@ -41,7 +41,8 @@ export const VehicleSchema = z.object({
       .int()
       .refine(({ toString: { length } }) => !length || length === 1, {
         message: 'O número deve ter no mínimo 1 e no máximo 9 eixos',
-      }),
+      })
+      .nullable(),
   ),
 
   chassis: z.optional(
