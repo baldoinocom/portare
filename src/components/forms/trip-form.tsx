@@ -1,10 +1,15 @@
 'use client'
 
 import { action } from '@/actions'
-import { TripSchema, TripWithStepSchema } from '@/actions/trips/schema'
+import {
+  TripSchema,
+  TripWithDraftSchema,
+  TripWithStepSchema,
+} from '@/actions/trips/schema'
 import {
   ClientInclude,
   DriverInclude,
+  GroupingInclude,
   SemiTrailerInclude,
   TripInclude,
   TruckInclude,
@@ -15,6 +20,7 @@ import { DriverSelect } from '@/components/forms/ui/driver-select'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
+import { GroupingSelect } from '@/components/forms/ui/grouping-select'
 import { SemiTrailerSelect } from '@/components/forms/ui/semi-trailer-select'
 import {
   TripFormSteps,
@@ -33,12 +39,14 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Popover,
   PopoverContent,
@@ -54,6 +62,7 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
@@ -69,7 +78,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Cargo, TripStatus } from '@prisma/client'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, ChevronsUpDown, Edit3Icon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
@@ -86,6 +95,7 @@ export const TripForm = ({
   initialData,
   origins,
   destinations,
+  groupings,
   drivers,
   trucks,
   semiTrailers,
@@ -94,6 +104,7 @@ export const TripForm = ({
   initialData?: TripInclude
   origins?: ClientInclude[]
   destinations?: ClientInclude[]
+  groupings?: GroupingInclude[]
   drivers?: DriverInclude[]
   trucks?: TruckInclude[]
   semiTrailers?: SemiTrailerInclude[]
@@ -117,7 +128,7 @@ export const TripForm = ({
     },
   })
 
-  const { create } = action.trip()
+  const { create, createDraft } = action.trip()
 
   const { execute } = useAction(create, {
     onSuccess: (data) => {
@@ -136,35 +147,72 @@ export const TripForm = ({
     },
   })
 
+  const { execute: executeDraft } = useAction(createDraft, {
+    onSuccess: (data) => {
+      router.replace(String(data.id))
+      toast({
+        title: 'Viagem registrada com sucesso',
+        description: 'A viagem foi registrada com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao registrar a viagem',
+        description: error,
+      })
+    },
+  })
+
   const onSubmit = async (values: TripFormValues) => {
-    if (step === TripSteps.one) {
-      onStep(TripSteps.two)
-    } else if (step === TripSteps.two) {
-      onStep(TripSteps.three)
+    if (requiredStep()) return nextStep()
+
+    if (draftStep()) {
+      resolverStep()
+
+      await executeDraft(TripWithDraftSchema.parse(values))
     } else {
       await execute(TripSchema.parse(values))
     }
   }
 
   const onErrorSubmit = () => {
-    if (step === TripSteps.three) {
+    if (!requiredStep()) {
       toast({
         variant: 'destructive',
-        title: 'Dados imcompletos',
+        title: 'Dados incompletos',
         description: 'Preencha todos os campos obrigatórios',
       })
     }
+
+    if (draftStep()) resolverStep()
   }
 
   const [step, setStep] = React.useState<TripSteps>(
     form.formState.defaultValues?.step as TripSteps,
   )
 
-  const onStep = (step: string) => {
-    router.replace('#')
+  const setStepValue = (step: string) => {
     form.setValue('step', step as TripSteps)
     setStep(step as TripSteps)
   }
+
+  const onStep = (step: string) => {
+    router.replace('#')
+    setStepValue(step)
+  }
+
+  const requiredStep = () => step === TripSteps.one || step === TripSteps.two
+
+  const draftStep = () => step === TripSteps.four || step === TripSteps.five
+
+  const nextStep = () => onStep(String(Number(step) + 1))
+
+  const resolverDraftStep = () => setStepValue(String(Number(step) + 2))
+
+  const resolverStep = () => setStepValue(String(Number(step) - 2))
+
+  const [groupingMode, setGroupingMode] = React.useState(true)
 
   const selectedOrigin = origins?.find(
     ({ companyId }) => companyId === form.getValues('originId'),
@@ -186,9 +234,15 @@ export const TripForm = ({
     ({ id }) => id === form.getValues('semiTrailerId'),
   )
 
-  // const selectedCargo = cargos?.find(
-  //   ({ id }) => id === form.getValues('cargoId'),
-  // )
+  const selectedCargo = cargos?.find(
+    ({ id }) => id === form.getValues('cargoId'),
+  )
+
+  const groupingErrors: (keyof z.infer<typeof TripSchema>)[] = [
+    'driverId',
+    'truckId',
+    'semiTrailerId',
+  ]
 
   return (
     <div className="space-y-12">
@@ -325,57 +379,110 @@ export const TripForm = ({
             {step === TripSteps.two && (
               <>
                 <FormSession>
-                  <div>
-                    <h2 className="text-base font-semibold">
-                      Informações da viagem
-                    </h2>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Informe as informações da viagem
-                    </p>
+                  <div className="space-y-4">
+                    <div>
+                      <h2 className="text-base font-semibold">
+                        Informações da viagem
+                      </h2>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Informe as informações da viagem
+                      </p>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="grouping-mode"
+                        defaultChecked={groupingMode}
+                        onCheckedChange={setGroupingMode}
+                      />
+                      <Label htmlFor="grouping-mode">Modo agrupamento</Label>
+                    </div>
                   </div>
 
                   <FormFields>
-                    <div className="sm:col-span-4">
-                      <FormField
-                        control={form.control}
-                        name="driverId"
-                        render={() => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Motorista</FormLabel>
-                            <DriverSelect drivers={drivers} />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    {groupingMode ? (
+                      <div className="sm:col-span-5">
+                        <FormField
+                          control={form.control}
+                          name="groupingId"
+                          render={({ field }) => (
+                            <FormItem className="group flex flex-col">
+                              <FormLabel className="flex items-center justify-between">
+                                Agrupamento
+                                {field.value && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    type="button"
+                                  >
+                                    <Edit3Icon className="size-4" />
+                                  </Button>
+                                )}
+                              </FormLabel>
+                              <GroupingSelect groupings={groupings} />
+                              <FormDescription>
+                                Agrupamento de motoristas, caminhões e
+                                semirreboques
+                              </FormDescription>
 
-                    <div className="sm:col-span-4">
-                      <FormField
-                        control={form.control}
-                        name="truckId"
-                        render={() => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Caminhão</FormLabel>
-                            <TruckSelect trucks={trucks} />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                              {groupingErrors.map((name, index) => (
+                                <FormField
+                                  key={index}
+                                  name={name}
+                                  render={() => <FormMessage />}
+                                />
+                              ))}
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="sm:col-span-4">
+                          <FormField
+                            control={form.control}
+                            name="driverId"
+                            render={() => (
+                              <FormItem className="flex flex-col">
+                                <FormLabel>Motorista</FormLabel>
+                                <DriverSelect drivers={drivers} />
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
 
-                    <div className="sm:col-span-4">
-                      <FormField
-                        control={form.control}
-                        name="semiTrailerId"
-                        render={() => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Semirreboque</FormLabel>
-                            <SemiTrailerSelect semiTrailers={semiTrailers} />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                        <div className="sm:col-span-4">
+                          <FormField
+                            control={form.control}
+                            name="truckId"
+                            render={() => (
+                              <FormItem className="flex flex-col">
+                                <FormLabel>Caminhão</FormLabel>
+                                <TruckSelect trucks={trucks} />
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <div className="sm:col-span-4">
+                          <FormField
+                            control={form.control}
+                            name="semiTrailerId"
+                            render={() => (
+                              <FormItem className="flex flex-col">
+                                <FormLabel>Semirreboque</FormLabel>
+                                <SemiTrailerSelect
+                                  semiTrailers={semiTrailers}
+                                />
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </>
+                    )}
 
                     <div className="sm:col-span-3">
                       <FormField
@@ -859,6 +966,16 @@ export const TripForm = ({
               <div className="flex-1">
                 <TripFormStepsFooter step={step} onStep={onStep} />
               </div>
+
+              {step !== TripSteps.one && (
+                <Button
+                  variant="outline"
+                  onClick={resolverDraftStep}
+                  disabled={form.formState.isSubmitting}
+                >
+                  Salvar rascunho
+                </Button>
+              )}
 
               <Button disabled={form.formState.isSubmitting}>
                 {step !== TripSteps.three ? 'Próximo' : 'Salvar'}

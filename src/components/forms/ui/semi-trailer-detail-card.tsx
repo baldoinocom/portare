@@ -15,7 +15,7 @@ export const SemiTrailerDetailCard = ({
       <span className="text-xs">
         {semiTrailer?.trailers
           .map(({ vehicle }) => formatLicensePlate(vehicle.licensePlate))
-          .join(' - ')}
+          .join(' | ')}
       </span>
     </div>
   )

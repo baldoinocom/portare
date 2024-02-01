@@ -228,7 +228,7 @@ export const semiTrailerColumns: ColumnDef<SemiTrailerInclude>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'semi-trailers/' + id}>
+              <Link href={'/semi-trailers/' + id}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

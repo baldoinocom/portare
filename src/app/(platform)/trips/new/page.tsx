@@ -4,15 +4,23 @@ import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
 
 export default async function Page() {
-  const [origins, destinations, drivers, trucks, semiTrailers, cargos] =
-    await Promise.all([
-      action.client().findMany(),
-      action.client().findMany(),
-      action.driver().findMany(),
-      action.truck().findMany(),
-      action.semiTrailer().findMany(),
-      action.cargo().findMany(),
-    ])
+  const [
+    origins,
+    destinations,
+    groupings,
+    drivers,
+    trucks,
+    semiTrailers,
+    cargos,
+  ] = await Promise.all([
+    action.client().findMany(),
+    action.client().findMany(),
+    action.grouping().findMany(),
+    action.driver().findMany(),
+    action.truck().findMany(),
+    action.semiTrailer().findMany(),
+    action.cargo().findMany(),
+  ])
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
@@ -24,6 +32,7 @@ export default async function Page() {
         <TripForm
           origins={origins.data}
           destinations={destinations.data}
+          groupings={groupings.data}
           drivers={drivers.data}
           trucks={trucks.data}
           semiTrailers={semiTrailers.data}

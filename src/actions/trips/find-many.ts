@@ -3,8 +3,13 @@
 import { TripInclude } from '@/actions/types'
 import { db } from '@/lib/db'
 
-export const findManyAction = async (): Promise<{ data: TripInclude[] }> => {
+export const findManyAction = async ({
+  draft,
+}: {
+  draft?: boolean
+} = {}): Promise<{ data: TripInclude[] }> => {
   const trips = await db.trip.findMany({
+    where: { draft },
     include: {
       origin: { include: { company: true } },
       destination: { include: { company: true } },

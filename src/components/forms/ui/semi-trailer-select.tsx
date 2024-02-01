@@ -41,7 +41,7 @@ export const SemiTrailerSelect = ({
       ' ' +
       semiTrailer?.trailers
         .map(({ vehicle }) => formatLicensePlate(vehicle.licensePlate))
-        .join(' - ')
+        .join(' | ')
     )
   }
 

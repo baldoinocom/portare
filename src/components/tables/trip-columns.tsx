@@ -79,7 +79,7 @@ export const tripColumns: ColumnDef<TripInclude>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="whitespace-nowrap">
-        {getValue && <CompanyDetailCard company={getValue<Company>()} />}
+        {!!getValue() && <CompanyDetailCard company={getValue<Company>()} />}
       </div>
     ),
   },
@@ -90,7 +90,7 @@ export const tripColumns: ColumnDef<TripInclude>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="whitespace-nowrap">
-        {getValue && <CompanyDetailCard company={getValue<Company>()} />}
+        {!!getValue() && <CompanyDetailCard company={getValue<Company>()} />}
       </div>
     ),
   },
@@ -121,7 +121,9 @@ export const tripColumns: ColumnDef<TripInclude>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="whitespace-nowrap">
-        {getValue && <DriverDetailCard driver={getValue<DriverInclude>()} />}
+        {!!getValue() && (
+          <DriverDetailCard driver={getValue<DriverInclude>()} />
+        )}
       </div>
     ),
   },
@@ -132,7 +134,7 @@ export const tripColumns: ColumnDef<TripInclude>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="whitespace-nowrap">
-        {getValue && <TruckDetailCard truck={getValue<TruckInclude>()} />}
+        {!!getValue() && <TruckDetailCard truck={getValue<TruckInclude>()} />}
       </div>
     ),
   },
@@ -143,7 +145,7 @@ export const tripColumns: ColumnDef<TripInclude>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="whitespace-nowrap">
-        {getValue && (
+        {!!getValue() && (
           <SemiTrailerDetailCard semiTrailer={getValue<SemiTrailerInclude>()} />
         )}
       </div>
@@ -166,7 +168,7 @@ export const tripColumns: ColumnDef<TripInclude>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'trips/' + id}>
+              <Link href={'/trips/' + id}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

@@ -140,7 +140,7 @@ export const unitColumns: ColumnDef<UnitInclude>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'units/' + companyId}>
+              <Link href={'/units/' + companyId}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

@@ -30,9 +30,8 @@ export const VehicleSchema = z.object({
     z
       .string()
       .trim()
-      .refine(({ length }) => !length || length === 4, {
-        message: 'O ano deve ter exatamente 4 dígitos',
-      }),
+      .toUpperCase()
+      .max(255, { message: 'O ano não pode ter mais de 255 caracteres' }),
   ),
 
   axle: z.optional(
@@ -42,7 +41,7 @@ export const VehicleSchema = z.object({
       .refine(({ toString: { length } }) => !length || length === 1, {
         message: 'O número deve ter no mínimo 1 e no máximo 9 eixos',
       })
-      .nullable(),
+      .nullish(),
   ),
 
   chassis: z.optional(

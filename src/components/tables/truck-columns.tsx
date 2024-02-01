@@ -121,7 +121,7 @@ export const truckColumns: ColumnDef<TruckInclude>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'trucks/' + id}>
+              <Link href={'/trucks/' + id}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

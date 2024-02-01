@@ -140,7 +140,7 @@ export const clientColumns: ColumnDef<ClientInclude>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'clients/' + companyId}>
+              <Link href={'/clients/' + companyId}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

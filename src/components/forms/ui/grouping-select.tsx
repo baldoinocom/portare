@@ -1,0 +1,131 @@
+import { GroupingInclude } from '@/actions/types'
+import {
+  GroupingDetailCard,
+  GroupingPreviewCard,
+} from '@/components/forms/ui/grouping-detail-card'
+import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandSeparator,
+} from '@/components/ui/command'
+import { FormControl, useFormField } from '@/components/ui/form'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { formatCPF, formatLicensePlate } from '@/lib/formatters'
+import { cn, nullAsUndefined } from '@/lib/utils'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import { useFormContext } from 'react-hook-form'
+
+export const GroupingSelect = ({
+  groupings,
+}: {
+  groupings?: GroupingInclude[]
+}) => {
+  const { getValues, setValue } = useFormContext()
+  const { name } = useFormField()
+
+  const selectedGrouping = groupings?.find(({ id }) => id === getValues(name))
+
+  const searchValue = (grouping: GroupingInclude) => {
+    return (
+      grouping.driver?.person.name +
+      ' ' +
+      grouping.driver?.person.nickname +
+      ' ' +
+      formatCPF(grouping.driver?.person.cpf) +
+      ' ' +
+      grouping.truck?.vehicle.brand?.name +
+      ' ' +
+      grouping.truck?.vehicle.model +
+      ' ' +
+      formatLicensePlate(grouping.truck?.vehicle.licensePlate) +
+      ' ' +
+      grouping.semiTrailer?.trailers?.at(0)?.vehicle.brand?.name +
+      ' ' +
+      grouping.semiTrailer?.trailers?.at(0)?.vehicle.model +
+      ' ' +
+      grouping.semiTrailer?.trailers
+        .map(({ vehicle }) => formatLicensePlate(vehicle.licensePlate))
+        .join(' | ')
+    )
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <FormControl>
+          <Button
+            variant="outline"
+            role="combobox"
+            className={cn(
+              'h-auto',
+              !getValues(name) && 'text-wrap text-start text-muted-foreground',
+            )}
+          >
+            {selectedGrouping ? (
+              <GroupingDetailCard grouping={selectedGrouping} />
+            ) : (
+              <div className="flex flex-1 flex-row justify-between">
+                <div>Selecione motorista, caminhão e semirreboque</div>
+                <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+              </div>
+            )}
+          </Button>
+        </FormControl>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-full p-0">
+        <Command>
+          <CommandInput placeholder="Pesquisar" />
+          <CommandEmpty>Nenhum</CommandEmpty>
+          <CommandGroup>
+            <ScrollArea className="flex max-h-72 flex-col">
+              {selectedGrouping && (
+                <>
+                  <CommandItem>
+                    <Check className="mr-2 size-4 shrink-0 opacity-100" />
+                    <GroupingPreviewCard grouping={selectedGrouping} />
+                  </CommandItem>
+                  <CommandSeparator className="m-1" />
+                </>
+              )}
+              {groupings
+                ?.filter(({ id }) => id !== getValues(name))
+                ?.map((grouping, index) => (
+                  <CommandItem
+                    key={index}
+                    value={searchValue(grouping)}
+                    onSelect={() => {
+                      const value = nullAsUndefined(grouping)
+
+                      setValue(name, grouping.id, { shouldDirty: true })
+                      setValue('driverId', value?.driverId, {
+                        shouldDirty: true,
+                      })
+                      setValue('truckId', value?.truckId, {
+                        shouldDirty: true,
+                      })
+                      setValue('semiTrailerId', value?.semiTrailerId, {
+                        shouldDirty: true,
+                      })
+                    }}
+                  >
+                    <div className="w-6" />
+                    <GroupingPreviewCard grouping={grouping} />
+                  </CommandItem>
+                ))}
+            </ScrollArea>
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}

@@ -1,44 +1,43 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
-import { truckColumns } from '@/components/tables/truck-columns'
+import { tripColumns } from '@/components/tables/trip-columns'
 import { DataTable } from '@/components/tables/ui/data-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { CheckIcon, ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
+import {
+  ClipboardIcon,
+  MapPinnedIcon,
+  PlusIcon,
+  RocketIcon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export default async function Page() {
-  const trucks = await action.truck().findMany()
+  const trips = await action.trip().findMany({ draft: false })
 
   return (
     <main>
       <div className="flex flex-col gap-y-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <div className="min-w-0 flex-1">
-            <h1 className="text-2xl font-bold">Cadastro de caminhões</h1>
+            <h2 className="text-2xl font-bold">Programações</h2>
 
             <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
               <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                <ClipboardIcon className="mr-1.5" />0 Cadastrados
+                <ClipboardIcon className="mr-1.5" />0 Registros
               </div>
 
               <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                <CheckIcon className="mr-1.5" />0 Disponíveis
-              </div>
-
-              <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                <RocketIcon className="mr-1.5" />0 Em viagem
+                <RocketIcon className="mr-1.5" />0 Em operação
               </div>
             </div>
           </div>
 
           <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
-            {/* <ButtonImport /> */}
-
             <Button asChild>
-              <Link href="/trucks/new">
+              <Link href="/trips/new">
                 <PlusIcon className="mr-1.5" />
-                Cadastrar
+                Registrar
               </Link>
             </Button>
           </div>
@@ -46,22 +45,22 @@ export default async function Page() {
 
         <Separator />
 
-        {!trucks.data.length && (
-          <EmptyState href="/trucks/new">
-            <PlusIcon
+        {!trips.data.length && (
+          <EmptyState href="/trips/new">
+            <MapPinnedIcon
               strokeWidth={1.2}
               size={52}
               className="mx-auto text-muted-foreground"
             />
 
             <span className="mt-2 block text-sm font-semibold">
-              Cadastrar um novo caminhão
+              Registrar uma nova viagem
             </span>
           </EmptyState>
         )}
 
-        {!!trucks.data.length && (
-          <DataTable columns={truckColumns} data={trucks.data} />
+        {!!trips.data.length && (
+          <DataTable columns={tripColumns} data={trips.data} />
         )}
       </div>
     </main>

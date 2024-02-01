@@ -340,7 +340,7 @@ model Vehicle {
   id           Int     @id @default(autoincrement())
   licensePlate String  @unique @db.VarChar(10)
   model        String?
-  year         String? @db.VarChar(4)
+  year         String?
   axle         Int?
   chassis      String? @unique @db.VarChar(17)
   renavam      String? @unique @db.VarChar(11) // RENAVAM - Registro Nacional de Veículos Automotores
@@ -532,7 +532,7 @@ model Grouping {
 
 model Trip {
   id         String     @id @default(cuid())
-  scheduled  Boolean    @default(false)
+  draft      Boolean    @default(false)
   order      String?
   note       String?    @db.Text
   departedAt DateTime?  @map("departed_at")
@@ -551,8 +551,8 @@ model Trip {
   truckId Int?   @map("truck_id")
   truck   Truck? @relation(fields: [truckId], references: [id])
 
-  semiTrailerId Int         @map("semi_trailer_id")
-  semiTrailer   SemiTrailer @relation(fields: [semiTrailerId], references: [id])
+  semiTrailerId Int?         @map("semi_trailer_id")
+  semiTrailer   SemiTrailer? @relation(fields: [semiTrailerId], references: [id])
 
   cargoId Int?   @map("cargo_id")
   cargo   Cargo? @relation(fields: [cargoId], references: [id])
@@ -568,7 +568,7 @@ model Trip {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([scheduled])
+  @@index([draft])
   @@index([status])
   @@index([originId])
   @@index([destinationId])

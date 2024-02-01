@@ -130,3 +130,21 @@ const TripReturnType = Prisma.validator<Prisma.TripDefaultArgs>()({
   },
 })
 export type TripInclude = Prisma.TripGetPayload<typeof TripReturnType>
+
+const GroupingReturnType = Prisma.validator<Prisma.GroupingDefaultArgs>()({
+  include: {
+    driver: { include: { person: true } },
+    truck: { include: { vehicle: { include: { brand: true } } } },
+    semiTrailer: {
+      include: {
+        type: true,
+        cargos: true,
+        configuration: true,
+        trailers: { include: { vehicle: { include: { brand: true } } } },
+      },
+    },
+  },
+})
+export type GroupingInclude = Prisma.GroupingGetPayload<
+  typeof GroupingReturnType
+>

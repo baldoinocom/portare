@@ -74,17 +74,32 @@ export const TripUpdateSchema = TripIdSchema.merge(
     'É necessário informar a data de partida e de chegada para atualizar',
 })
 
-export const TripWithStepSchema = z.discriminatedUnion('step', [
-  z.object({ step: z.literal(TripSteps.one) }).merge(
-    TripSchema.omit({
-      driverId: true,
-      truckId: true,
-      semiTrailerId: true,
-      cargoId: true,
+export const TripWithDraftSchema = TripSchema.partial({
+  driverId: true,
+  truckId: true,
+  semiTrailerId: true,
+  cargoId: true,
+})
+
+export const TripWithStepSchema = z
+  .discriminatedUnion('step', [
+    z.object({ step: z.literal(TripSteps.one) }).merge(
+      TripSchema.omit({
+        driverId: true,
+        truckId: true,
+        semiTrailerId: true,
+        cargoId: true,
+      }),
+    ),
+
+    z.object({ step: z.literal(TripSteps.two) }).merge(TripSchema),
+    z.object({ step: z.literal(TripSteps.three) }).merge(TripSchema),
+
+    z.object({ step: z.literal(TripSteps.four) }).merge(TripWithDraftSchema),
+    z.object({ step: z.literal(TripSteps.five) }).merge(TripWithDraftSchema),
+  ])
+  .and(
+    z.object({
+      groupingId: z.number().int().positive().nullish(),
     }),
-  ),
-
-  z.object({ step: z.literal(TripSteps.two) }).merge(TripSchema),
-
-  z.object({ step: z.literal(TripSteps.three) }).merge(TripSchema),
-])
+  )

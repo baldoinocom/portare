@@ -121,7 +121,7 @@ export const driverColumns: ColumnDef<DriverInclude>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'drivers/' + personId}>
+              <Link href={'/drivers/' + personId}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

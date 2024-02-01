@@ -148,7 +148,7 @@ export const aggregateColumns: ColumnDef<AggregateInclude>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={'aggregates/' + id}>
+              <Link href={'/aggregates/' + id}>
                 <Eye className="mr-2 size-4" />
                 Visualizar
               </Link>

@@ -49,7 +49,7 @@ export const CompanySchema = z.object({
       .nativeEnum(UF, {
         invalid_type_error: 'O UF é inválido',
       })
-      .nullable(),
+      .nullish(),
   ),
 })
 
