@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { StoppedVehicleWithDateRangeSchema } from '@/actions/stopped-vehicle/schema'
 import { StoppedVehicleInclude, VehicleInclude } from '@/actions/types'
+import { FormAlert } from '@/components/forms/ui/form-alert'
 import { StartAndEndDateSelect } from '@/components/forms/ui/start-and-end-date-select'
 import { VehicleSelect } from '@/components/forms/ui/vehicle-select'
 import { Button } from '@/components/ui/button'
@@ -215,6 +216,8 @@ export const StoppedVehicleFormDialog = ({
               )}
             />
           </div>
+
+          <FormAlert />
 
           <DialogFooter>
             <Button type="submit" disabled={form.formState.isSubmitting}>

@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { TrailerCertificateSchema } from '@/actions/trailer-certificate/schema'
 import { TrailerCertificateInclude, TrailerInclude } from '@/actions/types'
+import { FormAlert } from '@/components/forms/ui/form-alert'
 import { TrailerSelect } from '@/components/forms/ui/trailer-select'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -228,6 +229,8 @@ export const TrailerCertificateFormDialog = ({
               )}
             />
           </div>
+
+          <FormAlert />
 
           <DialogFooter>
             <Button type="submit" disabled={form.formState.isSubmitting}>

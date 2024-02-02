@@ -4,6 +4,7 @@ import { action } from '@/actions'
 import { ASOSchema } from '@/actions/aso/schema'
 import { ASOInclude, DriverInclude } from '@/actions/types'
 import { DriverSelect } from '@/components/forms/ui/driver-select'
+import { FormAlert } from '@/components/forms/ui/form-alert'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -224,6 +225,8 @@ export const ASOFormDialog = ({
               )}
             />
           </div>
+
+          <FormAlert />
 
           <DialogFooter>
             <Button type="submit" disabled={form.formState.isSubmitting}>

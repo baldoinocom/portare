@@ -2,6 +2,7 @@
 
 import { action } from '@/actions'
 import { TrailerTypeSchema } from '@/actions/trailer-type/schema'
+import { FormAlert } from '@/components/forms/ui/form-alert'
 import { Button } from '@/components/ui/button'
 import {
   DialogDescription,
@@ -116,6 +117,8 @@ export const TrailerTypeFormDialog = ({
               )}
             />
           </div>
+
+          <FormAlert />
 
           <DialogFooter>
             <Button type="submit" disabled={form.formState.isSubmitting}>

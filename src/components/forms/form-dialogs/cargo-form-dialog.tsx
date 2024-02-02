@@ -2,6 +2,7 @@
 
 import { action } from '@/actions'
 import { CargoSchema } from '@/actions/cargo/schema'
+import { FormAlert } from '@/components/forms/ui/form-alert'
 import { Button } from '@/components/ui/button'
 import {
   DialogDescription,
@@ -108,6 +109,8 @@ export const CargoFormDialog = ({ initialData }: { initialData?: Cargo }) => {
               )}
             />
           </div>
+
+          <FormAlert />
 
           <DialogFooter>
             <Button type="submit" disabled={form.formState.isSubmitting}>

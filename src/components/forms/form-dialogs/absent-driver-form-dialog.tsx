@@ -4,6 +4,7 @@ import { action } from '@/actions'
 import { AbsentDriverWithDateRangeSchema } from '@/actions/absent-driver/schema'
 import { AbsentDriverInclude, DriverInclude } from '@/actions/types'
 import { DriverSelect } from '@/components/forms/ui/driver-select'
+import { FormAlert } from '@/components/forms/ui/form-alert'
 import { StartAndEndDateSelect } from '@/components/forms/ui/start-and-end-date-select'
 import { Button } from '@/components/ui/button'
 import {
@@ -214,6 +215,8 @@ export const AbsentDriverFormDialog = ({
               )}
             />
           </div>
+
+          <FormAlert />
 
           <DialogFooter>
             <Button type="submit" disabled={form.formState.isSubmitting}>
