@@ -39,7 +39,6 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     user = await db.user.update({ where: { externalUserId }, data: {} })
   } catch (error) {
-    console.log(error)
     return { error: 'Ocorreu um erro ao atualizar, tente novamente mais tarde' }
   }
 

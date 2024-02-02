@@ -2,7 +2,6 @@ import {
   Building2Icon,
   BuildingIcon,
   FactoryIcon,
-  GroupIcon,
   HomeIcon,
   MapPinnedIcon,
   TruckIcon,
@@ -13,7 +12,6 @@ import { MenuItemProps } from './sidebar/menu'
 export const navigation: MenuItemProps[] = [
   { name: 'Início', href: '/', icon: HomeIcon },
   { name: 'Viagens', href: '/trips', icon: MapPinnedIcon },
-  { name: 'Agrupamentos', href: '/groupings', icon: GroupIcon },
   {
     name: 'Veículos',
     icon: TruckIcon,
@@ -23,11 +21,7 @@ export const navigation: MenuItemProps[] = [
     ],
   },
   { name: 'Motoristas', href: '/drivers', icon: Users2Icon },
-  {
-    name: 'Agregados',
-    href: '/aggregates',
-    icon: BuildingIcon,
-  },
+  { name: 'Agregados', href: '/aggregates', icon: BuildingIcon },
   { name: 'Origens/Destinos', href: '/clients', icon: FactoryIcon },
   { name: 'Unidades', href: '/units', icon: Building2Icon },
 ]

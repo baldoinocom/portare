@@ -11,7 +11,7 @@ export const FormAlert = ({ children }: { children?: React.ReactNode }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [x: string]: any
   }) => string | null = (error) => {
-    const message = error?.root?.message
+    const message = error?.root?.message || error?.['']?.message
     if (message) return message || null
 
     for (const key in error) {

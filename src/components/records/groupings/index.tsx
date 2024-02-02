@@ -1,16 +1,18 @@
 import { action } from '@/actions'
-import { EmptyState } from '@/components/empty-state'
 import { GroupingFormDialog } from '@/components/forms/form-dialogs/grouping-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
-import { groupingColumns } from '@/components/tables/grouping-columns'
-import { DataTable } from '@/components/tables/ui/data-table'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
-import { PlusIcon } from 'lucide-react'
 import { Header } from './header'
+import { Main } from './main'
 
 export const Groupings = async () => {
-  const groupings = await action.grouping().findMany()
+  const [groupings, drivers, trucks, semiTrailers] = await Promise.all([
+    action.grouping().findMany(),
+    action.driver().findMany(),
+    action.truck().findMany(),
+    action.semiTrailer().findMany(),
+  ])
 
   return (
     <Dialog>
@@ -18,32 +20,19 @@ export const Groupings = async () => {
 
       <Separator />
 
-      <main>
-        <div className="flex flex-col gap-y-8">
-          {!groupings.data.length && (
-            <DialogTrigger asChild>
-              <EmptyState href="#">
-                <PlusIcon
-                  strokeWidth={1.2}
-                  size={52}
-                  className="mx-auto text-muted-foreground"
-                />
-
-                <span className="mt-2 block text-sm font-semibold">
-                  Registrar um agrupamento
-                </span>
-              </EmptyState>
-            </DialogTrigger>
-          )}
-
-          {!!groupings.data.length && (
-            <DataTable columns={groupingColumns} data={groupings.data} />
-          )}
-        </div>
-      </main>
+      <Main
+        groupings={groupings.data}
+        drivers={drivers.data}
+        trucks={trucks.data}
+        semiTrailers={semiTrailers.data}
+      />
 
       <FormDialogContent>
-        <GroupingFormDialog />
+        <GroupingFormDialog
+          drivers={drivers.data}
+          trucks={trucks.data}
+          semiTrailers={semiTrailers.data}
+        />
       </FormDialogContent>
     </Dialog>
   )

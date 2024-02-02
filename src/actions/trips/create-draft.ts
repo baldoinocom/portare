@@ -74,7 +74,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     return { error: 'Ocorreu um erro ao criar, tente novamente mais tarde' }
   }
 
-  revalidatePath('/trips/draft')
+  revalidatePath('/trips')
 
   return { data: trip }
 }

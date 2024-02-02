@@ -31,9 +31,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { formatVehicleStatus } from '@/lib/formatters'
-import { nullAsUndefined } from '@/lib/utils'
+import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { VehicleStatus } from '@prisma/client'
+import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -103,7 +104,6 @@ export const StoppedVehicleFormDialog = ({
     values: z.infer<typeof StoppedVehicleWithDateRangeSchema>,
   ) => {
     if (initialData) {
-      console.log(values)
       await executeUpdate({ id: initialData.id, ...values })
     } else {
       await execute(values)
@@ -113,113 +113,121 @@ export const StoppedVehicleFormDialog = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <DialogHeader>
-          <DialogTitle>
-            {initialData
-              ? 'Registro da parada de veículo'
-              : 'Registro de parada de veículo'}
-          </DialogTitle>
+        <div className="space-y-4">
+          <DialogHeader>
+            <DialogTitle>
+              {initialData
+                ? 'Registro da parada de veículo'
+                : 'Registro de parada de veículo'}
+            </DialogTitle>
 
-          <DialogDescription>
-            {initialData
-              ? 'Altere as paradas de veículo'
-              : 'Regstre novas paradas de veículo'}
-          </DialogDescription>
-        </DialogHeader>
+            <DialogDescription>
+              {initialData
+                ? 'Altere as paradas de veículo'
+                : 'Regstre novas paradas de veículo'}
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          {!initialData && (
+          <div className="grid gap-4">
+            {!initialData && (
+              <FormField
+                control={form.control}
+                name="vehicleId"
+                render={() => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                      <FormLabel className="text-right">Veículo</FormLabel>
+                      <VehicleSelect vehicles={vehicles} />
+                    </div>
+                    <FormMessage className="text-right" />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
-              name="vehicleId"
+              name="startedAt"
               render={() => (
                 <FormItem>
                   <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                    <FormLabel className="text-right">Veículo</FormLabel>
-                    <VehicleSelect vehicles={vehicles} />
+                    <FormLabel className="text-right">
+                      Data de início e fim
+                    </FormLabel>
+                    <StartAndEndDateSelect />
                   </div>
                   <FormMessage className="text-right" />
                 </FormItem>
               )}
             />
-          )}
 
-          <FormField
-            control={form.control}
-            name="startedAt"
-            render={() => (
-              <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                  <FormLabel className="text-right">
-                    Data de início e fim
-                  </FormLabel>
-                  <StartAndEndDateSelect />
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                    <FormLabel className="col-span-2 text-right">
+                      Status do veículo
+                    </FormLabel>
 
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                  <FormLabel className="col-span-2 text-right">
-                    Status do veículo
-                  </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="col-span-2">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o status" />
+                        </SelectTrigger>
+                      </FormControl>
 
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className="col-span-2">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o status" />
-                      </SelectTrigger>
+                      <SelectContent>
+                        {status.map(({ value, label }, index) => (
+                          <SelectItem
+                            key={index}
+                            title={label as string}
+                            value={value}
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <FormMessage className="text-right" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="note"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                    <FormLabel className="text-right">Observação</FormLabel>
+                    <FormControl className="col-span-3">
+                      <Textarea {...field} />
                     </FormControl>
+                  </div>
+                  <FormMessage className="text-right" />
+                </FormItem>
+              )}
+            />
+          </div>
 
-                    <SelectContent>
-                      {status.map(({ value, label }, index) => (
-                        <SelectItem
-                          key={index}
-                          title={label as string}
-                          value={value}
-                        >
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                  <FormLabel className="text-right">Observação</FormLabel>
-                  <FormControl className="col-span-3">
-                    <Textarea {...field} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
+          <DialogFooter>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Loader2
+                className={cn(
+                  'mr-2 size-4 animate-spin',
+                  !form.formState.isSubmitting && 'sr-only',
+                )}
+              />
+              {initialData ? 'Salvar alterações' : 'Salvar'}
+            </Button>
+          </DialogFooter>
         </div>
-
-        <DialogFooter>
-          <Button disabled={form.formState.isSubmitting}>
-            {initialData ? 'Salvar alterações' : 'Salvar'}
-          </Button>
-        </DialogFooter>
       </form>
     </Form>
   )

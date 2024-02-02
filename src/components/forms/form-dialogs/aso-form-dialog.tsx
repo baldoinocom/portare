@@ -40,7 +40,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ExpirationType } from '@prisma/client'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -104,7 +104,6 @@ export const ASOFormDialog = ({
 
   const onSubmit = async (values: z.infer<typeof ASOSchema>) => {
     if (initialData) {
-      console.log(values)
       await executeUpdate({ id: initialData.id, ...values })
     } else {
       await execute(values)
@@ -114,120 +113,130 @@ export const ASOFormDialog = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <DialogHeader>
-          <DialogTitle>
-            {initialData ? 'Registro do A.S.O' : 'Registro de A.S.O'}
-          </DialogTitle>
+        <div className="space-y-4">
+          <DialogHeader>
+            <DialogTitle>
+              {initialData ? 'Registro do A.S.O' : 'Registro de A.S.O'}
+            </DialogTitle>
 
-          <DialogDescription>
-            {initialData ? 'Altere os A.S.O' : 'Regstre novas A.S.O'}
-          </DialogDescription>
-        </DialogHeader>
+            <DialogDescription>
+              {initialData ? 'Altere os A.S.O' : 'Regstre novas A.S.O'}
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          {!initialData && (
+          <div className="grid gap-4">
+            {!initialData && (
+              <FormField
+                control={form.control}
+                name="driverId"
+                render={() => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                      <FormLabel className="text-right">Motorista</FormLabel>
+                      <DriverSelect drivers={drivers} />
+                    </div>
+                    <FormMessage className="text-right" />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
-              name="driverId"
-              render={() => (
+              name="startedAt"
+              render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                    <FormLabel className="text-right">Motorista</FormLabel>
-                    <DriverSelect drivers={drivers} />
+                    <FormLabel className="col-span-2 text-right">
+                      Data de início
+                    </FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl className="col-span-2">
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              'justify-between',
+                              !field.value && 'text-muted-foreground',
+                            )}
+                          >
+                            {field.value
+                              ? format(field.value, 'PP', { locale: ptBR })
+                              : 'Escolha uma data'}
+                            <CalendarIcon className="ml-2 size-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+
+                      <PopoverContent className="p-0" align="end">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date: Date) =>
+                            date < new Date('2000-01-01')
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </div>
                   <FormMessage className="text-right" />
                 </FormItem>
               )}
             />
-          )}
 
-          <FormField
-            control={form.control}
-            name="startedAt"
-            render={({ field }) => (
-              <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                  <FormLabel className="col-span-2 text-right">
-                    Data de início
-                  </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
+            <FormField
+              control={form.control}
+              name="expirationType"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="grid grid-cols-4 items-center gap-4 space-y-0">
+                    <FormLabel className="col-span-2 text-right">
+                      Tipo de expiração
+                    </FormLabel>
+
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl className="col-span-2">
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            'justify-between',
-                            !field.value && 'text-muted-foreground',
-                          )}
-                        >
-                          {field.value
-                            ? format(field.value, 'PP', { locale: ptBR })
-                            : 'Escolha uma data'}
-                          <CalendarIcon className="ml-2 size-4 shrink-0 opacity-50" />
-                        </Button>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o tipo" />
+                        </SelectTrigger>
                       </FormControl>
-                    </PopoverTrigger>
 
-                    <PopoverContent className="p-0" align="end">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date: Date) => date < new Date('2000-01-01')}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
+                      <SelectContent>
+                        {expirationTypes.map(({ value, label }, index) => (
+                          <SelectItem
+                            key={index}
+                            title={label as string}
+                            value={value}
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <FormMessage className="text-right" />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          <FormField
-            control={form.control}
-            name="expirationType"
-            render={({ field }) => (
-              <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4 space-y-0">
-                  <FormLabel className="col-span-2 text-right">
-                    Tipo de expiração
-                  </FormLabel>
-
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className="col-span-2">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o tipo" />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {expirationTypes.map(({ value, label }, index) => (
-                        <SelectItem
-                          key={index}
-                          title={label as string}
-                          value={value}
-                        >
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
+          <DialogFooter>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Loader2
+                className={cn(
+                  'mr-2 size-4 animate-spin',
+                  !form.formState.isSubmitting && 'sr-only',
+                )}
+              />
+              {initialData ? 'Salvar alterações' : 'Salvar'}
+            </Button>
+          </DialogFooter>
         </div>
-
-        <DialogFooter>
-          <Button disabled={form.formState.isSubmitting}>
-            {initialData ? 'Salvar alterações' : 'Salvar'}
-          </Button>
-        </DialogFooter>
       </form>
     </Form>
   )

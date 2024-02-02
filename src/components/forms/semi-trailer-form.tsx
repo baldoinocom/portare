@@ -46,7 +46,7 @@ import { useAction } from '@/hooks/use-action'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Brand, Cargo, TrailerConfiguration, TrailerType } from '@prisma/client'
-import { Check, ChevronsUpDown, Info } from 'lucide-react'
+import { Check, ChevronsUpDown, Info, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -679,13 +679,21 @@ export const SemiTrailerForm = ({
 
               <div className="flex items-center justify-end space-x-6">
                 <Button
+                  type="reset"
                   variant="ghost"
                   disabled={form.formState.isSubmitting}
                   onClick={() => form.reset()}
                 >
                   Descartar
                 </Button>
-                <Button disabled={form.formState.isSubmitting}>
+
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  <Loader2
+                    className={cn(
+                      'mr-2 size-4 animate-spin',
+                      !form.formState.isSubmitting && 'sr-only',
+                    )}
+                  />
                   Salvar alterações
                 </Button>
               </div>
@@ -699,7 +707,15 @@ export const SemiTrailerForm = ({
               <FormAlert />
 
               <div className="flex items-center justify-end space-x-6">
-                <Button disabled={form.formState.isSubmitting}>Salvar</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  <Loader2
+                    className={cn(
+                      'mr-2 size-4 animate-spin',
+                      !form.formState.isSubmitting && 'sr-only',
+                    )}
+                  />
+                  Salvar
+                </Button>
               </div>
             </>
           )}
