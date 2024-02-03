@@ -397,7 +397,7 @@ model Truck {
   id         Int     @id @default(autoincrement())
   compressor Boolean @default(false)
 
-  vehicleId Int     @map("vehicle_id")
+  vehicleId Int     @unique @map("vehicle_id")
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   trips     Trip[]
@@ -436,7 +436,7 @@ model Trailer {
   id          Int     @id @default(autoincrement())
   fleetNumber String? @unique
 
-  vehicleId Int     @map("vehicle_id")
+  vehicleId Int     @unique @map("vehicle_id")
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   semiTrailerId Int?         @map("semi_trailer_id")

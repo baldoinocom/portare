@@ -1,101 +1,112 @@
 'use client'
 
-import { importTruckAction } from '@/actions/truck/import'
+import { action } from '@/actions'
+import { TruckImportSchema } from '@/actions/truck/schema'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-import { UploadIcon } from 'lucide-react'
+import { useAction } from '@/hooks/use-action'
+import { Loader2, UploadIcon } from 'lucide-react'
 import * as React from 'react'
 import * as XLSX from 'xlsx'
 
 export const ButtonImport = () => {
   const { toast } = useToast()
 
-  const [loading, setLoading] = React.useState(false)
+  const { importMany } = action.truck()
+
+  const { execute } = useAction(importMany, {
+    onSuccess: () => {
+      toast({
+        title: 'Caminhões importados com sucesso',
+        description: 'Os caminhões foram importados com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      console.error('importMany', error)
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao importar caminhões',
+        description: error,
+      })
+    },
+  })
 
   const handleFileSelect = () => {
-    const fileInput = document.getElementById('fileInput')
+    const fileInput = document.getElementById('file')
     fileInput?.click()
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (loading || !event?.target?.files?.length) return
+
+    const fileTypes = [
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/csv',
+    ]
+
+    const selectedFile = event.target.files[0]
+
+    if (!selectedFile || !fileTypes.includes(selectedFile.type)) {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao importar caminhões',
+        description:
+          'Tipo de arquivo inválido, selecione um arquivo do tipo .xls, .xlsx ou .csv e tente novamente',
+      })
+    } else {
+      handleFileRead(selectedFile)
+    }
+  }
+
+  const handleFileRead = (file: File) => {
     try {
-      if (loading || !event?.target?.files?.length) throw new Error()
-
-      const fileTypes = [
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'text/csv',
-      ]
-
       setLoading(true)
 
-      const selectedFile = event.target.files[0]
-
-      if (!selectedFile || !fileTypes.includes(selectedFile.type)) {
-        return toast({
-          variant: 'destructive',
-          title: 'Erro ao importar',
-          description: 'Arquivo inválido',
-        })
-      }
-
       const reader = new FileReader()
-      reader.readAsArrayBuffer(selectedFile)
+
+      reader.readAsArrayBuffer(file)
+
       reader.onload = async (event) => {
         if (!event?.target?.result) throw new Error()
 
         const workbook = XLSX.read(event.target.result, { type: 'array' })
+
         const sheetName = workbook.SheetNames[0]
         const sheet = workbook.Sheets[sheetName]
+
         const json = XLSX.utils.sheet_to_json(sheet)
 
-        const data = convertJson(json)
+        const data = TruckImportSchema.parse(json)
 
-        await importTruckAction(data)
+        await execute(data)
 
-        toast({
-          title: 'Importado com sucesso',
-          description: 'Os caminhões foram importados com sucesso',
-        })
+        setLoading(false)
       }
     } catch (error) {
       toast({
         variant: 'destructive',
-        title: 'Erro ao importar',
-        description: 'Não foi possível importar os caminhões',
+        title: 'Erro ao importar caminhões',
+        description:
+          'Verifique se o dados do arquivo estão corretos e tente novamente',
       })
-    } finally {
+
       setLoading(false)
     }
   }
 
-  const convertJson = (json: unknown[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return json.map((item: any) => {
-      if (!item.Placa) throw new Error('Placa não informada')
-
-      return {
-        vehicle: {
-          licensePlate: item.Placa,
-          year: item.Ano,
-          model: item.Modelo,
-          chassis: item.Chassi ? String(item.Chassi) : null,
-          renavam: item.Renavam ? String(item.Renavam) : null,
-          brand: item.Marca,
-          axle: item.Eixo ? 4 : null,
-          unitId: item.Frota === 'Unidade' ? 1 : null,
-        },
-        compressor: item.Compressor === 'SIM',
-      }
-    })
-  }
+  const [loading, setLoading] = React.useState(false)
 
   return (
     <Button variant="outline" onClick={handleFileSelect} disabled={loading}>
-      <UploadIcon className="mr-1.5" />
-      {loading ? 'Importando' : 'Importar'}
+      {loading ? (
+        <Loader2 className="mr-2 animate-spin" />
+      ) : (
+        <UploadIcon className="mr-1.5" />
+      )}
+      Importar
       <input
-        id="fileInput"
+        id="file"
         type="file"
         className="sr-only"
         onChange={handleFileChange}

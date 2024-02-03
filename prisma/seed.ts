@@ -2,8 +2,6 @@ import { db } from '@/lib/db'
 import { UF } from '@prisma/client'
 
 async function main() {
-  if (process.env.NODE_ENV !== 'development') return
-
   await db.$transaction([
     db.unit.create({
       data: {
