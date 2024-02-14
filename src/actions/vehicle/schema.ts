@@ -38,6 +38,7 @@ export const VehicleSchema = z.object({
     z.coerce
       .number()
       .int()
+      .positive()
       .refine(({ toString: { length } }) => !length || length === 1, {
         message: 'O número deve ter no mínimo 1 e no máximo 9 eixos',
       })
@@ -53,9 +54,7 @@ export const VehicleSchema = z.object({
       .refine(({ length }) => !length || length === 17, {
         message: 'O chassi deve ter exatamente 17 caracteres',
       })
-      .refine((value) => validChassis(value), {
-        message: 'O chassi deve ser válido',
-      }),
+      .refine(validChassis, { message: 'O chassi deve ser válido' }),
   ),
 
   renavam: z.optional(
@@ -66,9 +65,7 @@ export const VehicleSchema = z.object({
       .refine(({ length }) => !length || length === 11, {
         message: 'O RENAVAM deve ter exatamente 11 dígitos',
       })
-      .refine((value) => validRenavam(value), {
-        message: 'O RENAVAM deve ser válido',
-      }),
+      .refine(validRenavam, { message: 'O RENAVAM deve ser válido' }),
   ),
 
   brandId: z

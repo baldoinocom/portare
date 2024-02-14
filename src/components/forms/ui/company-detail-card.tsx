@@ -1,14 +1,14 @@
-import { formatCNPJ } from '@/lib/formatters'
-import { Company } from '@prisma/client'
+import { CompanyResource } from '@/actions/types'
 
-export const CompanyDetailCard = ({ company }: { company: Company }) => {
+export const CompanyDetailCard = ({
+  company,
+}: {
+  company: CompanyResource
+}) => {
   return (
     <div className="flex flex-col items-start uppercase">
-      <span className="text-xs font-medium text-muted-foreground">
-        {company?.tradeName}
-      </span>
-      <span>{company?.name}</span>
-      <span className="text-xs">{formatCNPJ(company?.cnpj)}</span>
+      <span>{company?.tradeName || company?.name}</span>
+      <span className="text-xs">{company.address?.city}</span>
     </div>
   )
 }

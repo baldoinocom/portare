@@ -1,8 +1,8 @@
 'use client'
 
+import { AppearanceForm } from '@/components/forms/appearance-form'
 import { Separator } from '@/components/ui/separator'
 import { useTheme } from 'next-themes'
-import { AppearanceForm } from './appearance-form'
 
 export default function Page() {
   const { theme } = useTheme()

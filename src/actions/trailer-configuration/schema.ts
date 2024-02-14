@@ -13,9 +13,7 @@ export const TrailerConfigurationSchema = z.object({
     .max(255, { message: 'O nome não pode ter mais de 255 caracteres' }),
 
   numberOfTrailers: z.coerce
-    .number({
-      required_error: 'O número de reboques é obrigatório',
-    })
+    .number({ required_error: 'O número de reboques é obrigatório' })
     .int()
     .min(1, { message: 'O número de reboques deve ter no mínimo 1' })
     .max(4, { message: 'O número de reboques deve ter no máximo 4' }),

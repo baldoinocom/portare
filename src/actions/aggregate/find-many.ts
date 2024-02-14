@@ -1,14 +1,12 @@
 'use server'
 
-import { AggregateInclude } from '@/actions/types'
+import { AggregateResource, aggregateResource } from '@/actions/types'
 import { db } from '@/lib/db'
 
 export const findManyAction = async (): Promise<{
-  data: AggregateInclude[]
+  data: AggregateResource[]
 }> => {
-  const aggregates = await db.aggregate.findMany({
-    include: { company: true, person: true, unit: true },
-  })
+  const aggregates = await db.aggregate.findMany(aggregateResource)
 
   return { data: aggregates }
 }

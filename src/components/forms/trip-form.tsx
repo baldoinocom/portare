@@ -7,12 +7,12 @@ import {
   TripWithStepSchema,
 } from '@/actions/trips/schema'
 import {
-  ClientInclude,
-  DriverInclude,
-  GroupingInclude,
-  SemiTrailerInclude,
-  TripInclude,
-  TruckInclude,
+  ClientResource,
+  DriverResource,
+  GroupingResource,
+  SemiTrailerResource,
+  TripResource,
+  TruckResource,
 } from '@/actions/types'
 import { GroupingInformation } from '@/components/forms/fields/grouping-information'
 import { TripInformation } from '@/components/forms/fields/trip-information'
@@ -94,13 +94,13 @@ export const TripForm = ({
   semiTrailers,
   cargos,
 }: {
-  initialData?: TripInclude
-  origins?: ClientInclude[]
-  destinations?: ClientInclude[]
-  groupings?: GroupingInclude[]
-  drivers?: DriverInclude[]
-  trucks?: TruckInclude[]
-  semiTrailers?: SemiTrailerInclude[]
+  initialData?: TripResource
+  origins?: ClientResource[]
+  destinations?: ClientResource[]
+  groupings?: GroupingResource[]
+  drivers?: DriverResource[]
+  trucks?: TruckResource[]
+  semiTrailers?: SemiTrailerResource[]
   cargos?: Cargo[]
 }) => {
   const router = useRouter()
@@ -121,7 +121,7 @@ export const TripForm = ({
     },
   })
 
-  const { create, createDraft } = action.trip()
+  const { create, createDraft, update } = action.trip()
 
   const { execute } = useAction(create, {
     onSuccess: (data) => {
@@ -157,20 +157,49 @@ export const TripForm = ({
     },
   })
 
+  const { execute: executeUpdate } = useAction(update, {
+    onSuccess: (data) => {
+      router.replace(String(data.id))
+      toast({
+        title: 'Viagem atualizada com sucesso',
+        description: 'A viagem foi atualizada com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao atualizar a viagem',
+        description: error,
+      })
+    },
+  })
+
   const onSubmit = async (values: TripFormValues) => {
     if (requiredStep()) return nextStep()
 
     if (draftStep()) {
       resolverStep()
 
-      await executeDraft(TripWithDraftSchema.parse(values))
+      const data = TripWithDraftSchema.parse(values)
+
+      if (initialData) {
+        await executeUpdate({ id: initialData.id, ...data })
+      } else {
+        await executeDraft(data)
+      }
     } else {
-      await execute(TripSchema.parse(values))
+      const data = TripSchema.parse(values)
+
+      if (initialData) {
+        await executeUpdate({ id: initialData.id, ...data })
+      } else {
+        await execute(data)
+      }
     }
   }
 
   const onErrorSubmit = () => {
-    if (!requiredStep()) {
+    if (step !== TripSteps.one) {
       toast({
         variant: 'destructive',
         title: 'Dados incompletos',
@@ -205,7 +234,7 @@ export const TripForm = ({
 
   const resolverStep = () => setStepValue(String(Number(step) - 2))
 
-  const [groupingMode, setGroupingMode] = React.useState(true)
+  const [groupingMode, setGroupingMode] = React.useState(!initialData)
 
   const selectedOrigin = origins?.find(
     ({ companyId }) => companyId === form.getValues('originId'),
@@ -388,14 +417,18 @@ export const TripForm = ({
                         </p>
                       </div>
 
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="grouping-mode"
-                          defaultChecked={groupingMode}
-                          onCheckedChange={setGroupingMode}
-                        />
-                        <Label htmlFor="grouping-mode">Modo agrupamento</Label>
-                      </div>
+                      {!initialData && (
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="grouping-mode"
+                            defaultChecked={groupingMode}
+                            onCheckedChange={setGroupingMode}
+                          />
+                          <Label htmlFor="grouping-mode">
+                            Modo agrupamento
+                          </Label>
+                        </div>
+                      )}
                     </div>
 
                     <FormFields>
@@ -577,42 +610,104 @@ export const TripForm = ({
                 />
               )}
 
-              <Separator />
+              {initialData && form.formState.isDirty && (
+                <>
+                  <Separator />
 
-              <FormAlert />
+                  <FormAlert />
 
-              <div className="flex items-center justify-end space-x-6">
-                <div className="flex-1">
-                  <TripFormStepsFooter step={step} onStep={onStep} />
-                </div>
+                  <div className="flex items-center justify-end space-x-6">
+                    <div className="flex-1">
+                      <TripFormStepsFooter step={step} onStep={onStep} />
+                    </div>
 
-                {step !== TripSteps.one && (
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    onClick={resolverDraftStep}
-                    disabled={form.formState.isSubmitting}
-                  >
-                    <Loader2
-                      className={cn(
-                        'mr-2 size-4 animate-spin',
-                        !form.formState.isSubmitting && 'sr-only',
-                      )}
-                    />
-                    Salvar rascunho
-                  </Button>
-                )}
+                    <Button
+                      type="reset"
+                      variant="ghost"
+                      disabled={form.formState.isSubmitting}
+                      onClick={() => form.reset()}
+                    >
+                      Descartar
+                    </Button>
 
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                  <Loader2
-                    className={cn(
-                      'mr-2 size-4 animate-spin',
-                      !form.formState.isSubmitting && 'sr-only',
+                    {initialData.draft && step !== TripSteps.one && (
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        onClick={resolverDraftStep}
+                        disabled={form.formState.isSubmitting}
+                      >
+                        <Loader2
+                          className={cn(
+                            'mr-2 size-4 animate-spin',
+                            !form.formState.isSubmitting && 'sr-only',
+                          )}
+                        />
+                        Salvar pre-progamação
+                      </Button>
                     )}
-                  />
-                  {step !== TripSteps.three ? 'Próximo' : 'Salvar'}
-                </Button>
-              </div>
+
+                    <Button
+                      type="submit"
+                      disabled={form.formState.isSubmitting}
+                    >
+                      <Loader2
+                        className={cn(
+                          'mr-2 size-4 animate-spin',
+                          !form.formState.isSubmitting && 'sr-only',
+                        )}
+                      />
+                      {step !== TripSteps.three
+                        ? 'Próximo'
+                        : 'Salvar alterações'}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {!initialData && (
+                <>
+                  <Separator />
+
+                  <FormAlert />
+
+                  <div className="flex items-center justify-end space-x-6">
+                    <div className="flex-1">
+                      <TripFormStepsFooter step={step} onStep={onStep} />
+                    </div>
+
+                    {step !== TripSteps.one && (
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        onClick={resolverDraftStep}
+                        disabled={form.formState.isSubmitting}
+                      >
+                        <Loader2
+                          className={cn(
+                            'mr-2 size-4 animate-spin',
+                            !form.formState.isSubmitting && 'sr-only',
+                          )}
+                        />
+                        Salvar pre-progamação
+                      </Button>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={form.formState.isSubmitting}
+                    >
+                      <Loader2
+                        className={cn(
+                          'mr-2 size-4 animate-spin',
+                          !form.formState.isSubmitting && 'sr-only',
+                        )}
+                      />
+                      {step !== TripSteps.three ? 'Próximo' : 'Salvar'}
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           </form>
         </Form>

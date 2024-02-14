@@ -1,25 +1,12 @@
 'use server'
 
-import { GroupingInclude } from '@/actions/types'
+import { GroupingResource, groupingResource } from '@/actions/types'
 import { db } from '@/lib/db'
 
 export const findManyAction = async (): Promise<{
-  data: GroupingInclude[]
+  data: GroupingResource[]
 }> => {
-  const groupings = await db.grouping.findMany({
-    include: {
-      driver: { include: { person: true } },
-      truck: { include: { vehicle: { include: { brand: true } } } },
-      semiTrailer: {
-        include: {
-          type: true,
-          cargos: true,
-          configuration: true,
-          trailers: { include: { vehicle: { include: { brand: true } } } },
-        },
-      },
-    },
-  })
+  const groupings = await db.grouping.findMany(groupingResource)
 
   return { data: groupings }
 }

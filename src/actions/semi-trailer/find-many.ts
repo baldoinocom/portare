@@ -1,25 +1,12 @@
 'use server'
 
-import { SemiTrailerInclude } from '@/actions/types'
+import { SemiTrailerResource, semiTrailerResource } from '@/actions/types'
 import { db } from '@/lib/db'
 
 export const findManyAction = async (): Promise<{
-  data: SemiTrailerInclude[]
+  data: SemiTrailerResource[]
 }> => {
-  const semiTrailers = await db.semiTrailer.findMany({
-    include: {
-      configuration: true,
-      type: true,
-      cargos: true,
-      trailers: {
-        include: {
-          vehicle: {
-            include: { brand: true, unit: { include: { company: true } } },
-          },
-        },
-      },
-    },
-  })
+  const semiTrailers = await db.semiTrailer.findMany(semiTrailerResource)
 
   return { data: semiTrailers }
 }

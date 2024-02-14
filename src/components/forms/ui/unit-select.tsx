@@ -1,4 +1,4 @@
-import { UnitInclude } from '@/actions/types'
+import { UnitResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const UnitSelect = ({ units }: { units?: UnitInclude[] }) => {
+export const UnitSelect = ({ units }: { units?: UnitResource[] }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -29,13 +29,13 @@ export const UnitSelect = ({ units }: { units?: UnitInclude[] }) => {
     ({ companyId }) => companyId === getValues(name),
   )
 
-  const searchValue = (unit: UnitInclude) => {
+  const searchValue = (unit: UnitResource) => {
     return (
       unit.company.name +
       ' ' +
       unit.company.tradeName +
       ' ' +
-      formatCNPJ(unit.company.cnpj)
+      formatCNPJ(unit.company.document)
     )
   }
 
@@ -83,9 +83,7 @@ export const UnitSelect = ({ units }: { units?: UnitInclude[] }) => {
                     key={index}
                     value={searchValue(unit)}
                     onSelect={() =>
-                      setValue(name, unit.companyId, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, unit.companyId, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />

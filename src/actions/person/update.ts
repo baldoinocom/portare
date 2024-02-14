@@ -12,13 +12,16 @@ type InputType = z.infer<typeof PersonWithNullableRelationshipSchema>
 type ReturnType = ActionState<InputType, Person>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { id, name, nickname, cpf, phoneNumber, unitId, aggregateId } = data
+  const { id, name, nickname, document, phoneNumber, unitId, aggregateId } =
+    data
 
   let person
 
   try {
-    if (cpf) {
-      const find = await db.person.findFirst({ where: { NOT: { id }, cpf } })
+    if (document) {
+      const find = await db.person.findFirst({
+        where: { NOT: { id }, document },
+      })
 
       if (find) {
         return { error: 'Já existe uma pessoa com esse CPF' }
@@ -30,7 +33,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       data: {
         name,
         nickname: emptyAsNull(nickname),
-        cpf: emptyAsNull(cpf),
+        document: emptyAsNull(document),
         phoneNumber: emptyAsNull(phoneNumber),
         unitId: aggregateId ? null : unitId,
         aggregateId: unitId ? null : aggregateId,

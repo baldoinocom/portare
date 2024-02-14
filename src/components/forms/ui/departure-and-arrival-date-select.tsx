@@ -52,8 +52,8 @@ export const DepartureAndArrivalDateSelect = () => {
             to: getValues('arrivedAt'),
           }}
           onSelect={(date) => {
-            setValue('departedAt', date?.from)
-            setValue('arrivedAt', date?.to)
+            setValue('departedAt', date?.from, { shouldDirty: true })
+            setValue('arrivedAt', date?.to, { shouldDirty: true })
           }}
           disabled={(date: Date) => date < new Date('2000-01-01')}
           initialFocus

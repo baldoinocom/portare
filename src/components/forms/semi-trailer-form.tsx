@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { SemiTrailerSchema } from '@/actions/semi-trailer/schema'
-import { SemiTrailerInclude, UnitInclude } from '@/actions/types'
+import { SemiTrailerResource, UnitResource } from '@/actions/types'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
@@ -61,12 +61,12 @@ export const SemiTrailerForm = ({
   trailerConfigurations,
   units,
 }: {
-  initialData?: SemiTrailerInclude
+  initialData?: SemiTrailerResource
   brands?: Brand[]
   trailerTypes?: TrailerType[]
   cargos?: Cargo[]
   trailerConfigurations?: TrailerConfiguration[]
-  units?: UnitInclude[]
+  units?: UnitResource[]
 }) => {
   const router = useRouter()
 

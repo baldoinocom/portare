@@ -1,9 +1,7 @@
 'use server'
 
-import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
-import clerk from '@clerk/clerk-sdk-node'
-import { User } from '@prisma/client'
+import clerk, { User } from '@clerk/clerk-sdk-node'
 import { z } from 'zod'
 import { UserPasswordFormSchema } from './schema'
 
@@ -32,17 +30,15 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       return { error: 'A nova senha não pode ser igual a atual' }
     }
 
-    await clerk.users.updateUser(externalUserId, {
+    user = await clerk.users.updateUser(externalUserId, {
       password: newPassword,
       skipPasswordChecks: true,
     })
-
-    user = await db.user.update({ where: { externalUserId }, data: {} })
   } catch (error) {
     return { error: 'Ocorreu um erro ao atualizar, tente novamente mais tarde' }
   }
 
-  return { data: user }
+  return { data: JSON.parse(JSON.stringify(user)) }
 }
 
 export const updatePasswordAction = safeAction(UserPasswordFormSchema, handler)

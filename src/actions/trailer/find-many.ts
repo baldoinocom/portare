@@ -1,16 +1,12 @@
 'use server'
 
-import { TrailerInclude } from '@/actions/types'
+import { TrailerResource, trailerResource } from '@/actions/types'
 import { db } from '@/lib/db'
 
-export const findManyAction = async (): Promise<{ data: TrailerInclude[] }> => {
-  const trailers = await db.trailer.findMany({
-    include: {
-      vehicle: {
-        include: { brand: true, unit: { include: { company: true } } },
-      },
-    },
-  })
+export const findManyAction = async (): Promise<{
+  data: TrailerResource[]
+}> => {
+  const trailers = await db.trailer.findMany(trailerResource)
 
   return { data: trailers }
 }

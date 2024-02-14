@@ -1,8 +1,9 @@
 import { LogoSlogan } from '@/components/logo-slogan'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 import { LucideIcon, SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
-import { ListMenuItem } from './list-menu-item'
+import { ListMenuItem, OtherListMenuItem } from './list-menu-item'
 
 export type MenuItemProps = {
   name: string
@@ -31,10 +32,15 @@ export const Menu = () => {
             <ListMenuItem />
           </li>
 
+          <li>
+            <Separator className="mb-2" />
+            <OtherListMenuItem />
+          </li>
+
           <li className="mt-auto">
             <Button variant="ghost" asChild className="justify-start">
               <Link
-                href="/system"
+                href="/system/users"
                 className="group -mx-2 flex w-full items-center gap-x-3 rounded-md text-sm font-semibold hover:bg-accent"
               >
                 <SettingsIcon className="shrink-0" />

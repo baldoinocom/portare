@@ -1,4 +1,4 @@
-import { TruckInclude } from '@/actions/types'
+import { TruckResource } from '@/actions/types'
 import { TruckDetailCard } from '@/components/forms/ui/truck-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,13 +21,13 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const TruckSelect = ({ trucks }: { trucks?: TruckInclude[] }) => {
+export const TruckSelect = ({ trucks }: { trucks?: TruckResource[] }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
   const selectedTruck = trucks?.find(({ id }) => id === getValues(name))
 
-  const searchTruck = (truck: TruckInclude) => {
+  const searchValue = (truck: TruckResource) => {
     return (
       truck?.vehicle.brand?.name +
       ' ' +
@@ -80,11 +80,9 @@ export const TruckSelect = ({ trucks }: { trucks?: TruckInclude[] }) => {
                 ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchTruck(value)}
+                    value={searchValue(value)}
                     onSelect={() =>
-                      setValue(name, value.id, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, value.id, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />

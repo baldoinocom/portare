@@ -1,16 +1,14 @@
-import { TruckInclude } from '@/actions/types'
+import { TruckResource } from '@/actions/types'
 import { formatLicensePlate } from '@/lib/formatters'
 
-export const TruckDetailCard = ({ truck }: { truck: TruckInclude }) => {
+export const TruckDetailCard = ({ truck }: { truck: TruckResource }) => {
   return (
     <div className="flex flex-col items-start uppercase">
-      <span className="text-xs font-medium text-muted-foreground">
-        {truck?.vehicle.brand?.name}
-      </span>
-      <span>{truck?.vehicle.model}</span>
-      <span className="text-xs">
-        {formatLicensePlate(truck?.vehicle.licensePlate)}
-      </span>
+      <span>{formatLicensePlate(truck?.vehicle.licensePlate)}</span>
+      <div className="space-x-2 text-xs font-medium text-muted-foreground">
+        <span>{truck?.vehicle.brand?.name}</span>
+        <span>{truck?.vehicle.model}</span>
+      </div>
     </div>
   )
 }

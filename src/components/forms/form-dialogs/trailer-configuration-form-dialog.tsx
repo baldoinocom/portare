@@ -37,7 +37,10 @@ export const TrailerConfigurationFormDialog = ({
 
   const form = useForm<z.infer<typeof TrailerConfigurationSchema>>({
     resolver: zodResolver(TrailerConfigurationSchema),
-    defaultValues: nullAsUndefined(initialData),
+    defaultValues: {
+      ...nullAsUndefined(initialData),
+      numberOfTrailers: initialData?.numberOfTrailers || 1,
+    },
   })
 
   const { create, update } = action.trailerConfiguration()
@@ -129,13 +132,7 @@ export const TrailerConfigurationFormDialog = ({
                       Número de reboques
                     </FormLabel>
                     <FormControl className="col-span-1">
-                      <Input
-                        {...field}
-                        type="number"
-                        defaultValue={'1'}
-                        min={1}
-                        max={4}
-                      />
+                      <Input {...field} type="number" min={1} max={4} />
                     </FormControl>
                   </div>
                   <FormMessage className="text-right" />

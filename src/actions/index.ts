@@ -1,4 +1,5 @@
 import { absentDriverAction } from './absent-driver'
+import { addressAction } from './address'
 import { aggregateAction } from './aggregate'
 import { asoAction } from './aso'
 import { brandAction } from './brand'
@@ -22,6 +23,7 @@ import { vehicleAction } from './vehicle'
 
 export const action = {
   absentDriver: absentDriverAction,
+  address: addressAction,
   aggregate: aggregateAction,
   aso: asoAction,
   brand: brandAction,

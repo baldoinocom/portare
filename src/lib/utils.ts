@@ -36,6 +36,21 @@ export const emptyAsNull = <T>(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T,
+  waitFor: number,
+) => {
+  let timeout: ReturnType<typeof setTimeout>
+
+  return (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    return new Promise((resolve) => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => resolve(func(...args)), waitFor)
+    })
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyObject = { [key: string]: any }
 
 export const nullAsUndefined = (

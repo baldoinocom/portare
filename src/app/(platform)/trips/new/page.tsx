@@ -1,6 +1,5 @@
 import { action } from '@/actions'
 import { TripForm } from '@/components/forms/trip-form'
-import { Separator } from '@/components/ui/separator'
 import { Header } from './_components/header'
 
 export default async function Page() {
@@ -13,8 +12,8 @@ export default async function Page() {
     semiTrailers,
     cargos,
   ] = await Promise.all([
-    action.client().findMany(),
-    action.client().findMany(),
+    action.client().findMany({ type: 'origin' }),
+    action.client().findMany({ type: 'destination' }),
     action.grouping().findMany(),
     action.driver().findMany(),
     action.truck().findMany(),
@@ -25,8 +24,6 @@ export default async function Page() {
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
       <Header />
-
-      <Separator />
 
       <main>
         <TripForm

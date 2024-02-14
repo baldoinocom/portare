@@ -1,32 +1,16 @@
 'use server'
 
-import { TripInclude } from '@/actions/types'
+import { TripResource, tripResource } from '@/actions/types'
 import { db } from '@/lib/db'
 
 export const findManyAction = async ({
   draft,
 }: {
   draft?: boolean
-} = {}): Promise<{ data: TripInclude[] }> => {
+} = {}): Promise<{ data: TripResource[] }> => {
   const trips = await db.trip.findMany({
     where: { draft },
-    include: {
-      origin: { include: { company: true } },
-      destination: { include: { company: true } },
-      driver: { include: { person: true } },
-      truck: { include: { vehicle: { include: { brand: true } } } },
-      semiTrailer: {
-        include: {
-          type: true,
-          configuration: true,
-          cargos: true,
-          trailers: { include: { vehicle: { include: { brand: true } } } },
-        },
-      },
-      cargo: true,
-      unit: { include: { company: true } },
-      aggregate: { include: { person: true, company: true } },
-    },
+    include: tripResource.include,
   })
 
   return { data: trips }

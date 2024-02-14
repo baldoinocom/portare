@@ -1,8 +1,8 @@
 import { GroupingWithUniqueSchema } from '@/actions/grouping/schema'
 import {
-  DriverInclude,
-  SemiTrailerInclude,
-  TruckInclude,
+  DriverResource,
+  SemiTrailerResource,
+  TruckResource,
 } from '@/actions/types'
 import { DriverSelect } from '@/components/forms/ui/driver-select'
 import { SemiTrailerSelect } from '@/components/forms/ui/semi-trailer-select'
@@ -21,9 +21,9 @@ export const GroupingInformation = ({
   trucks,
   semiTrailers,
 }: {
-  drivers?: DriverInclude[]
-  trucks?: TruckInclude[]
-  semiTrailers?: SemiTrailerInclude[]
+  drivers?: DriverResource[]
+  trucks?: TruckResource[]
+  semiTrailers?: SemiTrailerResource[]
 }) => {
   const { control } = useFormContext<z.infer<typeof GroupingWithUniqueSchema>>()
 

@@ -1,6 +1,5 @@
 'use server'
 
-import { action } from '@/actions'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Driver } from '@prisma/client'
@@ -17,18 +16,6 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let driver
 
   try {
-    driver = await db.driver.findUnique({
-      where: { personId },
-      select: {
-        personId: true,
-        person: { include: { aggregateOwner: { select: { id: true } } } },
-      },
-    })
-
-    if (!driver?.person?.aggregateOwner) {
-      await action.person().delete({ id: personId })
-    }
-
     driver = await db.driver.delete({ where: { personId } })
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }

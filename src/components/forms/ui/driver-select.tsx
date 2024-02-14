@@ -1,4 +1,4 @@
-import { DriverInclude } from '@/actions/types'
+import { DriverResource } from '@/actions/types'
 import { DriverDetailCard } from '@/components/forms/ui/driver-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const DriverSelect = ({ drivers }: { drivers?: DriverInclude[] }) => {
+export const DriverSelect = ({ drivers }: { drivers?: DriverResource[] }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -29,13 +29,13 @@ export const DriverSelect = ({ drivers }: { drivers?: DriverInclude[] }) => {
     ({ personId }) => personId === getValues(name),
   )
 
-  const searchDriver = (driver: DriverInclude) => {
+  const searchValue = (driver: DriverResource) => {
     return (
       driver.person.name +
       ' ' +
       driver.person.nickname +
       ' ' +
-      formatCPF(driver.person.cpf)
+      formatCPF(driver.person.document)
     )
   }
 
@@ -82,11 +82,9 @@ export const DriverSelect = ({ drivers }: { drivers?: DriverInclude[] }) => {
                 ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchDriver(value)}
+                    value={searchValue(value)}
                     onSelect={() =>
-                      setValue(name, value.personId, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, value.personId, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />

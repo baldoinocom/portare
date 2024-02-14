@@ -2,7 +2,8 @@
 
 import { action } from '@/actions'
 import { ClientSchema } from '@/actions/client/schema'
-import { ClientInclude } from '@/actions/types'
+import { ClientResource } from '@/actions/types'
+import { CompanyAddressInformation } from '@/components/forms/fields/address-information'
 import { CompanyInformation } from '@/components/forms/fields/company-information'
 import { ClientTypeCard } from '@/components/forms/ui/client-type-card'
 import { FormAlert } from '@/components/forms/ui/form-alert'
@@ -30,7 +31,7 @@ import { z } from 'zod'
 export const ClientForm = ({
   initialData,
 }: {
-  initialData?: ClientInclude
+  initialData?: ClientResource
 }) => {
   const router = useRouter()
 
@@ -103,6 +104,21 @@ export const ClientForm = ({
 
             <FormFields>
               <CompanyInformation />
+            </FormFields>
+          </FormSession>
+
+          <Separator />
+
+          <FormSession>
+            <div>
+              <h2 className="text-base font-semibold">Endereço</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Informe o endereço da empresa
+              </p>
+            </div>
+
+            <FormFields>
+              <CompanyAddressInformation />
             </FormFields>
           </FormSession>
 

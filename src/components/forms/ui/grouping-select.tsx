@@ -1,4 +1,4 @@
-import { GroupingInclude } from '@/actions/types'
+import { GroupingResource } from '@/actions/types'
 import {
   GroupingDetailCard,
   GroupingPreviewCard,
@@ -27,20 +27,20 @@ import { useFormContext } from 'react-hook-form'
 export const GroupingSelect = ({
   groupings,
 }: {
-  groupings?: GroupingInclude[]
+  groupings?: GroupingResource[]
 }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
   const selectedGrouping = groupings?.find(({ id }) => id === getValues(name))
 
-  const searchValue = (grouping: GroupingInclude) => {
+  const searchValue = (grouping: GroupingResource) => {
     return (
       grouping.driver?.person.name +
       ' ' +
       grouping.driver?.person.nickname +
       ' ' +
-      formatCPF(grouping.driver?.person.cpf) +
+      formatCPF(grouping.driver?.person.document) +
       ' ' +
       grouping.truck?.vehicle.brand?.name +
       ' ' +

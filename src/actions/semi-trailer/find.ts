@@ -1,13 +1,13 @@
 'use server'
 
-import { SemiTrailerInclude } from '@/actions/types'
+import { SemiTrailerResource, semiTrailerResource } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { SemiTrailerIdSchema } from './schema'
 
 type InputType = z.infer<typeof SemiTrailerIdSchema>
-type ReturnType = ActionState<InputType, SemiTrailerInclude>
+type ReturnType = ActionState<InputType, SemiTrailerResource>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { id } = data
@@ -17,18 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     semiTrailer = await db.semiTrailer.findUniqueOrThrow({
       where: { id },
-      include: {
-        configuration: true,
-        type: true,
-        cargos: true,
-        trailers: {
-          include: {
-            vehicle: {
-              include: { brand: true, unit: { include: { company: true } } },
-            },
-          },
-        },
-      },
+      include: semiTrailerResource.include,
     })
   } catch (error) {
     return {

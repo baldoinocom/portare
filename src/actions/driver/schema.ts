@@ -19,9 +19,7 @@ export const DriverSchema = z.object({
       .refine(({ length }) => !length || length === 11, {
         message: 'O CNH deve ter exatamente 11 dígitos',
       })
-      .refine((value) => validCNH(value), {
-        message: 'O CNH deve ser válido',
-      }),
+      .refine(validCNH, { message: 'O CNH deve ser válido' }),
   ),
 })
 

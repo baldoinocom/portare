@@ -1,16 +1,12 @@
-import { CompanySchema } from '@/actions/company/schema'
-import { PersonWithoutRelationshipSchema } from '@/actions/person/schema'
-import { DocumentTypeEnum } from '@/lib/enums'
+import { CompanyWithDocumentTypeSchema } from '@/actions/company/schema'
 import { z } from 'zod'
 
 export const AggregateIdSchema = z.object({
-  id: z.number().int().positive(),
+  companyId: z.number().int().positive(),
 })
 
-const AggregateSchema = z.object({
-  person: z.optional(PersonWithoutRelationshipSchema),
-
-  company: z.optional(CompanySchema),
+export const AggregateSchema = z.object({
+  company: CompanyWithDocumentTypeSchema,
 
   unitId: z
     .number({ required_error: 'A unidade é obrigatória' })
@@ -18,40 +14,6 @@ const AggregateSchema = z.object({
     .positive(),
 })
 
-const AggregateUpdateSchema = AggregateIdSchema.merge(
+export const AggregateUpdateSchema = AggregateIdSchema.merge(
   AggregateSchema.deepPartial(),
 )
-
-export const AggregateWithUniqueDocumentSchema = AggregateSchema.refine(
-  ({ company, person }) => !company !== !person,
-  {
-    message: 'Apenas um entre empresa e pessoa deve estar presente',
-  },
-)
-
-export const AggregateWithNullableDocumentSchema = AggregateUpdateSchema.refine(
-  ({ company, person }) => !(company && person),
-  {
-    message: 'Apenas um entre empresa e pessoa deve estar presente',
-  },
-)
-
-export const AggregateWithDocumentTypeSchema = z
-  .discriminatedUnion(
-    'documentType',
-    [
-      z
-        .object({
-          documentType: z.literal(DocumentTypeEnum.cpf),
-        })
-        .merge(AggregateSchema.pick({ person: true }).required()),
-
-      z
-        .object({
-          documentType: z.literal(DocumentTypeEnum.cnpj),
-        })
-        .merge(AggregateSchema.pick({ company: true }).required()),
-    ],
-    { required_error: 'O tipo de documento é obrigatório' },
-  )
-  .and(AggregateSchema.omit({ person: true, company: true }))

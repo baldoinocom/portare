@@ -1,5 +1,5 @@
 import { PersonWithRelationshipTypeSchema } from '@/actions/person/schema'
-import { AggregateInclude, UnitInclude } from '@/actions/types'
+import { AggregateResource, UnitResource } from '@/actions/types'
 import { VehicleWithRelationshipTypeSchema } from '@/actions/vehicle/schema'
 import { AggregateSelect } from '@/components/forms/ui/aggregate-select'
 import { UnitSelect } from '@/components/forms/ui/unit-select'
@@ -19,8 +19,8 @@ export const RelationshipType = ({
   aggregates,
 }: {
   type: 'person' | 'vehicle'
-  units?: UnitInclude[]
-  aggregates?: AggregateInclude[]
+  units?: UnitResource[]
+  aggregates?: AggregateResource[]
 }) => {
   const { control } = useFormContext<{
     person: z.infer<typeof PersonWithRelationshipTypeSchema>

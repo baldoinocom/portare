@@ -25,6 +25,17 @@ export const formatRenavam = (renavam: string | undefined | null) => {
   return renavam
 }
 
+export const formatDocument = (document: string | undefined | null) => {
+  switch (document?.length) {
+    case 11:
+      return formatCPF(document)
+    case 14:
+      return formatCNPJ(document)
+    default:
+      return document
+  }
+}
+
 export const formatCPF = (cpf: string | undefined | null) => {
   cpf = cpf?.replace(/\D/g, '')
   cpf = cpf?.replace(/(\d{3})(\d)/, '$1.$2')
@@ -50,7 +61,7 @@ export const formatPhoneNumber = (phoneNumber: string | undefined | null) => {
 }
 
 export const formatUF = (state: string | undefined | null) => {
-  switch (state) {
+  switch (state?.toLowerCase()) {
     case 'ac':
       return 'Acre'
     case 'al':

@@ -34,12 +34,9 @@ export const SemiTrailerSchema = VehicleSchema.pick({
       .positive(),
 
     cargos: z
-      .array(
-        z.object({
-          id: z.number().int().positive(),
-        }),
-        { required_error: 'Pelo menos um tipo de carga é obrigatório' },
-      )
+      .array(z.object({ id: z.number().int().positive() }), {
+        required_error: 'Pelo menos um tipo de carga é obrigatório',
+      })
       .nonempty({ message: 'Pelo menos um tipo de carga é obrigatório' }),
 
     trailers: z

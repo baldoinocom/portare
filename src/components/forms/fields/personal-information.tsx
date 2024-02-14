@@ -53,7 +53,7 @@ export const PersonalInformation = () => {
       <div className="sm:col-span-4">
         <FormField
           control={control}
-          name="person.cpf"
+          name="person.document"
           render={({ field }) => (
             <FormItem>
               <FormLabel>CPF</FormLabel>

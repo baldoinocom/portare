@@ -1,4 +1,4 @@
-import { VehicleInclude } from '@/actions/types'
+import { VehicleResource } from '@/actions/types'
 import { VehicleDetailCard } from '@/components/forms/ui/vehicle-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,14 +24,14 @@ import { useFormContext } from 'react-hook-form'
 export const VehicleSelect = ({
   vehicles,
 }: {
-  vehicles?: VehicleInclude[]
+  vehicles?: VehicleResource[]
 }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
   const selectedVehicle = vehicles?.find(({ id }) => id === getValues(name))
 
-  const searchVehicle = (vehicle: VehicleInclude) => {
+  const searchVehicle = (vehicle: VehicleResource) => {
     return (
       vehicle.brand?.name +
       ' ' +
@@ -86,9 +86,7 @@ export const VehicleSelect = ({
                     key={index}
                     value={searchVehicle(value)}
                     onSelect={() =>
-                      setValue(name, value.id, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, value.id, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />

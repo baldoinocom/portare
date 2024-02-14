@@ -1,6 +1,7 @@
 'use client'
 
-import { TrailerCertificateInclude } from '@/actions/types'
+import { action } from '@/actions'
+import { TrailerCertificateResource } from '@/actions/types'
 import { TrailerCertificateFormDialog } from '@/components/forms/form-dialogs/trailer-certificate-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
@@ -13,13 +14,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useToast } from '@/components/ui/use-toast'
+import { useAction } from '@/hooks/use-action'
 import { formatExpirationType, formatLicensePlate } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
 
-export const trailerCertificateColumns: ColumnDef<TrailerCertificateInclude>[] =
+export const trailerCertificateColumns: ColumnDef<TrailerCertificateResource>[] =
   [
     {
       id: 'select',
@@ -120,33 +123,67 @@ export const trailerCertificateColumns: ColumnDef<TrailerCertificateInclude>[] =
 
     {
       id: 'actions',
-      cell: ({ row }) => {
-        return (
-          <Dialog>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="size-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                <DialogTrigger asChild>
-                  <DropdownMenuItem>
-                    <Eye className="mr-2 size-4" />
-                    Visualizar
-                  </DropdownMenuItem>
-                </DialogTrigger>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <FormDialogContent>
-              <TrailerCertificateFormDialog initialData={row.original} />
-            </FormDialogContent>
-          </Dialog>
-        )
-      },
+      cell: ({ row }) => <CellActions item={row.original} />,
       enableHiding: false,
     },
   ]
+
+const CellActions = ({ item }: { item: TrailerCertificateResource }) => {
+  const { id, trailerId } = item
+
+  const { toast } = useToast()
+
+  const { delete: deleteAction } = action.trailerCertificate()
+
+  const { execute } = useAction(deleteAction, {
+    onSuccess: () => {
+      toast({
+        title: 'Laudo de reboque deletado com sucesso',
+        description: 'O laudo de reboque foi deletado com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao deletar o laudo de reboque',
+        description: error,
+      })
+    },
+  })
+
+  const handleDelete = async () => {
+    await execute({ id, trailerId })
+  }
+
+  return (
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="size-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </DropdownMenuItem>
+          </DialogTrigger>
+
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <FormDialogContent>
+        <TrailerCertificateFormDialog initialData={item} />
+      </FormDialogContent>
+    </Dialog>
+  )
+}

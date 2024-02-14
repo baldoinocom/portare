@@ -1,8 +1,8 @@
 import {
-  ClientInclude,
-  DriverInclude,
-  SemiTrailerInclude,
-  TruckInclude,
+  ClientResource,
+  DriverResource,
+  SemiTrailerResource,
+  TruckResource,
 } from '@/actions/types'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
@@ -30,19 +30,19 @@ export const TripInformation = ({
   departedAt,
   arrivedAt,
 }: {
-  status?: TripStatus
-  origin?: ClientInclude
-  destination?: ClientInclude
-  driver?: DriverInclude
-  truck?: TruckInclude
-  semiTrailer?: SemiTrailerInclude
-  cargo?: Cargo
-  note?: string
-  departedAt?: Date
-  arrivedAt?: Date
+  status?: TripStatus | null
+  origin?: ClientResource | null
+  destination?: ClientResource | null
+  driver?: DriverResource | null
+  truck?: TruckResource | null
+  semiTrailer?: SemiTrailerResource | null
+  cargo?: Cargo | null
+  note?: string | null
+  departedAt?: Date | null
+  arrivedAt?: Date | null
 }) => {
   return (
-    <div className="-mx-4 space-y-8 px-4 py-8 shadow-sm ring-1 ring-border sm:mx-0 sm:rounded-lg sm:px-8 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:p-16">
+    <div className="mx-1 space-y-8 rounded-lg px-4 py-8 shadow-sm ring-1 ring-border sm:px-8 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:p-16">
       <dl className="grid grid-cols-1 text-sm leading-6 sm:grid-cols-2">
         <div className="sm:pr-4">
           <h2 className="text-lg font-semibold leading-6">Viagem</h2>
@@ -72,7 +72,7 @@ export const TripInformation = ({
                     {origin?.company.name}
                   </span>
                   <br />
-                  {origin?.company.address}
+                  {origin?.company.address?.city}
                 </dd>
               </div>
             )}
@@ -87,7 +87,7 @@ export const TripInformation = ({
                     {destination?.company.name}
                   </span>
                   <br />
-                  {destination?.company.address}
+                  {destination?.company.address?.city}
                 </dd>
               </div>
             )}
@@ -127,13 +127,11 @@ export const TripInformation = ({
                 <tr className="border-t border-border pt-4 *:py-2 *:align-top *:tabular-nums *:text-muted-foreground">
                   <td>{driver?.person.name}</td>
                   <td className="pl-8">{driver?.person.nickname}</td>
-                  <td className="pl-8">{formatCPF(driver?.person.cpf)}</td>
+                  <td className="pl-8">{formatCPF(driver?.person.document)}</td>
                   <td className="pl-8">{driver?.cnh}</td>
                   <td className="w-full pl-8 text-right">
                     {driver?.person.aggregateId
-                      ? driver.person.aggregate?.personId
-                        ? driver.person.aggregate?.person?.name
-                        : driver.person.aggregate?.company?.name
+                      ? driver.person.aggregate?.company.name
                       : driver?.person.unit?.company.name}
                   </td>
                 </tr>
@@ -211,9 +209,7 @@ export const TripInformation = ({
                   <td className="pl-8">{truck?.vehicle.chassis}</td>
                   <td className="w-full pl-8 text-right">
                     {truck?.vehicle.aggregateId
-                      ? truck.vehicle.aggregate?.personId
-                        ? truck.vehicle.aggregate?.person?.name
-                        : truck.vehicle.aggregate?.company?.name
+                      ? truck.vehicle.aggregate?.company.name
                       : truck?.vehicle.unit?.company.name}
                   </td>
                 </tr>

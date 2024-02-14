@@ -1,8 +1,9 @@
 'use client'
 
 import { action } from '@/actions'
-import { UnitInclude } from '@/actions/types'
+import { UnitResource } from '@/actions/types'
 import { UnitSchema } from '@/actions/unit/schema'
+import { CompanyAddressInformation } from '@/components/forms/fields/address-information'
 import { CompanyInformation } from '@/components/forms/fields/company-information'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
@@ -19,7 +20,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-export const UnitForm = ({ initialData }: { initialData?: UnitInclude }) => {
+export const UnitForm = ({ initialData }: { initialData?: UnitResource }) => {
   const router = useRouter()
 
   const { toast } = useToast()
@@ -88,6 +89,21 @@ export const UnitForm = ({ initialData }: { initialData?: UnitInclude }) => {
 
             <FormFields>
               <CompanyInformation />
+            </FormFields>
+          </FormSession>
+
+          <Separator />
+
+          <FormSession>
+            <div>
+              <h2 className="text-base font-semibold">Endereço</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Informe o endereço da empresa
+              </p>
+            </div>
+
+            <FormFields>
+              <CompanyAddressInformation />
             </FormFields>
           </FormSession>
 

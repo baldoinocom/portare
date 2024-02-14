@@ -102,7 +102,7 @@ export const ProfileForm = ({
 
         <FormField
           control={form.control}
-          name="cpf"
+          name="document"
           render={({ field }) => (
             <FormItem>
               <FormLabel>CPF</FormLabel>

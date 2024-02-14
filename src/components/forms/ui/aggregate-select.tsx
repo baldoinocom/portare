@@ -1,6 +1,5 @@
-import { AggregateInclude } from '@/actions/types'
+import { AggregateResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
-import { PersonDetailCard } from '@/components/forms/ui/person-detail-card'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -17,7 +16,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { formatCNPJ, formatCPF } from '@/lib/formatters'
+import { formatDocument } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
@@ -25,26 +24,22 @@ import { useFormContext } from 'react-hook-form'
 export const AggregateSelect = ({
   aggregates,
 }: {
-  aggregates?: AggregateInclude[]
+  aggregates?: AggregateResource[]
 }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
-  const selectedAggregate = aggregates?.find(({ id }) => id === getValues(name))
+  const selectedAggregate = aggregates?.find(
+    ({ companyId }) => companyId === getValues(name),
+  )
 
-  const searchValue = (aggregate: AggregateInclude) => {
+  const searchValue = (aggregate: AggregateResource) => {
     return (
-      aggregate.person?.name +
-      ' ' +
-      aggregate.person?.nickname +
-      ' ' +
-      formatCPF(aggregate.person?.cpf) +
-      ' ' +
       aggregate.company?.name +
       ' ' +
       aggregate.company?.tradeName +
       ' ' +
-      formatCNPJ(aggregate.company?.cnpj)
+      formatDocument(aggregate.company?.document)
     )
   }
 
@@ -61,15 +56,7 @@ export const AggregateSelect = ({
             )}
           >
             {selectedAggregate ? (
-              <>
-                {selectedAggregate.company && (
-                  <CompanyDetailCard company={selectedAggregate.company} />
-                )}
-
-                {selectedAggregate.person && (
-                  <PersonDetailCard person={selectedAggregate.person} />
-                )}
-              </>
+              <CompanyDetailCard company={selectedAggregate.company} />
             ) : (
               'Selecione'
             )}
@@ -88,38 +75,23 @@ export const AggregateSelect = ({
                 <>
                   <CommandItem>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
-                    {selectedAggregate.company && (
-                      <CompanyDetailCard company={selectedAggregate.company} />
-                    )}
-
-                    {selectedAggregate.person && (
-                      <PersonDetailCard person={selectedAggregate.person} />
-                    )}
+                    <CompanyDetailCard company={selectedAggregate.company} />
                   </CommandItem>
                   <CommandSeparator className="m-1" />
                 </>
               )}
-
               {aggregates
-                ?.filter(({ id }) => id !== getValues(name))
+                ?.filter(({ companyId }) => companyId !== getValues(name))
                 ?.map((aggregate, index) => (
                   <CommandItem
                     key={index}
                     value={searchValue(aggregate)}
                     onSelect={() =>
-                      setValue(name, aggregate.id, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, aggregate.companyId, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />
-                    {aggregate.company && (
-                      <CompanyDetailCard company={aggregate.company} />
-                    )}
-
-                    {aggregate.person && (
-                      <PersonDetailCard person={aggregate.person} />
-                    )}
+                    <CompanyDetailCard company={aggregate.company} />
                   </CommandItem>
                 ))}
             </ScrollArea>

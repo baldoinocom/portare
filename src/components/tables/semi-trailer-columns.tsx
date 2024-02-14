@@ -1,6 +1,8 @@
 'use client'
 
-import { SemiTrailerInclude } from '@/actions/types'
+import { action } from '@/actions'
+import { CompanyResource, SemiTrailerResource } from '@/actions/types'
+import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -11,13 +13,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { formatRenavam } from '@/lib/formatters'
+import { useToast } from '@/components/ui/use-toast'
+import { useAction } from '@/hooks/use-action'
+import { formatLicensePlate } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
 import Link from 'next/link'
 
-export const semiTrailerColumns: ColumnDef<SemiTrailerInclude>[] = [
+export const semiTrailerColumns: ColumnDef<SemiTrailerResource>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -63,25 +67,6 @@ export const semiTrailerColumns: ColumnDef<SemiTrailerInclude>[] = [
   },
 
   {
-    id: 'Modelo',
-    accessorFn: (row) => row.trailers?.at(0)?.vehicle.model,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
-    cell: ({ getValue }) => (
-      <div className="uppercase">{getValue<string>()}</div>
-    ),
-  },
-
-  {
     id: 'Tipo',
     accessorFn: (row) => row.type?.name,
     header: ({ column }) => {
@@ -106,7 +91,7 @@ export const semiTrailerColumns: ColumnDef<SemiTrailerInclude>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="flex flex-wrap gap-2">
-        {getValue<SemiTrailerInclude['cargos']>().map(({ name }, index) => (
+        {getValue<SemiTrailerResource['cargos']>().map(({ name }, index) => (
           <Badge
             key={index}
             variant="outline"
@@ -141,32 +126,9 @@ export const semiTrailerColumns: ColumnDef<SemiTrailerInclude>[] = [
   {
     id: 'Placa',
     accessorFn: (row) =>
-      row.trailers?.map(({ vehicle }) => vehicle.licensePlate),
-    header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="flex flex-col gap-2">
-        {getValue<string[]>().map((value, index) => (
-          <Badge
-            key={index}
-            variant="outline"
-            className={cn(
-              'justify-center font-medium uppercase',
-              !value && 'border-muted bg-muted',
-            )}
-          >
-            <span className={cn('w-max', !value && 'opacity-0')}>
-              {String(value)}
-            </span>
-          </Badge>
-        ))}
-      </div>
-    ),
-  },
-
-  {
-    id: 'Renavam',
-    accessorFn: (row) =>
-      row.trailers?.map(({ vehicle }) => formatRenavam(vehicle.renavam)),
+      row.trailers?.map(({ vehicle }) =>
+        formatLicensePlate(vehicle.licensePlate),
+      ),
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="flex flex-col gap-2">
@@ -213,30 +175,75 @@ export const semiTrailerColumns: ColumnDef<SemiTrailerInclude>[] = [
   },
 
   {
-    id: 'actions',
-    cell: ({ row }) => {
-      const { id } = row.original
+    id: 'Unidade',
+    accessorFn: (row) => row.trailers?.at(0)?.vehicle.unit?.company,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div>
+        {!!getValue() && (
+          <CompanyDetailCard company={getValue<CompanyResource>()} />
+        )}
+      </div>
+    ),
+  },
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={'/semi-trailers/' + id}>
-                <Eye className="mr-2 size-4" />
-                Visualizar
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+  {
+    id: 'actions',
+    cell: ({ row }) => <CellActions item={row.original} />,
     enableHiding: false,
   },
 ]
+
+const CellActions = ({ item }: { item: SemiTrailerResource }) => {
+  const { id } = item
+
+  const { toast } = useToast()
+
+  const { delete: deleteAction } = action.semiTrailer()
+
+  const { execute } = useAction(deleteAction, {
+    onSuccess: () => {
+      toast({
+        title: 'Semirreboque deletado com sucesso',
+        description: 'O semirreboque foi deletado com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao deletar o semirreboque',
+        description: error,
+      })
+    },
+  })
+
+  const handleDelete = () => {
+    execute({ id })
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="size-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+        <DropdownMenuItem asChild>
+          <Link href={'/semi-trailers/' + id}>
+            <Eye className="mr-2 size-4" />
+            Visualizar
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={handleDelete}>
+          <Trash2Icon className="mr-2 size-4" />
+          Excluir
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}

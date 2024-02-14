@@ -1,23 +1,23 @@
 'use server'
 
-import { AggregateInclude } from '@/actions/types'
+import { AggregateResource, aggregateResource } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { AggregateIdSchema } from './schema'
 
 type InputType = z.infer<typeof AggregateIdSchema>
-type ReturnType = ActionState<InputType, AggregateInclude>
+type ReturnType = ActionState<InputType, AggregateResource>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { id } = data
+  const { companyId } = data
 
   let aggregate
 
   try {
     aggregate = await db.aggregate.findUniqueOrThrow({
-      where: { id },
-      include: { company: true, person: true, unit: true },
+      where: { companyId },
+      include: aggregateResource.include,
     })
   } catch (error) {
     return {

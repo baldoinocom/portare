@@ -1,4 +1,4 @@
-import { CompanySchema } from '@/actions/company/schema'
+import { CompanyWithDocumentTypeSchema } from '@/actions/company/schema'
 import { z } from 'zod'
 
 export const UnitIdSchema = z.object({
@@ -6,7 +6,7 @@ export const UnitIdSchema = z.object({
 })
 
 export const UnitSchema = z.object({
-  company: CompanySchema,
+  company: CompanyWithDocumentTypeSchema,
 })
 
 export const UnitUpdateSchema = UnitIdSchema.merge(UnitSchema.deepPartial())

@@ -120,19 +120,17 @@ model Person {
   id          Int     @id @default(autoincrement())
   name        String
   nickname    String?
-  cpf         String? @unique @db.VarChar(11) // CPF - Cadastro de Pessoas Físicas
+  document    String? @unique @db.VarChar(11) // CPF - Cadastro de Pessoas Físicas
   phoneNumber String? @map("phone_number") @db.VarChar(11)
 
   unitId Int?  @map("unit_id")
   unit   Unit? @relation(fields: [unitId], references: [companyId])
 
   aggregateId Int?       @map("aggregate_id")
-  aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
+  aggregate   Aggregate? @relation(fields: [aggregateId], references: [companyId])
 
   user   User?
   driver Driver?
-
-  aggregateOwner Aggregate? @relation("AggregateOwner", map: "aggregate_owner")
 
   ticketsAsRequester       Ticket[]       @relation("TicketRequester", map: "ticket_requester")
   ticketsAsAcceptor        Ticket[]       @relation("TicketAcceptor", map: "ticket_acceptor")
@@ -144,7 +142,7 @@ model Person {
 
   @@index([name])
   @@index([nickname])
-  @@index([cpf])
+  @@index([document])
   @@index([unitId])
   @@index([aggregateId])
   @@map("people")
@@ -152,7 +150,7 @@ model Person {
 
 model Driver {
   personId Int    @id @map("person_id")
-  person   Person @relation(fields: [personId], references: [id])
+  person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
   cnh String? @unique @db.VarChar(11) // CNH - Carteira Nacional de Habilitação
 
@@ -212,12 +210,14 @@ enum DriverStatus {
 }
 
 model Company {
-  id        Int     @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
-  tradeName String? @map("trade_name")
-  cnpj      String? @unique @db.VarChar(14) // CNPJ - Cadastro Nacional da Pessoa Jurídica
-  address   String? @db.Text
-  uf        UF?
+  tradeName String?     @map("trade_name")
+  document  String?     @unique @db.VarChar(14) // CPF - Cadastro de Pessoas Físicas | CNPJ - Cadastro Nacional da Pessoa Jurídica
+  type      CompanyType @default(cnpj)
+
+  addressId Int?     @map("address_id")
+  address   Address? @relation(fields: [addressId], references: [id])
 
   client    Client?
   unit      Unit?
@@ -228,8 +228,16 @@ model Company {
 
   @@index([name])
   @@index([tradeName])
-  @@index([cnpj])
+  @@index([document])
+  @@index([type])
   @@map("companies")
+}
+
+enum CompanyType {
+  cnpj
+  cpf
+
+  @@map("company_type")
 }
 
 model Client {
@@ -243,6 +251,7 @@ model Client {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([type])
   @@map("clients")
 }
 
@@ -270,13 +279,8 @@ model Unit {
 }
 
 model Aggregate {
-  id Int @id @default(autoincrement())
-
-  companyId Int?     @unique @map("company_id")
-  company   Company? @relation(fields: [companyId], references: [id])
-
-  personId Int?    @unique @map("person_id")
-  person   Person? @relation("AggregateOwner", fields: [personId], references: [id], map: "aggregate_owner")
+  companyId Int     @id @map("company_id")
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   unitId Int?  @map("unit_id")
   unit   Unit? @relation(fields: [unitId], references: [companyId])
@@ -289,39 +293,24 @@ model Aggregate {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([companyId])
-  @@index([personId])
   @@index([unitId])
   @@map("aggregates")
 }
 
-// UF - Unidade Federativa
-enum UF {
-  ac // Acre
-  al // Alagoas
-  ap // Amapá
-  am // Amazonas
-  ba // Bahia
-  ce // Ceará
-  es // Espírito Santo
-  go // Goiás
-  ma // Maranhão
-  mt // Mato Grosso
-  ms // Mato Grosso do Sul
-  mg // Minas Gerais
-  pa // Pará
-  pb // Paraíba
-  pr // Paraná
-  pe // Pernambuco
-  pi // Piauí
-  rj // Rio de Janeiro
-  rn // Rio Grande do Norte
-  rs // Rio Grande do Sul
-  ro // Rondônia
-  rr // Roraima
-  sc // Santa Catarina
-  sp // São Paulo
-  se // Sergipe
-  to // Tocantins
+model Address {
+  id      Int     @id @default(autoincrement())
+  zipCode String? @map("zip_code")
+  state   String?
+  city    String?
+  locale  String? @db.Text
+
+  companies Company[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([zipCode])
+  @@map("addresses")
 }
 
 model Brand {
@@ -352,7 +341,7 @@ model Vehicle {
   unit   Unit? @relation(fields: [unitId], references: [companyId])
 
   aggregateId Int?       @map("aggregate_id")
-  aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
+  aggregate   Aggregate? @relation(fields: [aggregateId], references: [companyId])
 
   trucks   Truck[]
   trailers Trailer[]
@@ -561,7 +550,7 @@ model Trip {
   unit   Unit? @relation(fields: [unitId], references: [companyId])
 
   aggregateId Int?       @map("aggregate_id")
-  aggregate   Aggregate? @relation(fields: [aggregateId], references: [id])
+  aggregate   Aggregate? @relation(fields: [aggregateId], references: [companyId])
 
   tickets Ticket[]
 
@@ -666,4 +655,17 @@ enum NotificationType {
   ticketAnswered @map("ticket_answered") // Chamado respondido
 
   @@map("notification_type")
+}
+
+model MDFe {
+  id       Int       @id
+  data     Json
+  branch   String?
+  closedAt DateTime? @map("closed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([branch])
+  @@map("mdfe")
 }

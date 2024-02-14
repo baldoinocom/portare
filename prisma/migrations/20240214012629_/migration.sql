@@ -11,10 +11,10 @@ CREATE TYPE "permission_group" AS ENUM ('groups', 'permissions', 'roles', 'trips
 CREATE TYPE "driver_status" AS ENUM ('leave_of_absence', 'medical_certificate', 'break', 'vacation');
 
 -- CreateEnum
-CREATE TYPE "client_type" AS ENUM ('both', 'origin', 'destination');
+CREATE TYPE "company_type" AS ENUM ('cnpj', 'cpf');
 
 -- CreateEnum
-CREATE TYPE "UF" AS ENUM ('ac', 'al', 'ap', 'am', 'ba', 'ce', 'es', 'go', 'ma', 'mt', 'ms', 'mg', 'pa', 'pb', 'pr', 'pe', 'pi', 'rj', 'rn', 'rs', 'ro', 'rr', 'sc', 'sp', 'se', 'to');
+CREATE TYPE "client_type" AS ENUM ('both', 'origin', 'destination');
 
 -- CreateEnum
 CREATE TYPE "vehicle_status" AS ENUM ('maintenance', 'documentation');
@@ -91,7 +91,7 @@ CREATE TABLE "people" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "nickname" TEXT,
-    "cpf" VARCHAR(11),
+    "document" VARCHAR(11),
     "phone_number" VARCHAR(11),
     "unit_id" INTEGER,
     "aggregate_id" INTEGER,
@@ -142,9 +142,9 @@ CREATE TABLE "companies" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "trade_name" TEXT,
-    "cnpj" VARCHAR(14),
-    "address" TEXT,
-    "uf" "UF",
+    "document" VARCHAR(14),
+    "type" "company_type" NOT NULL DEFAULT 'cnpj',
+    "address_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -172,14 +172,25 @@ CREATE TABLE "units" (
 
 -- CreateTable
 CREATE TABLE "aggregates" (
-    "id" SERIAL NOT NULL,
-    "company_id" INTEGER,
-    "person_id" INTEGER,
+    "company_id" INTEGER NOT NULL,
     "unit_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "aggregates_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "aggregates_pkey" PRIMARY KEY ("company_id")
+);
+
+-- CreateTable
+CREATE TABLE "addresses" (
+    "id" SERIAL NOT NULL,
+    "zip_code" TEXT,
+    "state" TEXT,
+    "city" TEXT,
+    "locale" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -367,6 +378,18 @@ CREATE TABLE "notifications" (
 );
 
 -- CreateTable
+CREATE TABLE "mdfe" (
+    "id" INTEGER NOT NULL,
+    "data" JSONB NOT NULL,
+    "branch" TEXT,
+    "closed_at" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "mdfe_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_GroupRole" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -418,7 +441,7 @@ CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
 CREATE UNIQUE INDEX "permissions_code_group_key" ON "permissions"("code", "group");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "people_cpf_key" ON "people"("cpf");
+CREATE UNIQUE INDEX "people_document_key" ON "people"("document");
 
 -- CreateIndex
 CREATE INDEX "people_name_idx" ON "people"("name");
@@ -427,7 +450,7 @@ CREATE INDEX "people_name_idx" ON "people"("name");
 CREATE INDEX "people_nickname_idx" ON "people"("nickname");
 
 -- CreateIndex
-CREATE INDEX "people_cpf_idx" ON "people"("cpf");
+CREATE INDEX "people_document_idx" ON "people"("document");
 
 -- CreateIndex
 CREATE INDEX "people_unit_id_idx" ON "people"("unit_id");
@@ -442,7 +465,7 @@ CREATE UNIQUE INDEX "drivers_cnh_key" ON "drivers"("cnh");
 CREATE INDEX "absent_drivers_status_idx" ON "absent_drivers"("status");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "companies_cnpj_key" ON "companies"("cnpj");
+CREATE UNIQUE INDEX "companies_document_key" ON "companies"("document");
 
 -- CreateIndex
 CREATE INDEX "companies_name_idx" ON "companies"("name");
@@ -451,22 +474,22 @@ CREATE INDEX "companies_name_idx" ON "companies"("name");
 CREATE INDEX "companies_trade_name_idx" ON "companies"("trade_name");
 
 -- CreateIndex
-CREATE INDEX "companies_cnpj_idx" ON "companies"("cnpj");
+CREATE INDEX "companies_document_idx" ON "companies"("document");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "aggregates_company_id_key" ON "aggregates"("company_id");
+CREATE INDEX "companies_type_idx" ON "companies"("type");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "aggregates_person_id_key" ON "aggregates"("person_id");
+CREATE INDEX "clients_type_idx" ON "clients"("type");
 
 -- CreateIndex
 CREATE INDEX "aggregates_company_id_idx" ON "aggregates"("company_id");
 
 -- CreateIndex
-CREATE INDEX "aggregates_person_id_idx" ON "aggregates"("person_id");
+CREATE INDEX "aggregates_unit_id_idx" ON "aggregates"("unit_id");
 
 -- CreateIndex
-CREATE INDEX "aggregates_unit_id_idx" ON "aggregates"("unit_id");
+CREATE INDEX "addresses_zip_code_idx" ON "addresses"("zip_code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "brands_name_key" ON "brands"("name");
@@ -490,6 +513,9 @@ CREATE INDEX "vehicles_unit_id_idx" ON "vehicles"("unit_id");
 CREATE INDEX "vehicles_aggregate_id_idx" ON "vehicles"("aggregate_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "trucks_vehicle_id_key" ON "trucks"("vehicle_id");
+
+-- CreateIndex
 CREATE INDEX "semi_trailers_configuration_id_idx" ON "semi_trailers"("configuration_id");
 
 -- CreateIndex
@@ -497,6 +523,9 @@ CREATE INDEX "semi_trailers_type_id_idx" ON "semi_trailers"("type_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "trailers_fleetNumber_key" ON "trailers"("fleetNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "trailers_vehicle_id_key" ON "trailers"("vehicle_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "trailer_configurations_name_key" ON "trailer_configurations"("name");
@@ -562,6 +591,9 @@ CREATE INDEX "notifications_recipient_id_idx" ON "notifications"("recipient_id")
 CREATE INDEX "notifications_sender_id_idx" ON "notifications"("sender_id");
 
 -- CreateIndex
+CREATE INDEX "mdfe_branch_idx" ON "mdfe"("branch");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_GroupRole_AB_unique" ON "_GroupRole"("A", "B");
 
 -- CreateIndex
@@ -592,10 +624,10 @@ ALTER TABLE "users" ADD CONSTRAINT "users_person_id_fkey" FOREIGN KEY ("person_i
 ALTER TABLE "people" ADD CONSTRAINT "people_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("company_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "people" ADD CONSTRAINT "people_aggregate_id_fkey" FOREIGN KEY ("aggregate_id") REFERENCES "aggregates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "people" ADD CONSTRAINT "people_aggregate_id_fkey" FOREIGN KEY ("aggregate_id") REFERENCES "aggregates"("company_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "drivers" ADD CONSTRAINT "drivers_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "people"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "drivers" ADD CONSTRAINT "drivers_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "people"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "aso" ADD CONSTRAINT "aso_driver_id_fkey" FOREIGN KEY ("driver_id") REFERENCES "drivers"("person_id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -604,16 +636,16 @@ ALTER TABLE "aso" ADD CONSTRAINT "aso_driver_id_fkey" FOREIGN KEY ("driver_id") 
 ALTER TABLE "absent_drivers" ADD CONSTRAINT "absent_drivers_driver_id_fkey" FOREIGN KEY ("driver_id") REFERENCES "drivers"("person_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "companies" ADD CONSTRAINT "companies_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "addresses"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "clients" ADD CONSTRAINT "clients_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "units" ADD CONSTRAINT "units_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "aggregates" ADD CONSTRAINT "aggregates_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "aggregates" ADD CONSTRAINT "aggregate_owner" FOREIGN KEY ("person_id") REFERENCES "people"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "aggregates" ADD CONSTRAINT "aggregates_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "aggregates" ADD CONSTRAINT "aggregates_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("company_id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -625,7 +657,7 @@ ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_brand_id_fkey" FOREIGN KEY ("bra
 ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("company_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_aggregate_id_fkey" FOREIGN KEY ("aggregate_id") REFERENCES "aggregates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_aggregate_id_fkey" FOREIGN KEY ("aggregate_id") REFERENCES "aggregates"("company_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "stopped_vehicles" ADD CONSTRAINT "stopped_vehicles_vehicle_id_fkey" FOREIGN KEY ("vehicle_id") REFERENCES "vehicles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -679,7 +711,7 @@ ALTER TABLE "trips" ADD CONSTRAINT "trips_cargo_id_fkey" FOREIGN KEY ("cargo_id"
 ALTER TABLE "trips" ADD CONSTRAINT "trips_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("company_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "trips" ADD CONSTRAINT "trips_aggregate_id_fkey" FOREIGN KEY ("aggregate_id") REFERENCES "aggregates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "trips" ADD CONSTRAINT "trips_aggregate_id_fkey" FOREIGN KEY ("aggregate_id") REFERENCES "aggregates"("company_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "tickets" ADD CONSTRAINT "ticket_requester" FOREIGN KEY ("requester_id") REFERENCES "people"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

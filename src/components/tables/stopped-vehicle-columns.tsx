@@ -1,6 +1,7 @@
 'use client'
 
-import { StoppedVehicleInclude } from '@/actions/types'
+import { action } from '@/actions'
+import { StoppedVehicleResource } from '@/actions/types'
 import { StoppedVehicleFormDialog } from '@/components/forms/form-dialogs/stopped-vehicle-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
@@ -13,13 +14,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useToast } from '@/components/ui/use-toast'
+import { useAction } from '@/hooks/use-action'
 import { formatLicensePlate, formatVehicleStatus } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
 
-export const stoppedVehicleColumns: ColumnDef<StoppedVehicleInclude>[] = [
+export const stoppedVehicleColumns: ColumnDef<StoppedVehicleResource>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -124,33 +127,67 @@ export const stoppedVehicleColumns: ColumnDef<StoppedVehicleInclude>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => {
-      return (
-        <Dialog>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="size-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DialogTrigger asChild>
-                <DropdownMenuItem>
-                  <Eye className="mr-2 size-4" />
-                  Visualizar
-                </DropdownMenuItem>
-              </DialogTrigger>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <FormDialogContent>
-            <StoppedVehicleFormDialog initialData={row.original} />
-          </FormDialogContent>
-        </Dialog>
-      )
-    },
+    cell: ({ row }) => <CellActions item={row.original} />,
     enableHiding: false,
   },
 ]
+
+const CellActions = ({ item }: { item: StoppedVehicleResource }) => {
+  const { id, vehicleId } = item
+
+  const { toast } = useToast()
+
+  const { delete: deleteAction } = action.stoppedVehicle()
+
+  const { execute } = useAction(deleteAction, {
+    onSuccess: () => {
+      toast({
+        title: 'Parada de veículo deletada com sucesso',
+        description: 'A parada de veículo foi deletada com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao deletar a parada de veículo',
+        description: error,
+      })
+    },
+  })
+
+  const handleDelete = async () => {
+    await execute({ id, vehicleId })
+  }
+
+  return (
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="size-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </DropdownMenuItem>
+          </DialogTrigger>
+
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <FormDialogContent>
+        <StoppedVehicleFormDialog initialData={item} />
+      </FormDialogContent>
+    </Dialog>
+  )
+}

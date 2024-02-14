@@ -1,4 +1,4 @@
-import { SemiTrailerInclude } from '@/actions/types'
+import { SemiTrailerResource } from '@/actions/types'
 import { SemiTrailerDetailCard } from '@/components/forms/ui/semi-trailer-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,7 +24,7 @@ import { useFormContext } from 'react-hook-form'
 export const SemiTrailerSelect = ({
   semiTrailers,
 }: {
-  semiTrailers?: SemiTrailerInclude[]
+  semiTrailers?: SemiTrailerResource[]
 }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
@@ -33,7 +33,7 @@ export const SemiTrailerSelect = ({
     ({ id }) => id === getValues(name),
   )
 
-  const searchSemiTrailer = (semiTrailer: SemiTrailerInclude) => {
+  const searchValue = (semiTrailer: SemiTrailerResource) => {
     return (
       semiTrailer?.trailers?.at(0)?.vehicle.brand?.name +
       ' ' +
@@ -88,11 +88,9 @@ export const SemiTrailerSelect = ({
                 ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchSemiTrailer(value)}
+                    value={searchValue(value)}
                     onSelect={() =>
-                      setValue(name, value.id, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, value.id, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />

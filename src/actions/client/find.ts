@@ -1,13 +1,13 @@
 'use server'
 
-import { ClientInclude } from '@/actions/types'
+import { ClientResource, clientResource } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { ClientIdSchema } from './schema'
 
 type InputType = z.infer<typeof ClientIdSchema>
-type ReturnType = ActionState<InputType, ClientInclude>
+type ReturnType = ActionState<InputType, ClientResource>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { companyId } = data
@@ -17,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     client = await db.client.findUniqueOrThrow({
       where: { companyId },
-      include: { company: true },
+      include: clientResource.include,
     })
   } catch (error) {
     return {

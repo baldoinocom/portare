@@ -1,5 +1,6 @@
 'use client'
 
+import { action } from '@/actions'
 import { CargoFormDialog } from '@/components/forms/form-dialogs/cargo-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
@@ -12,9 +13,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useToast } from '@/components/ui/use-toast'
+import { useAction } from '@/hooks/use-action'
 import { Cargo } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
 
 export const cargoColumns: ColumnDef<Cargo>[] = [
   {
@@ -63,33 +66,67 @@ export const cargoColumns: ColumnDef<Cargo>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => {
-      return (
-        <Dialog>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="size-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DialogTrigger asChild>
-                <DropdownMenuItem>
-                  <Eye className="mr-2 size-4" />
-                  Visualizar
-                </DropdownMenuItem>
-              </DialogTrigger>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <FormDialogContent>
-            <CargoFormDialog initialData={row.original} />
-          </FormDialogContent>
-        </Dialog>
-      )
-    },
+    cell: ({ row }) => <CellActions item={row.original} />,
     enableHiding: false,
   },
 ]
+
+const CellActions = ({ item }: { item: Cargo }) => {
+  const { id } = item
+
+  const { toast } = useToast()
+
+  const { delete: deleteAction } = action.cargo()
+
+  const { execute } = useAction(deleteAction, {
+    onSuccess: () => {
+      toast({
+        title: 'Carga deletada com sucesso',
+        description: 'A carga foi deletada com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao deletar a carga',
+        description: error,
+      })
+    },
+  })
+
+  const handleDelete = async () => {
+    await execute({ id })
+  }
+
+  return (
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="size-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </DropdownMenuItem>
+          </DialogTrigger>
+
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <FormDialogContent>
+        <CargoFormDialog initialData={item} />
+      </FormDialogContent>
+    </Dialog>
+  )
+}

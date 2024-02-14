@@ -52,8 +52,8 @@ export const StartAndEndDateSelect = () => {
             to: getValues('endedAt'),
           }}
           onSelect={(date) => {
-            setValue('startedAt', date?.from)
-            setValue('endedAt', date?.to)
+            setValue('startedAt', date?.from, { shouldDirty: true })
+            setValue('endedAt', date?.to, { shouldDirty: true })
           }}
           disabled={(date: Date) => date < new Date('2000-01-01')}
           initialFocus

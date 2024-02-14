@@ -3,11 +3,6 @@ export enum RelationshipTypeEnum {
   aggregate = 'aggregate',
 }
 
-export enum DocumentTypeEnum {
-  cpf = 'cpf',
-  cnpj = 'cnpj',
-}
-
 export enum TripSteps {
   one = '1',
   two = '2',

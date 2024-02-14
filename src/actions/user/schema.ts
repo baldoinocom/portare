@@ -1,19 +1,34 @@
 import { z } from 'zod'
 
 export const UserIdSchema = z.object({
-  id: z.string().cuid(),
+  externalUserId: z.string(),
 })
 
 export const UserSchema = z.object({
-  username: z.string(),
+  username: z
+    .string({ required_error: 'O nome de usuário é obrigatório' })
+    .min(4, { message: 'O nome de usuário deve ter no mínimo 4 caracteres' })
+    .max(50, { message: 'O nome de usuário deve ter no máximo 20 caracteres' }),
+
+  password: z
+    .string({ required_error: 'A senha é obrigatória' })
+    .min(4, { message: 'A senha deve ter no mínimo 4 caracteres' }),
 })
 
-export const UserUpdateSchema = UserIdSchema.merge(UserSchema.deepPartial())
+export const UserUpdateSchema = UserIdSchema.merge(
+  UserSchema.omit({ password: true })
+    .merge(
+      z.object({
+        password: z.string().refine(({ length }) => !length || length >= 4, {
+          message: 'A nova senha deve ter no mínimo 4 caracteres',
+        }),
+      }),
+    )
+    .deepPartial(),
+)
 
-export const UserPasswordFormSchema = z
-  .object({
-    externalUserId: z.string({ required_error: 'O usuário é obrigatório' }),
-
+export const UserPasswordFormSchema = UserIdSchema.merge(
+  z.object({
     currentPassword: z
       .string({ required_error: 'A senha atual é obrigatória' })
       .min(4, { message: 'A senha atual deve ter no mínimo 4 caracteres' }),
@@ -27,12 +42,12 @@ export const UserPasswordFormSchema = z
       .min(4, {
         message: 'A senha de confirmação deve ter no mínimo 4 caracteres',
       }),
-  })
-  .refine(
-    ({ newPassword, passwordConfirmation }) =>
-      newPassword === passwordConfirmation,
-    {
-      path: ['passwordConfirmation'],
-      message: 'A senha de confirmação deve ser igual a nova senha',
-    },
-  )
+  }),
+).refine(
+  ({ newPassword, passwordConfirmation }) =>
+    newPassword === passwordConfirmation,
+  {
+    path: ['passwordConfirmation'],
+    message: 'A senha de confirmação deve ser igual a nova senha',
+  },
+)

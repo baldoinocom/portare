@@ -1,4 +1,4 @@
-import { TrailerInclude } from '@/actions/types'
+import { TrailerResource } from '@/actions/types'
 import { TrailerDetailCard } from '@/components/forms/ui/trailer-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,14 +24,14 @@ import { useFormContext } from 'react-hook-form'
 export const TrailerSelect = ({
   trailers,
 }: {
-  trailers?: TrailerInclude[]
+  trailers?: TrailerResource[]
 }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
   const selectedTrailer = trailers?.find(({ id }) => id === getValues(name))
 
-  const searchTrailer = (trailer: TrailerInclude) => {
+  const searchTrailer = (trailer: TrailerResource) => {
     return (
       trailer.vehicle.brand?.name +
       ' ' +
@@ -86,9 +86,7 @@ export const TrailerSelect = ({
                     key={index}
                     value={searchTrailer(value)}
                     onSelect={() =>
-                      setValue(name, value.id, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, value.id, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />

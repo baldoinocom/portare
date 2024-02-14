@@ -1,10 +1,10 @@
 'use client'
 
 import {
-  DriverInclude,
-  GroupingInclude,
-  SemiTrailerInclude,
-  TruckInclude,
+  DriverResource,
+  GroupingResource,
+  SemiTrailerResource,
+  TruckResource,
 } from '@/actions/types'
 import { EmptyState } from '@/components/empty-state'
 import { groupingColumns } from '@/components/tables/grouping-columns'
@@ -18,10 +18,10 @@ export const Main = ({
   trucks,
   semiTrailers,
 }: {
-  groupings: GroupingInclude[]
-  drivers: DriverInclude[]
-  trucks: TruckInclude[]
-  semiTrailers: SemiTrailerInclude[]
+  groupings: GroupingResource[]
+  drivers: DriverResource[]
+  trucks: TruckResource[]
+  semiTrailers: SemiTrailerResource[]
 }) => {
   return (
     <main>

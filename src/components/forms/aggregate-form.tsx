@@ -1,10 +1,10 @@
 'use client'
 
 import { action } from '@/actions'
-import { AggregateWithDocumentTypeSchema } from '@/actions/aggregate/schema'
-import { AggregateInclude, UnitInclude } from '@/actions/types'
+import { AggregateSchema } from '@/actions/aggregate/schema'
+import { AggregateResource, UnitResource } from '@/actions/types'
+import { CompanyAddressInformation } from '@/components/forms/fields/address-information'
 import { CompanyInformation } from '@/components/forms/fields/company-information'
-import { PersonalInformation } from '@/components/forms/fields/personal-information'
 import { DocumentTypeCard } from '@/components/forms/ui/document-type-card'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
@@ -22,9 +22,9 @@ import { RadioGroup } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
-import { DocumentTypeEnum } from '@/lib/enums'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CompanyType } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
@@ -35,20 +35,17 @@ export const AggregateForm = ({
   initialData,
   units,
 }: {
-  initialData?: AggregateInclude
-  units?: UnitInclude[]
+  initialData?: AggregateResource
+  units?: UnitResource[]
 }) => {
   const router = useRouter()
 
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof AggregateWithDocumentTypeSchema>>({
-    resolver: zodResolver(AggregateWithDocumentTypeSchema),
-    defaultValues: {
-      ...nullAsUndefined(initialData),
-      documentType: initialData?.companyId
-        ? DocumentTypeEnum.cnpj
-        : DocumentTypeEnum.cpf,
+  const form = useForm<z.infer<typeof AggregateSchema>>({
+    resolver: zodResolver(AggregateSchema),
+    defaultValues: nullAsUndefined(initialData) || {
+      company: { type: CompanyType.cpf },
     },
   })
 
@@ -56,7 +53,7 @@ export const AggregateForm = ({
 
   const { execute } = useAction(create, {
     onSuccess: (data) => {
-      router.replace(String(data.id))
+      router.replace(String(data.companyId))
       toast({
         title: 'Agregado cadastrado com sucesso',
         description: 'O agregado foi cadastrado com sucesso! 🎉',
@@ -87,18 +84,19 @@ export const AggregateForm = ({
     },
   })
 
-  const onSubmit = async (
-    values: z.infer<typeof AggregateWithDocumentTypeSchema>,
-  ) => {
+  const onSubmit = async (values: z.infer<typeof AggregateSchema>) => {
     if (initialData) {
-      await executeUpdate({ id: initialData.id, ...values })
+      await executeUpdate({
+        companyId: initialData.companyId,
+        ...values,
+      })
     } else {
       await execute(values)
     }
   }
 
-  const [documentType, setDocumentType] = React.useState<DocumentTypeEnum>(
-    form.formState.defaultValues?.documentType || DocumentTypeEnum.cpf,
+  const [companyType, setCompanyType] = React.useState<CompanyType>(
+    initialData?.company.type || CompanyType.cpf,
   )
 
   return (
@@ -117,85 +115,74 @@ export const AggregateForm = ({
 
             <FormFields>
               <div className="sm:col-span-full">
-                <FormField
-                  control={form.control}
-                  name="documentType"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <RadioGroup
-                        {...field}
-                        onValueChange={(e: DocumentTypeEnum) => {
-                          setDocumentType(e)
-                          field.onChange(e)
-                        }}
-                        className="space-y-8"
-                      >
-                        <DocumentTypeCard value={DocumentTypeEnum.cpf}>
-                          <div>
-                            <h2 className="text-base font-semibold">
-                              Pessoa física
-                            </h2>
-                            <p className="mt-1 text-sm text-muted-foreground">
-                              Informe o CPF e os dados pessoais do agregado
-                            </p>
-                          </div>
-                        </DocumentTypeCard>
+                <div className="flex flex-col">
+                  <RadioGroup
+                    value={companyType}
+                    onValueChange={(e: CompanyType) => {
+                      setCompanyType(e)
+                      form.setValue('company.type', e, { shouldDirty: true })
+                    }}
+                    className="space-y-8"
+                  >
+                    <DocumentTypeCard value={CompanyType.cpf}>
+                      <div>
+                        <h2 className="text-base font-semibold">
+                          Pessoa física
+                        </h2>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Informe o CPF e os dados pessoais do agregado
+                        </p>
+                      </div>
+                    </DocumentTypeCard>
 
-                        <DocumentTypeCard value={DocumentTypeEnum.cnpj}>
-                          <div>
-                            <h2 className="text-base font-semibold">
-                              Pessoa jurídica
-                            </h2>
-                            <p className="mt-1 text-sm text-muted-foreground">
-                              Informe o CNPJ e os dados da empresa e do
-                              proprietário
-                            </p>
-                          </div>
-                        </DocumentTypeCard>
-                      </RadioGroup>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <DocumentTypeCard value={CompanyType.cnpj}>
+                      <div>
+                        <h2 className="text-base font-semibold">
+                          Pessoa jurídica
+                        </h2>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Informe o CNPJ e os dados da empresa e do proprietário
+                        </p>
+                      </div>
+                    </DocumentTypeCard>
+                  </RadioGroup>
+                  <FormMessage />
+                </div>
               </div>
             </FormFields>
           </FormSession>
 
           <Separator />
 
-          {documentType === DocumentTypeEnum.cpf && (
-            <FormSession>
-              <div>
-                <h2 className="text-base font-semibold">
-                  Informações pessoais
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Gerenciar configurações de informações pessoais
-                </p>
-              </div>
+          <FormSession>
+            <div>
+              <h2 className="text-base font-semibold">
+                Informações da empresa
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Gerenciar configurações de informações da empresa
+              </p>
+            </div>
 
-              <FormFields>
-                <PersonalInformation />
-              </FormFields>
-            </FormSession>
-          )}
+            <FormFields>
+              <CompanyInformation companyType={companyType} />
+            </FormFields>
+          </FormSession>
 
-          {documentType === DocumentTypeEnum.cnpj && (
-            <FormSession>
-              <div>
-                <h2 className="text-base font-semibold">
-                  Informações da empresa
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Gerenciar configurações de informações da empresa
-                </p>
-              </div>
+          <Separator />
 
-              <FormFields>
-                <CompanyInformation />
-              </FormFields>
-            </FormSession>
-          )}
+          <FormSession>
+            <div>
+              <h2 className="text-base font-semibold">Endereço</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Informe o endereço da empresa
+              </p>
+            </div>
+
+            <FormFields>
+              <CompanyAddressInformation />
+            </FormFields>
+          </FormSession>
 
           <Separator />
 

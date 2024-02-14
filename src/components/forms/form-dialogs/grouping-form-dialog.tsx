@@ -3,10 +3,10 @@
 import { action } from '@/actions'
 import { GroupingWithUniqueSchema } from '@/actions/grouping/schema'
 import {
-  DriverInclude,
-  GroupingInclude,
-  SemiTrailerInclude,
-  TruckInclude,
+  DriverResource,
+  GroupingResource,
+  SemiTrailerResource,
+  TruckResource,
 } from '@/actions/types'
 import { GroupingInformation } from '@/components/forms/fields/grouping-information'
 import { FormAlert } from '@/components/forms/ui/form-alert'
@@ -32,10 +32,10 @@ export const GroupingFormDialog = ({
   trucks,
   semiTrailers,
 }: {
-  initialData?: GroupingInclude
-  drivers?: DriverInclude[]
-  trucks?: TruckInclude[]
-  semiTrailers?: SemiTrailerInclude[]
+  initialData?: GroupingResource
+  drivers?: DriverResource[]
+  trucks?: TruckResource[]
+  semiTrailers?: SemiTrailerResource[]
 }) => {
   const { toast } = useToast()
 

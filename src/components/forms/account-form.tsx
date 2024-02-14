@@ -1,6 +1,7 @@
 'use client'
 
 import { UserSchema } from '@/actions/user/schema'
+import { PasswordFormDialog } from '@/components/forms/form-dialogs/password-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -21,7 +22,6 @@ import { User } from '@prisma/client'
 import { LockKeyholeIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { PasswordFormDialog } from './password-form-dialog'
 
 export const AccountForm = ({ initialData }: { initialData?: User }) => {
   const { toast } = useToast()

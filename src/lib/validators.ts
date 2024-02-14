@@ -38,6 +38,13 @@ export const validChassis = (chassis: string | undefined) => {
   return !/^(\d)\1+$/.test(chassis)
 }
 
+export const validCEP = (cep: string | undefined) => {
+  if (!cep) return true
+
+  cep = cep.replace(/[^\d]/g, '')
+  return cep.length === 8
+}
+
 export const validCNH = (cnh: string | undefined) => {
   if (!cnh) return true
 
@@ -45,6 +52,15 @@ export const validCNH = (cnh: string | undefined) => {
   if (cnh.length !== 11) return false
 
   return !/^(\d)\1+$/.test(cnh)
+}
+
+export const validDocument = (document: string | undefined) => {
+  if (!document) return true
+
+  document = document.replace(/[^\d]/g, '')
+  if (document.length !== 11 && document.length !== 14) return false
+
+  return validCPF(document) || validCNPJ(document)
 }
 
 export const validCPF = (cpf: string | undefined) => {

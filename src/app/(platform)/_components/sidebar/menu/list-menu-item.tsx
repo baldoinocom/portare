@@ -1,6 +1,6 @@
 'use client'
 
-import { navigation } from '../../data'
+import { navigation, otherNavigation } from '../../data'
 import { ExpandableMenuItem } from './expandable-menu-item'
 import { MenuItem } from './menu-item'
 
@@ -14,6 +14,18 @@ export const ListMenuItem = () => {
           ) : (
             <ExpandableMenuItem item={item} />
           )}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+export const OtherListMenuItem = () => {
+  return (
+    <ul role="list" className="-mx-2 space-y-1">
+      {otherNavigation.map((item) => (
+        <li key={item.name}>
+          <MenuItem item={item} />
         </li>
       ))}
     </ul>

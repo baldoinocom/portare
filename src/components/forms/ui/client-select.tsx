@@ -1,4 +1,4 @@
-import { ClientInclude } from '@/actions/types'
+import { ClientResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
-export const ClientSelect = ({ clients }: { clients?: ClientInclude[] }) => {
+export const ClientSelect = ({ clients }: { clients?: ClientResource[] }) => {
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -29,13 +29,13 @@ export const ClientSelect = ({ clients }: { clients?: ClientInclude[] }) => {
     ({ companyId }) => companyId === getValues(name),
   )
 
-  const searchValue = (client: ClientInclude) => {
+  const searchValue = (client: ClientResource) => {
     return (
       client.company.name +
       ' ' +
       client.company.tradeName +
       ' ' +
-      formatCNPJ(client.company.cnpj)
+      formatCNPJ(client.company.document)
     )
   }
 
@@ -83,9 +83,7 @@ export const ClientSelect = ({ clients }: { clients?: ClientInclude[] }) => {
                     key={index}
                     value={searchValue(client)}
                     onSelect={() =>
-                      setValue(name, client.companyId, {
-                        shouldDirty: true,
-                      })
+                      setValue(name, client.companyId, { shouldDirty: true })
                     }
                   >
                     <div className="w-6" />

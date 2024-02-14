@@ -1,13 +1,13 @@
 'use server'
 
-import { DriverInclude } from '@/actions/types'
+import { DriverResource, driverResource } from '@/actions/types'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { z } from 'zod'
 import { DriverIdSchema } from './schema'
 
 type InputType = z.infer<typeof DriverIdSchema>
-type ReturnType = ActionState<InputType, DriverInclude>
+type ReturnType = ActionState<InputType, DriverResource>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { personId } = data
@@ -17,14 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     driver = await db.driver.findUniqueOrThrow({
       where: { personId },
-      include: {
-        person: {
-          include: {
-            unit: { include: { company: true } },
-            aggregate: { include: { person: true, company: true } },
-          },
-        },
-      },
+      include: driverResource.include,
     })
   } catch (error) {
     return {

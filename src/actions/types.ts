@@ -1,150 +1,121 @@
 import { Prisma } from '@prisma/client'
 
-const UserReturnType = Prisma.validator<Prisma.UserDefaultArgs>()({
-  include: { person: true },
+export const userResource = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: { person: true, groups: true },
 })
-export type UserInclude = Prisma.UserGetPayload<typeof UserReturnType>
+export type UserResource = Prisma.UserGetPayload<typeof userResource>
 
-const DriverReturnType = Prisma.validator<Prisma.DriverDefaultArgs>()({
-  include: {
-    person: {
-      include: {
-        unit: { include: { company: true } },
-        aggregate: { include: { person: true, company: true } },
-      },
-    },
-  },
+export const companyResource = Prisma.validator<Prisma.CompanyDefaultArgs>()({
+  include: { address: true },
 })
-export type DriverInclude = Prisma.DriverGetPayload<typeof DriverReturnType>
+export type CompanyResource = Prisma.CompanyGetPayload<typeof companyResource>
 
-const ASOReturnType = Prisma.validator<Prisma.ASODefaultArgs>()({
-  include: { driver: { include: { person: true } } },
+export const clientResource = Prisma.validator<Prisma.ClientDefaultArgs>()({
+  include: { company: companyResource },
 })
-export type ASOInclude = Prisma.ASOGetPayload<typeof ASOReturnType>
+export type ClientResource = Prisma.ClientGetPayload<typeof clientResource>
 
-const AbsentDriverReturnType =
-  Prisma.validator<Prisma.AbsentDriverDefaultArgs>()({
-    include: { driver: { include: { person: true } } },
+export const unitResource = Prisma.validator<Prisma.UnitDefaultArgs>()({
+  include: { company: companyResource },
+})
+export type UnitResource = Prisma.UnitGetPayload<typeof unitResource>
+
+export const aggregateResource =
+  Prisma.validator<Prisma.AggregateDefaultArgs>()({
+    include: { company: companyResource, unit: unitResource },
   })
-export type AbsentDriverInclude = Prisma.AbsentDriverGetPayload<
-  typeof AbsentDriverReturnType
+export type AggregateResource = Prisma.AggregateGetPayload<
+  typeof aggregateResource
 >
 
-const AggregateReturnType = Prisma.validator<Prisma.AggregateDefaultArgs>()({
-  include: { company: true, person: true },
+export const personResource = Prisma.validator<Prisma.PersonDefaultArgs>()({
+  include: { unit: unitResource, aggregate: aggregateResource },
 })
-export type AggregateInclude = Prisma.AggregateGetPayload<
-  typeof AggregateReturnType
+export type PersonResource = Prisma.PersonGetPayload<typeof personResource>
+
+export const driverResource = Prisma.validator<Prisma.DriverDefaultArgs>()({
+  include: { person: personResource },
+})
+export type DriverResource = Prisma.DriverGetPayload<typeof driverResource>
+
+export const aSOResource = Prisma.validator<Prisma.ASODefaultArgs>()({
+  include: { driver: driverResource },
+})
+export type ASOResource = Prisma.ASOGetPayload<typeof aSOResource>
+
+export const absentDriverResource =
+  Prisma.validator<Prisma.AbsentDriverDefaultArgs>()({
+    include: { driver: driverResource },
+  })
+export type AbsentDriverResource = Prisma.AbsentDriverGetPayload<
+  typeof absentDriverResource
 >
 
-const ClientReturnType = Prisma.validator<Prisma.ClientDefaultArgs>()({
-  include: { company: true },
+export const vehicleResource = Prisma.validator<Prisma.VehicleDefaultArgs>()({
+  include: { brand: true, unit: unitResource, aggregate: aggregateResource },
 })
-export type ClientInclude = Prisma.ClientGetPayload<typeof ClientReturnType>
+export type VehicleResource = Prisma.VehicleGetPayload<typeof vehicleResource>
 
-const UnitReturnType = Prisma.validator<Prisma.UnitDefaultArgs>()({
-  include: { company: true },
+export const trailerResource = Prisma.validator<Prisma.TrailerDefaultArgs>()({
+  include: { vehicle: vehicleResource },
 })
-export type UnitInclude = Prisma.UnitGetPayload<typeof UnitReturnType>
+export type TrailerResource = Prisma.TrailerGetPayload<typeof trailerResource>
 
-const VehicleReturnType = Prisma.validator<Prisma.VehicleDefaultArgs>()({
-  include: { brand: true },
-})
-export type VehicleInclude = Prisma.VehicleGetPayload<typeof VehicleReturnType>
+export const trailerCertificateResource =
+  Prisma.validator<Prisma.TrailerCertificateDefaultArgs>()({
+    include: { trailer: trailerResource },
+  })
+export type TrailerCertificateResource = Prisma.TrailerCertificateGetPayload<
+  typeof trailerCertificateResource
+>
 
-const SemiTrailerReturnType = Prisma.validator<Prisma.SemiTrailerDefaultArgs>()(
-  {
+export const semiTrailerResource =
+  Prisma.validator<Prisma.SemiTrailerDefaultArgs>()({
     include: {
       type: true,
       cargos: true,
       configuration: true,
-      trailers: {
-        include: {
-          vehicle: {
-            include: { brand: true, unit: { include: { company: true } } },
-          },
-        },
-      },
-    },
-  },
-)
-export type SemiTrailerInclude = Prisma.SemiTrailerGetPayload<
-  typeof SemiTrailerReturnType
->
-
-const TrailerReturnType = Prisma.validator<Prisma.TrailerDefaultArgs>()({
-  include: {
-    vehicle: { include: { brand: true, unit: { include: { company: true } } } },
-  },
-})
-export type TrailerInclude = Prisma.TrailerGetPayload<typeof TrailerReturnType>
-
-const TrailerCertificateReturnType =
-  Prisma.validator<Prisma.TrailerCertificateDefaultArgs>()({
-    include: {
-      trailer: { include: { vehicle: { include: { brand: true } } } },
+      trailers: trailerResource,
     },
   })
-export type TrailerCertificateInclude = Prisma.TrailerCertificateGetPayload<
-  typeof TrailerCertificateReturnType
+export type SemiTrailerResource = Prisma.SemiTrailerGetPayload<
+  typeof semiTrailerResource
 >
 
-const TruckReturnType = Prisma.validator<Prisma.TruckDefaultArgs>()({
-  include: {
-    vehicle: {
-      include: {
-        brand: true,
-        unit: { include: { company: true } },
-        aggregate: { include: { person: true, company: true } },
-      },
-    },
-  },
+export const truckResource = Prisma.validator<Prisma.TruckDefaultArgs>()({
+  include: { vehicle: vehicleResource },
 })
-export type TruckInclude = Prisma.TruckGetPayload<typeof TruckReturnType>
+export type TruckResource = Prisma.TruckGetPayload<typeof truckResource>
 
-const StoppedVehicleReturnType =
+export const stoppedVehicleResource =
   Prisma.validator<Prisma.StoppedVehicleDefaultArgs>()({
-    include: { vehicle: { include: { brand: true } } },
+    include: { vehicle: vehicleResource },
   })
-export type StoppedVehicleInclude = Prisma.StoppedVehicleGetPayload<
-  typeof StoppedVehicleReturnType
+export type StoppedVehicleResource = Prisma.StoppedVehicleGetPayload<
+  typeof stoppedVehicleResource
 >
 
-const TripReturnType = Prisma.validator<Prisma.TripDefaultArgs>()({
+export const tripResource = Prisma.validator<Prisma.TripDefaultArgs>()({
   include: {
-    origin: { include: { company: true } },
-    destination: { include: { company: true } },
-    driver: { include: { person: true } },
-    truck: { include: { vehicle: { include: { brand: true } } } },
-    semiTrailer: {
-      include: {
-        type: true,
-        configuration: true,
-        cargos: true,
-        trailers: { include: { vehicle: { include: { brand: true } } } },
-      },
-    },
+    origin: clientResource,
+    destination: clientResource,
+    driver: driverResource,
+    truck: truckResource,
+    semiTrailer: semiTrailerResource,
     cargo: true,
-    unit: { include: { company: true } },
-    aggregate: { include: { person: true, company: true } },
+    unit: unitResource,
+    aggregate: aggregateResource,
   },
 })
-export type TripInclude = Prisma.TripGetPayload<typeof TripReturnType>
+export type TripResource = Prisma.TripGetPayload<typeof tripResource>
 
-const GroupingReturnType = Prisma.validator<Prisma.GroupingDefaultArgs>()({
+export const groupingResource = Prisma.validator<Prisma.GroupingDefaultArgs>()({
   include: {
-    driver: { include: { person: true } },
-    truck: { include: { vehicle: { include: { brand: true } } } },
-    semiTrailer: {
-      include: {
-        type: true,
-        cargos: true,
-        configuration: true,
-        trailers: { include: { vehicle: { include: { brand: true } } } },
-      },
-    },
+    driver: driverResource,
+    truck: truckResource,
+    semiTrailer: semiTrailerResource,
   },
 })
-export type GroupingInclude = Prisma.GroupingGetPayload<
-  typeof GroupingReturnType
+export type GroupingResource = Prisma.GroupingGetPayload<
+  typeof groupingResource
 >

@@ -23,7 +23,7 @@ const PersonSchema = z.object({
       .max(50, { message: 'O apelido não pode ter mais de 50 caracteres' }),
   ),
 
-  cpf: z.optional(
+  document: z.optional(
     z
       .string()
       .trim()
@@ -31,7 +31,7 @@ const PersonSchema = z.object({
       .refine(({ length }) => !length || length === 11, {
         message: 'O CPF deve ter exatamente 11 dígitos',
       })
-      .refine((value) => validCPF(value), { message: 'O CPF deve ser válido' }),
+      .refine(validCPF, { message: 'O CPF deve ser válido' }),
   ),
 
   phoneNumber: z.optional(
@@ -62,16 +62,12 @@ export const PersonWithoutRelationshipSchema = PersonSchema.omit({
 
 export const PersonWithUniqueRelationshipSchema = PersonSchema.refine(
   ({ unitId, aggregateId }) => !unitId !== !aggregateId,
-  {
-    message: 'Apenas um entre unidade e agregado deve estar presente',
-  },
+  { message: 'Apenas um entre unidade e agregado deve estar presente' },
 )
 
 export const PersonWithNullableRelationshipSchema = PersonUpdateSchema.refine(
   ({ unitId, aggregateId }) => !(unitId && aggregateId),
-  {
-    message: 'Apenas um entre unidade e agregado deve estar presente',
-  },
+  { message: 'Apenas um entre unidade e agregado deve estar presente' },
 )
 
 export const PersonWithRelationshipTypeSchema = z

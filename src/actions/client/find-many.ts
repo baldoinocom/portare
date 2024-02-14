@@ -1,10 +1,17 @@
 'use server'
 
-import { ClientInclude } from '@/actions/types'
+import { ClientResource, clientResource } from '@/actions/types'
 import { db } from '@/lib/db'
 
-export const findManyAction = async (): Promise<{ data: ClientInclude[] }> => {
-  const clients = await db.client.findMany({ include: { company: true } })
+export const findManyAction = async ({
+  type,
+}: {
+  type?: 'origin' | 'destination'
+} = {}): Promise<{ data: ClientResource[] }> => {
+  const clients = await db.client.findMany({
+    where: type ? { type: { in: [type, 'both'] } } : undefined,
+    include: clientResource.include,
+  })
 
   return { data: clients }
 }

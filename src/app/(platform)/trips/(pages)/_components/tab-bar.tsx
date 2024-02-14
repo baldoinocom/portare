@@ -16,7 +16,6 @@ import { usePathname, useRouter } from 'next/navigation'
 const tabs = [
   { name: 'Programações', href: '/trips' },
   { name: 'Pré-programação (0)', href: '/trips/drafts' },
-  { name: 'Agrupamentos', href: '/trips/groupings' },
 ]
 
 export const TabBar = () => {

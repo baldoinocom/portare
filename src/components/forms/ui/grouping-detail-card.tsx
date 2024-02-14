@@ -1,12 +1,12 @@
 import {
-  DriverInclude,
-  GroupingInclude,
-  SemiTrailerInclude,
-  TruckInclude,
+  DriverResource,
+  GroupingResource,
+  SemiTrailerResource,
+  TruckResource,
 } from '@/actions/types'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCPF, formatLicensePlate } from '@/lib/formatters'
+import { formatLicensePlate } from '@/lib/formatters'
 import { DriverDetailCard } from './driver-detail-card'
 import { SemiTrailerDetailCard } from './semi-trailer-detail-card'
 import { TruckDetailCard } from './truck-detail-card'
@@ -14,7 +14,7 @@ import { TruckDetailCard } from './truck-detail-card'
 export const GroupingDetailCard = ({
   grouping,
 }: {
-  grouping: GroupingInclude
+  grouping: GroupingResource
 }) => {
   return (
     <div className="flex w-full flex-col items-start space-y-3 text-start uppercase">
@@ -23,7 +23,7 @@ export const GroupingDetailCard = ({
           <div className="text-xs font-bold capitalize">Motorista</div>
 
           {grouping.driver ? (
-            <DriverDetailCard driver={grouping.driver as DriverInclude} />
+            <DriverDetailCard driver={grouping.driver as DriverResource} />
           ) : (
             <Skeleton className="h-14 w-2/3 group-hover:bg-background" />
           )}
@@ -36,7 +36,7 @@ export const GroupingDetailCard = ({
         <div className="flex-1">
           <div className="text-xs font-bold capitalize">Caminhão</div>
           {grouping.truck ? (
-            <TruckDetailCard truck={grouping.truck as TruckInclude} />
+            <TruckDetailCard truck={grouping.truck as TruckResource} />
           ) : (
             <Skeleton className="h-14 w-2/3 group-hover:bg-background" />
           )}
@@ -49,7 +49,7 @@ export const GroupingDetailCard = ({
 
           {grouping.semiTrailer ? (
             <SemiTrailerDetailCard
-              semiTrailer={grouping.semiTrailer as SemiTrailerInclude}
+              semiTrailer={grouping.semiTrailer as SemiTrailerResource}
             />
           ) : (
             <Skeleton className="h-14 w-2/3 group-hover:bg-background" />
@@ -63,57 +63,36 @@ export const GroupingDetailCard = ({
 export const GroupingPreviewCard = ({
   grouping,
 }: {
-  grouping: GroupingInclude
+  grouping: Partial<GroupingResource>
 }) => {
   return (
     <div className="flex w-full flex-col items-start text-start uppercase">
       <div className="flex w-full flex-col">
         {grouping.driver && (
           <div>
-            <div className="text-xs font-medium text-muted-foreground">
-              {grouping.driver.person?.nickname}
-            </div>
             <div className="flex space-x-4">
-              <span className="flex-1 text-xs font-medium">
+              <span className="flex-1 font-medium">
                 {grouping.driver.person?.name}
               </span>
-              <span className="text-xs text-muted-foreground">
-                {formatCPF(grouping.driver.person?.cpf)}
+              <span className="text-right text-muted-foreground">
+                {grouping.driver.person?.nickname}
               </span>
             </div>
           </div>
         )}
 
-        {grouping.truck && (
-          <div>
-            <div className="flex space-x-4">
-              <span className="flex-1 text-xs font-medium">
-                {formatLicensePlate(grouping.truck?.vehicle.licensePlate)}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {grouping.truck?.vehicle.brand?.name} |{' '}
-                {grouping.truck?.vehicle.model}
-              </span>
-            </div>
+        <div>
+          <div className="flex space-x-4">
+            <span className="flex-1 font-medium">
+              {formatLicensePlate(grouping.truck?.vehicle.licensePlate)}
+            </span>
+            <span className="text-right font-medium">
+              {grouping?.semiTrailer?.trailers
+                .map(({ vehicle }) => formatLicensePlate(vehicle.licensePlate))
+                .join(' | ')}
+            </span>
           </div>
-        )}
-
-        {grouping.semiTrailer && (
-          <div>
-            <div className="flex space-x-4">
-              <span className="flex-1 text-xs font-medium">
-                {grouping.semiTrailer?.trailers
-                  .map(({ vehicle }) =>
-                    formatLicensePlate(vehicle.licensePlate),
-                  )
-                  .join(' | ')}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {grouping.semiTrailer?.trailers?.at(0)?.vehicle.brand?.name}
-              </span>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   )
