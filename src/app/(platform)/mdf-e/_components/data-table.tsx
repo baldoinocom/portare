@@ -55,6 +55,7 @@ export const DataTable = <TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
+    initialState: { pagination: { pageSize: 50 } },
     data,
     columns,
     onSortingChange: setSorting,
@@ -106,6 +107,8 @@ export const DataTable = <TData, TValue>({
     }))
 
     await execute(values)
+
+    table.setRowSelection({})
   }
 
   return (
