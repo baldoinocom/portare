@@ -27,6 +27,7 @@ export default async function Page({
         branch: data[0] === 'pr' ? 'pr' : 'sc',
         closedAt: data[1] === 'closed' ? { not: null } : { equals: null },
       },
+      orderBy: { id: 'asc' },
     }) as PrismaPromise<MDFeResource[]>,
     db.mDFe.count({ where: { branch: 'sc', closedAt: null } }),
     db.mDFe.count({ where: { branch: 'pr', closedAt: null } }),

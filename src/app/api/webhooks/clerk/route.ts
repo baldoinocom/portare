@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { Webhook } from 'svix'
 
 import { db } from '@/lib/db'
+import { revalidatePath } from 'next/cache'
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -67,6 +68,8 @@ export async function POST(req: Request) {
   if (eventType === 'user.deleted') {
     await db.user.delete({ where: { externalUserId: payload.data.id } })
   }
+
+  revalidatePath('/')
 
   return new Response('', { status: 200 })
 }
