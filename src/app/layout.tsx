@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: { default: 'Portare', template: '%s | Portare' },
   description: 'TMS - Sistema de Gerenciamento de Transporte',
   icons: favicons,
-
   creator: 'Nicolas Baldoino',
   authors: [
     { name: 'Nicolas Baldoino', url: 'github.com/nicolasbaldoino' },
