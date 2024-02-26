@@ -1,7 +1,7 @@
 'use client'
 
 import { action } from '@/actions'
-import { UserPasswordFormSchema } from '@/actions/user/schema'
+import { UserUpdatePasswordSchema } from '@/actions/user/schema'
 import { Button } from '@/components/ui/button'
 import { DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
@@ -15,19 +15,15 @@ import {
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
-import { useClerk } from '@clerk/nextjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 export const PasswordFormDialog = () => {
-  const { user } = useClerk()
-
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof UserPasswordFormSchema>>({
-    resolver: zodResolver(UserPasswordFormSchema),
-    defaultValues: { externalUserId: user?.id },
+  const form = useForm<z.infer<typeof UserUpdatePasswordSchema>>({
+    resolver: zodResolver(UserUpdatePasswordSchema),
   })
 
   const { updatePassword } = action.user()
@@ -48,10 +44,8 @@ export const PasswordFormDialog = () => {
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof UserPasswordFormSchema>) => {
-    if (user) {
-      await execute(values)
-    }
+  const onSubmit = async (values: z.infer<typeof UserUpdatePasswordSchema>) => {
+    await execute(values)
   }
 
   return (
@@ -114,7 +108,7 @@ export const PasswordFormDialog = () => {
         </div>
 
         <DialogFooter>
-          <Button disabled={form.formState.isSubmitting}>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
             Atualizar senha
           </Button>
         </DialogFooter>

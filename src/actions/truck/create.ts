@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { emptyAsNull } from '@/lib/utils'
 import { Truck } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -12,7 +13,7 @@ type InputType = z.infer<typeof TruckSchema>
 type ReturnType = ActionState<InputType, Truck>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { vehicle, compressor } = data
+  const { vehicle, compressor, compressorModel } = data
 
   let truck
 
@@ -21,7 +22,11 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     if (data) {
       truck = await db.truck.create({
-        data: { vehicle: { connect: { id: data.id } }, compressor },
+        data: {
+          vehicle: { connect: { id: data.id } },
+          compressor,
+          compressorModel: compressor ? emptyAsNull(compressorModel) : null,
+        },
         include: {
           vehicle: { include: { brand: true, unit: true, aggregate: true } },
         },

@@ -8,10 +8,11 @@ import * as React from 'react'
 import { Menu } from './menu'
 
 export const MobileSidebar = () => {
-  const { collapsed, onExpand } = useSidebar()
+  const { opened, onClose } = useSidebar()
+
   return (
-    <Transition.Root show={collapsed} as={React.Fragment}>
-      <Dialog as="div" className="relative z-50 lg:hidden" onClose={onExpand}>
+    <Transition.Root show={opened} as={React.Fragment}>
+      <Dialog as="div" className="relative z-50 lg:hidden" onClose={onClose}>
         <Transition.Child
           as={React.Fragment}
           enter="transition-opacity ease-linear duration-300"
@@ -47,14 +48,15 @@ export const MobileSidebar = () => {
                   <Button
                     variant="ghost"
                     className="-m-2.5 bg-background p-2.5 text-foreground"
-                    onClick={onExpand}
+                    onClick={onClose}
                   >
                     <XIcon />
-                    <span className="sr-only">Open sidebar</span>
+                    <span className="sr-only">Close</span>
                   </Button>
                 </div>
               </Transition.Child>
-              <Menu />
+
+              <Menu mobile />
             </Dialog.Panel>
           </Transition.Child>
         </div>

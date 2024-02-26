@@ -3,9 +3,9 @@
 import { ActionState, safeAction } from '@/lib/safe-action'
 import clerk, { User } from '@clerk/clerk-sdk-node'
 import { z } from 'zod'
-import { UserPasswordFormSchema } from './schema'
+import { UserUpdatePasswordSchema } from './schema'
 
-type InputType = z.infer<typeof UserPasswordFormSchema>
+type InputType = z.infer<typeof UserUpdatePasswordSchema>
 type ReturnType = ActionState<InputType, User>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -41,4 +41,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   return { data: JSON.parse(JSON.stringify(user)) }
 }
 
-export const updatePasswordAction = safeAction(UserPasswordFormSchema, handler)
+export const updatePasswordAction = safeAction(
+  UserUpdatePasswordSchema,
+  handler,
+)

@@ -97,21 +97,23 @@ enum PermissionCode {
 }
 
 enum PermissionGroup {
-  groups
-  permissions
-  roles
+  // System
+  group
+  permission
+  role
 
-  trips
-  groupings
+  trip
+  grouping
 
-  drivers
+  driver
+  aggregate
+  client
+  unit
 
-  aggregates
-  units
-  clients
-
-  trucks
-  trailers
+  // Vehicle
+  truck
+  semiTrailer
+  brand
 
   @@map("permission_group")
 }
@@ -152,7 +154,8 @@ model Driver {
   personId Int    @id @map("person_id")
   person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
-  cnh String? @unique @db.VarChar(11) // CNH - Carteira Nacional de Habilitação
+  cnh         String? @unique @db.VarChar(11) // CNH - Carteira Nacional de Habilitação
+  cnhRegistry String? @unique @db.VarChar(11) // Registro da CNH
 
   aso      ASO[]
   absences AbsentDriver[]
@@ -383,8 +386,9 @@ enum VehicleStatus {
 }
 
 model Truck {
-  id         Int     @id @default(autoincrement())
-  compressor Boolean @default(false)
+  id              Int     @id @default(autoincrement())
+  compressor      Boolean @default(false)
+  compressorModel String? @map("compressor_model")
 
   vehicleId Int     @unique @map("vehicle_id")
   vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)

@@ -1,11 +1,15 @@
 'use client'
 
 import { AppearanceForm } from '@/components/forms/appearance-form'
+import { PageWidthContext } from '@/components/page-content'
 import { Separator } from '@/components/ui/separator'
 import { useTheme } from 'next-themes'
+import { UseThemeProps } from 'next-themes/dist/types'
+import * as React from 'react'
 
 export default function Page() {
-  const { theme } = useTheme()
+  const theme = useTheme().theme as UseThemeProps['systemTheme']
+  const width = React.useContext(PageWidthContext).width
 
   return (
     <div className="space-y-6">
@@ -18,9 +22,7 @@ export default function Page() {
 
       <Separator />
 
-      {theme && (
-        <AppearanceForm initialData={{ theme: theme as 'dark' | 'light' }} />
-      )}
+      {theme && width && <AppearanceForm initialData={{ theme, width }} />}
     </div>
   )
 }

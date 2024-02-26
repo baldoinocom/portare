@@ -2,6 +2,7 @@ import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
 import { TripInformation } from '@/components/forms/fields/trip-information'
 import { TripForm } from '@/components/forms/trip-form'
+import { PageContent } from '@/components/page-content'
 import { Header } from './_components/header'
 
 export default async function Page({
@@ -40,7 +41,7 @@ export default async function Page({
     : []
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+    <PageContent>
       <Header />
 
       <main>
@@ -72,6 +73,6 @@ export default async function Page({
           />
         )}
       </main>
-    </div>
+    </PageContent>
   )
 }

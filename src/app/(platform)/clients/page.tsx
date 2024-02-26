@@ -1,5 +1,6 @@
 import { action } from '@/actions'
 import { EmptyState } from '@/components/empty-state'
+import { PageContent } from '@/components/page-content'
 import { clientColumns } from '@/components/tables/client-columns'
 import { DataTable } from '@/components/tables/ui/data-table'
 import { Separator } from '@/components/ui/separator'
@@ -10,7 +11,7 @@ export default async function Page() {
   const clients = await action.client().findMany()
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+    <PageContent>
       <Header />
 
       <Separator />
@@ -36,6 +37,6 @@ export default async function Page() {
           )}
         </div>
       </main>
-    </div>
+    </PageContent>
   )
 }

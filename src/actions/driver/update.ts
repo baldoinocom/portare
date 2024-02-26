@@ -13,7 +13,7 @@ type InputType = z.infer<typeof DriverUpdateSchema>
 type ReturnType = ActionState<InputType, Driver>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { personId, person, cnh } = data
+  const { personId, person, cnh, cnhRegistry } = data
 
   let driver
 
@@ -25,6 +25,16 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
       if (find) {
         return { error: 'Já existe um motorista com essa CNH' }
+      }
+    }
+
+    if (cnhRegistry) {
+      const find = await db.driver.findFirst({
+        where: { NOT: { personId }, cnhRegistry },
+      })
+
+      if (find) {
+        return { error: 'Já existe um motorista com esse registro de CNH' }
       }
     }
 

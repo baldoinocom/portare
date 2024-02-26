@@ -18,7 +18,7 @@ export const Header = () => {
   const edit = searchParams.get('edit') !== null
 
   return (
-    <div className="sticky top-16 z-50 -mt-10 space-y-8 bg-background pt-10">
+    <div className="sticky top-16 z-10 -mt-10 space-y-8 bg-background pt-10">
       <div>
         <Breadcrumb pages={pages} />
 

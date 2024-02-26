@@ -2,7 +2,7 @@
 
 import { action } from '@/actions'
 import { UserResource } from '@/actions/types'
-import { UserSchema, UserUpdateSchema } from '@/actions/user/schema'
+import { UserSchema, UserUpsertSchema } from '@/actions/user/schema'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -29,12 +29,6 @@ import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const userFormSchema = z.discriminatedUnion('new', [
-  z.object({ new: z.literal(true) }).merge(UserSchema),
-
-  z.object({ new: z.literal(false) }).merge(UserUpdateSchema),
-])
-
 export const UserFormDialog = ({
   initialData,
 }: {
@@ -42,8 +36,8 @@ export const UserFormDialog = ({
 }) => {
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof userFormSchema>>({
-    resolver: zodResolver(userFormSchema),
+  const form = useForm<z.infer<typeof UserUpsertSchema>>({
+    resolver: zodResolver(UserUpsertSchema),
     defaultValues: { new: !initialData, ...nullAsUndefined(initialData) },
   })
 
@@ -81,7 +75,7 @@ export const UserFormDialog = ({
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof userFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof UserUpsertSchema>) => {
     if (initialData) {
       await executeUpdate({
         externalUserId: initialData.externalUserId,

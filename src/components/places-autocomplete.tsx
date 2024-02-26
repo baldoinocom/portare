@@ -125,4 +125,3 @@ export const PlacesAutoComplete = ({
     </>
   )
 }
-PlacesAutoComplete.displayName = 'PlacesAutoComplete'

@@ -1,4 +1,4 @@
-import { Menu } from './menu'
+import { DesktopSidebar } from './desktop-sidebar'
 import { MobileSidebar } from './mobile-sidebar'
 
 export const Sidebar = () => {
@@ -6,9 +6,7 @@ export const Sidebar = () => {
     <div>
       <MobileSidebar />
 
-      <div className="hidden border-r border-border lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-        <Menu />
-      </div>
+      <DesktopSidebar />
     </div>
   )
 }

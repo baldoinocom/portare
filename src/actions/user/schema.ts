@@ -27,7 +27,7 @@ export const UserUpdateSchema = UserIdSchema.merge(
     .deepPartial(),
 )
 
-export const UserPasswordFormSchema = UserIdSchema.merge(
+export const UserUpdatePasswordSchema = UserIdSchema.merge(
   z.object({
     currentPassword: z
       .string({ required_error: 'A senha atual é obrigatória' })
@@ -51,3 +51,9 @@ export const UserPasswordFormSchema = UserIdSchema.merge(
     message: 'A senha de confirmação deve ser igual a nova senha',
   },
 )
+
+export const UserUpsertSchema = z.discriminatedUnion('new', [
+  z.object({ new: z.literal(true) }).merge(UserSchema),
+
+  z.object({ new: z.literal(false) }).merge(UserUpdateSchema),
+])

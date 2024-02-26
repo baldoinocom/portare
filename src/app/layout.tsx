@@ -8,9 +8,15 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'portare',
-  description: 'TMS - Sistema de gerenciamento de transporte',
+  title: { default: 'Portare', template: '%s | Portare' },
+  description: 'TMS - Sistema de Gerenciamento de Transporte',
   icons: favicons,
+
+  creator: 'Nicolas Baldoino',
+  authors: [
+    { name: 'Nicolas Baldoino', url: 'github.com/nicolasbaldoino' },
+    { name: 'Daniel Baldoino', url: 'github.com/srbaldoino' },
+  ],
 }
 
 export default function RootLayout({
@@ -20,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="pt-BR" suppressHydrationWarning>
         <body
           className={cn(
             'h-full min-h-screen bg-background font-sans antialiased',

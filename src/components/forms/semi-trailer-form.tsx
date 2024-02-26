@@ -580,6 +580,7 @@ export const SemiTrailerForm = ({
                   </Alert>
                 </div>
               )}
+
               {trailerFields.map((trailerField, index) => (
                 <div
                   key={trailerField.id}
@@ -615,6 +616,25 @@ export const SemiTrailerForm = ({
                             {...field}
                             mask="9999 99999 99"
                             placeholder="1234 56789 01"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`trailers.${index}.vehicle.chassis`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Chassi</FormLabel>
+                        <FormControl>
+                          <InputMask
+                            {...field}
+                            mask="*** ****** ** ******"
+                            placeholder="1AB 123AB1 CD 123456"
+                            className="uppercase"
                           />
                         </FormControl>
                         <FormMessage />

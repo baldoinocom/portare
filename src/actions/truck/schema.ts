@@ -13,6 +13,12 @@ export const TruckSchema = z.object({
   vehicle: VehicleWithUniqueRelationshipSchema,
 
   compressor: z.optional(z.boolean().default(false)),
+
+  compressorModel: z.optional(
+    z.string().trim().toUpperCase().max(255, {
+      message: 'O modelo do compressor não pode ter mais de 255 caracteres',
+    }),
+  ),
 })
 
 export const TruckWithRelationshipTypeSchema = TruckSchema.pick({

@@ -1,4 +1,4 @@
-import { TripSteps } from '@/lib/enums'
+import { TripSteps } from '@/actions/enums'
 import { TripStatus } from '@prisma/client'
 import { z } from 'zod'
 
@@ -83,23 +83,13 @@ export const TripWithDraftSchema = TripSchema.partial({
 
 export const TripWithStepSchema = z
   .discriminatedUnion('step', [
-    z.object({ step: z.literal(TripSteps.one) }).merge(
-      TripSchema.omit({
-        driverId: true,
-        truckId: true,
-        semiTrailerId: true,
-        cargoId: true,
-      }),
-    ),
-
+    // Steps
+    z.object({ step: z.literal(TripSteps.one) }).merge(TripWithDraftSchema),
     z.object({ step: z.literal(TripSteps.two) }).merge(TripSchema),
     z.object({ step: z.literal(TripSteps.three) }).merge(TripSchema),
 
+    // Draft steps
     z.object({ step: z.literal(TripSteps.four) }).merge(TripWithDraftSchema),
     z.object({ step: z.literal(TripSteps.five) }).merge(TripWithDraftSchema),
   ])
-  .and(
-    z.object({
-      groupingId: z.number().int().positive().nullish(),
-    }),
-  )
+  .and(z.object({ groupingId: z.number().int().positive().nullish() }))

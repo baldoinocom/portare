@@ -1,4 +1,4 @@
-import { RelationshipTypeEnum } from '@/lib/enums'
+import { RelationshipTypeEnum } from '@/actions/enums'
 import { extractNumber } from '@/lib/utils'
 import { validChassis, validLicensePlate, validRenavam } from '@/lib/validators'
 import { z } from 'zod'

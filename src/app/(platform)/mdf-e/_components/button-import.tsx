@@ -7,7 +7,7 @@ import { format } from 'date-fns'
 import { Loader2, UploadIcon } from 'lucide-react'
 import * as React from 'react'
 import * as XLSX from 'xlsx'
-import { importMDFe } from '../_actions/import_mdfe'
+import { importMDFe } from '../_actions/import-mdfe'
 import { MDFeSchema, MDFeType } from '../_actions/type'
 
 export const ButtonImport = () => {
@@ -84,8 +84,8 @@ export const ButtonImport = () => {
           'No.Manifesto': Number(row['No.Manifesto']),
           'NF CLIENTE': String(Number(row['NF CLIENTE'])),
           'Numero CTRC': String(Number(row['Numero CTRC'])),
-          'Dt. Emissao': format(new Date(row['Dt. Emissao']), 'dd-MM-yyyy'),
-          'Emis Nf Cli': format(new Date(row['Emis Nf Cli']), 'dd-MM-yyyy'),
+          'Dt. Emissao': format(new Date(row['Dt. Emissao']), 'dd/MM/yyyy'),
+          'Emis Nf Cli': format(new Date(row['Emis Nf Cli']), 'dd/MM/yyyy'),
         }))
 
         const data = MDFeSchema.parse(rows)

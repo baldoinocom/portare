@@ -2,6 +2,7 @@
 
 import { action } from '@/actions'
 import { DriverWithRelationshipTypeSchema } from '@/actions/driver/schema'
+import { RelationshipTypeEnum } from '@/actions/enums'
 import {
   AggregateResource,
   DriverResource,
@@ -25,7 +26,6 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
-import { RelationshipTypeEnum } from '@/lib/enums'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
@@ -144,6 +144,26 @@ export const DriverForm = ({
                           {...field}
                           mask="99999999999"
                           placeholder="12345678987"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="sm:col-span-4">
+                <FormField
+                  control={form.control}
+                  name="cnhRegistry"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rergistro da CNH</FormLabel>
+                      <FormControl>
+                        <InputMask
+                          {...field}
+                          mask="99999999999"
+                          placeholder="12345678901"
                         />
                       </FormControl>
                       <FormMessage />

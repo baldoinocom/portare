@@ -1,6 +1,5 @@
-import { useCallback, useState } from 'react'
-
 import { ActionState, FieldErrors } from '@/lib/safe-action'
+import * as React from 'react'
 
 type Action<TInput, TOutput> = (
   data: TInput,
@@ -16,14 +15,14 @@ export const useAction = <TInput, TOutput>(
   action: Action<TInput, TOutput>,
   options: UseActionOptions<TOutput> = {},
 ) => {
-  const [fieldErrors, setFieldErrors] = useState<
+  const [fieldErrors, setFieldErrors] = React.useState<
     FieldErrors<TInput> | undefined
   >(undefined)
-  const [error, setError] = useState<string | undefined>(undefined)
-  const [data, setData] = useState<TOutput | undefined>(undefined)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = React.useState<string | undefined>(undefined)
+  const [data, setData] = React.useState<TOutput | undefined>(undefined)
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
-  const execute = useCallback(
+  const execute = React.useCallback(
     async (input: TInput) => {
       setIsLoading(true)
 

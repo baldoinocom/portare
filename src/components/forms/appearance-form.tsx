@@ -1,5 +1,6 @@
 'use client'
 
+import { PageWidthContext } from '@/components/page-content'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -14,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
+import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -21,22 +23,29 @@ const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark'], {
     required_error: 'Selecione um tema para o painel',
   }),
+  width: z.enum(['flexible', 'full'], {
+    required_error: 'Selecione a largura da página',
+  }),
 })
+
+type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
 
 export function AppearanceForm({
   initialData,
 }: {
-  initialData?: { theme: 'light' | 'dark' }
+  initialData?: Partial<AppearanceFormValues>
 }) {
   const { setTheme } = useTheme()
+  const { setWidth } = React.useContext(PageWidthContext)
 
-  const form = useForm<z.infer<typeof appearanceFormSchema>>({
+  const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
     defaultValues: nullAsUndefined(initialData),
   })
 
-  const onSubmit = (data: z.infer<typeof appearanceFormSchema>) => {
+  const onSubmit = (data: AppearanceFormValues) => {
     setTheme(data.theme)
+    setWidth(data.width)
   }
 
   return (
@@ -114,7 +123,81 @@ export function AppearanceForm({
           )}
         />
 
-        <Button>Atualizar preferências</Button>
+        <FormField
+          control={form.control}
+          name="width"
+          render={({ field }) => (
+            <FormItem className="space-y-1">
+              <FormLabel>Largura</FormLabel>
+              <FormDescription>Selecione a largura da página</FormDescription>
+              <FormMessage />
+
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                className="grid max-w-md grid-cols-2 gap-8 pt-2"
+              >
+                <FormItem>
+                  <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
+                    <FormControl>
+                      <RadioGroupItem value="flexible" className="sr-only" />
+                    </FormControl>
+                    <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
+                      <div className="space-y-2 rounded-sm bg-[#ecedef] p-2 px-8">
+                        <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
+                          <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
+                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                        </div>
+                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                        </div>
+                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                        </div>
+                      </div>
+                    </div>
+                    <span className="block w-full p-2 text-center font-normal">
+                      Flexível
+                    </span>
+                  </FormLabel>
+                </FormItem>
+
+                <FormItem>
+                  <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
+                    <FormControl>
+                      <RadioGroupItem value="full" className="sr-only" />
+                    </FormControl>
+                    <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
+                      <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
+                        <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
+                          <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
+                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                        </div>
+                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                        </div>
+                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+                        </div>
+                      </div>
+                    </div>
+                    <span className="block w-full p-2 text-center font-normal">
+                      Máximo
+                    </span>
+                  </FormLabel>
+                </FormItem>
+              </RadioGroup>
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          Atualizar preferências
+        </Button>
       </form>
     </Form>
   )

@@ -2,6 +2,12 @@ import { db } from '@/lib/db'
 
 async function main() {
   // await db.$transaction([
+  //   db.user.create({
+  //     data: {
+  //       username: 'nicolasbaldoino',
+  //       externalUserId: 'user_2bHmtB9K8lWIhDEJCiaYSNaTQu2',
+  //     },
+  //   }),
   //   db.unit.create({
   //     data: {
   //       company: {

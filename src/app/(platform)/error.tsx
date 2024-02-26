@@ -1,12 +1,13 @@
 'use client'
 
+import { PageContent } from '@/components/page-content'
 import { Button } from '@/components/ui/button'
 
 export default function Error({ reset }: { reset: () => void }) {
   return (
     <div className="flex min-h-full flex-col bg-background pb-12 pt-16">
-      <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-6 lg:px-8">
-        <div className="py-16">
+      <PageContent className="w-full flex-grow justify-center gap-y-0 px-6">
+        <main className="py-16">
           <div className="text-center">
             <p className="text-base font-semibold text-primary">Oops</p>
             <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -26,8 +27,8 @@ export default function Error({ reset }: { reset: () => void }) {
               </Button>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </PageContent>
     </div>
   )
 }

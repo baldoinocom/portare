@@ -139,7 +139,7 @@ export const ProfileForm = ({
         />
 
         {initialData && form.formState.isDirty && (
-          <Button>Atualizar perfil</Button>
+          <Button type="submit">Atualizar perfil</Button>
         )}
       </form>
     </Form>

@@ -1,8 +1,8 @@
 import { DataNotFound } from '@/app/not-found'
+import { PageContent } from '@/components/page-content'
 import { db } from '@/lib/db'
 import { PrismaPromise } from '@prisma/client'
 import { MDFeResource } from '../_actions/type'
-import { ButtonImport } from '../_components/button-import'
 import { columns } from '../_components/columns'
 import { DataTable } from '../_components/data-table'
 import { Header } from '../_components/header'
@@ -34,22 +34,12 @@ export default async function Page({
   ])
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+    <PageContent>
       <Header countMDFeSC={countMDFeSC} countMDFePR={countMDFePR} />
 
       <main>
         <div className="flex flex-col gap-y-8">
-          <div className="border-b border-border pb-5 sm:pb-0">
-            <div className="sm:flex sm:items-center sm:justify-between">
-              <div className="min-w-0 flex-1">
-                <h2 className="text-2xl font-bold">Registros</h2>
-              </div>
-
-              <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
-                <ButtonImport />
-              </div>
-            </div>
-
+          <div className="border-b border-border sm:pb-0">
             <SubTabBar count={data[0] === 'pr' ? countMDFePR : countMDFeSC} />
           </div>
 
@@ -62,6 +52,6 @@ export default async function Page({
           {!!mdfe.length && <DataTable columns={columns} data={mdfe} />}
         </div>
       </main>
-    </div>
+    </PageContent>
   )
 }

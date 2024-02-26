@@ -8,15 +8,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useClerk } from '@clerk/nextjs'
+import { currentUser } from '@/lib/auth-service'
 import { ChevronDownIcon } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { userNavigation } from '../data'
+import { SignOut } from './sign-out'
 
-export const ProfileDropdown = () => {
-  const { user, signOut } = useClerk()
-  const router = useRouter()
+export const ProfileDropdown = async () => {
+  const user = await currentUser()
 
   return (
     <div className="flex items-center gap-x-2">
@@ -51,11 +50,7 @@ export const ProfileDropdown = () => {
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            onClick={() => signOut(() => router.push('/auth/sign-in'))}
-          >
-            Sair
-          </DropdownMenuItem>
+          <SignOut />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

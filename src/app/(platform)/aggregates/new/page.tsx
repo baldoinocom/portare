@@ -1,17 +1,18 @@
 import { action } from '@/actions'
 import { AggregateForm } from '@/components/forms/aggregate-form'
+import { PageContent } from '@/components/page-content'
 import { Header } from './_components/header'
 
 export default async function Page() {
   const units = await action.unit().findMany()
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+    <PageContent>
       <Header />
 
       <main>
         <AggregateForm units={units.data} />
       </main>
-    </div>
+    </PageContent>
   )
 }

@@ -1,3 +1,4 @@
+import { PageContent } from '@/components/page-content'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -9,7 +10,7 @@ import {
 
 export default function Page() {
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+    <PageContent>
       <header>
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="min-w-0 flex-1">
@@ -91,6 +92,6 @@ export default function Page() {
           {/* Content */}
         </div>
       </main>
-    </div>
+    </PageContent>
   )
 }

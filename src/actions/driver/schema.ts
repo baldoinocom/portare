@@ -21,10 +21,21 @@ export const DriverSchema = z.object({
       })
       .refine(validCNH, { message: 'O CNH deve ser válido' }),
   ),
+
+  cnhRegistry: z.optional(
+    z
+      .string()
+      .trim()
+      .refine(({ length }) => !length || length === 11, {
+        message: 'O registro da CNH deve ter exatamente 11 dígitos',
+      })
+      .refine(validCNH, { message: 'O registro da CNH deve ser válido' }),
+  ),
 })
 
 export const DriverWithRelationshipTypeSchema = DriverSchema.pick({
   cnh: true,
+  cnhRegistry: true,
 }).merge(z.object({ person: PersonWithRelationshipTypeSchema }))
 
 export const DriverUpdateSchema = DriverIdSchema.merge(

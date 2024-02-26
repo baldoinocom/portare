@@ -1,6 +1,7 @@
 'use client'
 
 import { action } from '@/actions'
+import { TripSteps } from '@/actions/enums'
 import {
   TripSchema,
   TripWithDraftSchema,
@@ -66,7 +67,6 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
-import { TripSteps } from '@/lib/enums'
 import { formatTripStatus } from '@/lib/formatters'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -224,14 +224,13 @@ export const TripForm = ({
     setStepValue(step)
   }
 
+  // Steps
   const requiredStep = () => step === TripSteps.one || step === TripSteps.two
-
-  const draftStep = () => step === TripSteps.four || step === TripSteps.five
-
   const nextStep = () => onStep(String(Number(step) + 1))
 
+  // Draft steps
+  const draftStep = () => step === TripSteps.four || step === TripSteps.five
   const resolverDraftStep = () => setStepValue(String(Number(step) + 2))
-
   const resolverStep = () => setStepValue(String(Number(step) - 2))
 
   const [groupingMode, setGroupingMode] = React.useState(!initialData)

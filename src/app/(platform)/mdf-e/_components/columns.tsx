@@ -20,7 +20,7 @@ import {
   MoreHorizontal,
 } from 'lucide-react'
 import { MDFeResource } from '../_actions/type'
-import { updateMDFe } from '../_actions/update_mdfe'
+import { updateMDFe } from '../_actions/update-mdfe'
 
 export const columns: ColumnDef<MDFeResource>[] = [
   {
@@ -63,70 +63,63 @@ export const columns: ColumnDef<MDFeResource>[] = [
       )
     },
     cell: ({ getValue }) => (
-      <div className="flex justify-center uppercase">{getValue<string>()}</div>
+      <div className="ml-4 uppercase">{getValue<string>()}</div>
     ),
   },
 
   {
-    id: 'Placa Veicul',
+    id: 'Placa',
     accessorFn: (row) => row.data['Placa Veicul'],
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">{getValue<string>()}</div>
+      <div className="whitespace-nowrap">
+        <div className="flex flex-col items-start uppercase">
+          <span>{getValue<string>()}</span>
+          <span className="text-xs"></span>
+        </div>
+      </div>
     ),
   },
 
   {
-    id: 'Dt. Emissao',
-    accessorFn: (row) => row.data['Dt. Emissao'],
-    header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">{getValue<string>()}</div>
-    ),
-  },
-
-  {
-    id: 'Nome Destina',
+    id: 'Destinatário',
     accessorFn: (row) => row.data['Nome Destina'],
     header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">{getValue<string>()}</div>
+    cell: ({ getValue, row: { original } }) => (
+      <div className="whitespace-nowrap">
+        <div className="flex flex-col items-start uppercase">
+          <span>{getValue<string>()}</span>
+          <span className="text-xs">{original.data['Local Entreg']}</span>
+        </div>
+      </div>
     ),
   },
 
   {
-    id: 'Local Entreg',
-    accessorFn: (row) => row.data['Local Entreg'],
-    header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">{getValue<string>()}</div>
-    ),
-  },
-
-  {
-    id: 'NF CLIENTE',
+    id: 'Nota Fiscal',
     accessorFn: (row) => row.data['NF CLIENTE'],
     header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">{getValue<string>()}</div>
+    cell: ({ getValue, row: { original } }) => (
+      <div className="whitespace-nowrap">
+        <div className="flex flex-col items-start uppercase">
+          <span>{getValue<string>()}</span>
+          <span className="text-xs">{original.data['Dt. Emissao']}</span>
+        </div>
+      </div>
     ),
   },
 
   {
-    id: 'Numero CTRC',
+    id: 'CT-e',
     accessorFn: (row) => row.data['Numero CTRC'],
     header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">{getValue<string>()}</div>
-    ),
-  },
-
-  {
-    id: 'Emis Nf Cli',
-    accessorFn: (row) => row.data['Emis Nf Cli'],
-    header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">{getValue<string>()}</div>
+    cell: ({ getValue, row: { original } }) => (
+      <div className="whitespace-nowrap">
+        <div className="flex flex-col items-start uppercase">
+          <span>{getValue<string>()}</span>
+          <span className="text-xs">{original.data['Emis Nf Cli']}</span>
+        </div>
+      </div>
     ),
   },
 

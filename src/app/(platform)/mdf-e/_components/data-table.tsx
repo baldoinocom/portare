@@ -34,7 +34,7 @@ import {
 import { ChevronDown, FileCheck2Icon, FileX2Icon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import * as React from 'react'
-import { updateMDFe } from '../_actions/update_mdfe'
+import { updateMDFe } from '../_actions/update-mdfe'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -174,7 +174,7 @@ export const DataTable = <TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead className="py-2" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -195,7 +195,7 @@ export const DataTable = <TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell className="py-2" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

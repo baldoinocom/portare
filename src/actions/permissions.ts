@@ -1,30 +1,32 @@
 import { PermissionCode, PermissionGroup } from '@prisma/client'
 
-export type Permissions = `${PermissionGroup}.${PermissionCode}`
+export type PermissionGroupCode = `${PermissionGroup}.${PermissionCode}`
 
-export const permissions: {
+type Permission = {
   group: string
   name: string
-  value: Permissions
-}[] = [
+  value: PermissionGroupCode
+}
+
+export const permissions: Permission[] = [
   {
     group: 'Unidade',
     name: 'Criar unidade',
-    value: 'units.create',
+    value: 'unit.create',
   },
   {
     group: 'Unidade',
     name: 'Visualizar unidade',
-    value: 'units.view',
+    value: 'unit.view',
   },
   {
     group: 'Unidade',
     name: 'Editar unidade',
-    value: 'units.update',
+    value: 'unit.update',
   },
   {
     group: 'Unidade',
     name: 'Excluir unidade',
-    value: 'units.delete',
+    value: 'unit.delete',
   },
 ]
