@@ -23,6 +23,7 @@ export const TruckSchema = z.object({
 
 export const TruckWithRelationshipTypeSchema = TruckSchema.pick({
   compressor: true,
+  compressorModel: true,
 }).merge(z.object({ vehicle: VehicleWithRelationshipTypeSchema }))
 
 export const TruckUpdateSchema = TruckIdSchema.merge(TruckSchema.deepPartial())

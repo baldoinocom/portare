@@ -528,7 +528,10 @@ export const SemiTrailerForm = ({
                         <FormLabel>Eixos</FormLabel>
 
                         <Select
-                          onValueChange={field.onChange}
+                          value={String(field.value)}
+                          onValueChange={(e) =>
+                            field.onChange(e === 'undefined' ? null : e)
+                          }
                           defaultValue={String(field.value)}
                         >
                           <FormControl>

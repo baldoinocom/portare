@@ -17,7 +17,9 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
@@ -137,20 +139,41 @@ export const TruckForm = ({
                 <FormField
                   control={form.control}
                   name="compressor"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">Compressor</FormLabel>
-                        <FormDescription>
-                          Informe se o caminhão possui compressor
-                        </FormDescription>
+                  render={({ field: { value, onChange } }) => (
+                    <FormItem className="flex flex-col rounded-lg border p-4">
+                      <div className="flex flex-row items-center justify-between">
+                        <div className="space-y-0.5">
+                          <FormLabel className="text-base">
+                            Compressor
+                          </FormLabel>
+                          <FormDescription>
+                            Informe se o caminhão possui compressor
+                          </FormDescription>
+                        </div>
+                        <FormControl>
+                          <Switch checked={value} onCheckedChange={onChange} />
+                        </FormControl>
                       </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+
+                      <div>
+                        <FormField
+                          control={form.control}
+                          name="compressorModel"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Modelo</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  className="uppercase"
+                                  disabled={!value}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
-                      </FormControl>
+                      </div>
                     </FormItem>
                   )}
                 />

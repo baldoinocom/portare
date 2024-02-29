@@ -168,6 +168,7 @@ export const VehicleInformation = ({ brands }: { brands?: Brand[] }) => {
               <FormLabel>Eixos</FormLabel>
 
               <Select
+                value={String(field.value)}
                 onValueChange={(e) =>
                   field.onChange(e === 'undefined' ? null : e)
                 }
