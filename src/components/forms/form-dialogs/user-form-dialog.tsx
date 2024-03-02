@@ -41,10 +41,16 @@ export const UserFormDialog = ({
     defaultValues: { new: !initialData, ...nullAsUndefined(initialData) },
   })
 
+  const onReset = () => {
+    form.reset({ username: '', password: '' })
+  }
+
   const { create, update } = action.user()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Usuário cadastro com sucesso',
         description: 'O usuário foi cadastro com sucesso! 🎉',

@@ -66,10 +66,16 @@ export const StoppedVehicleFormDialog = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({ note: '', status: form.getValues('status') })
+  }
+
   const { create, update } = action.stoppedVehicle()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Parada de veículo registrada com sucesso',
         description:
@@ -173,6 +179,7 @@ export const StoppedVehicleFormDialog = ({
                     </FormLabel>
 
                     <Select
+                      {...field}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >

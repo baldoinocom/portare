@@ -126,6 +126,7 @@ export const TripForm = ({
   const { execute } = useAction(create, {
     onSuccess: (data) => {
       router.replace(String(data.id))
+
       toast({
         title: 'Viagem registrada com sucesso',
         description: 'A viagem foi registrada com sucesso! 🎉',
@@ -143,6 +144,7 @@ export const TripForm = ({
   const { execute: executeDraft } = useAction(createDraft, {
     onSuccess: (data) => {
       router.replace(String(data.id))
+
       toast({
         title: 'Viagem registrada com sucesso',
         description: 'A viagem foi registrada com sucesso! 🎉',
@@ -160,6 +162,7 @@ export const TripForm = ({
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: (data) => {
       router.replace(String(data.id))
+
       toast({
         title: 'Viagem atualizada com sucesso',
         description: 'A viagem foi atualizada com sucesso! 🎉',
@@ -299,6 +302,7 @@ export const TripForm = ({
                               <FormLabel>Status da viagem</FormLabel>
 
                               <Select
+                                {...field}
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                               >

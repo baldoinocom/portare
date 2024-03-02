@@ -29,7 +29,6 @@ import { useAction } from '@/hooks/use-action'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -42,8 +41,6 @@ export const DriverForm = ({
   units?: UnitResource[]
   aggregates?: AggregateResource[]
 }) => {
-  const router = useRouter()
-
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof DriverWithRelationshipTypeSchema>>({
@@ -59,11 +56,20 @@ export const DriverForm = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({
+      person: { name: '', nickname: '', document: '', phoneNumber: '' },
+      cnh: '',
+      cnhRegistry: '',
+    })
+  }
+
   const { create, update } = action.driver()
 
   const { execute } = useAction(create, {
-    onSuccess: (data) => {
-      router.replace(String(data.personId))
+    onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Motorista cadastrado com sucesso',
         description: 'O motorista foi cadastrado com sucesso! 🎉',

@@ -47,7 +47,6 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Brand, Cargo, TrailerConfiguration, TrailerType } from '@prisma/client'
 import { Check, ChevronsUpDown, Info, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -68,8 +67,6 @@ export const SemiTrailerForm = ({
   trailerConfigurations?: TrailerConfiguration[]
   units?: UnitResource[]
 }) => {
-  const router = useRouter()
-
   const { toast } = useToast()
 
   const getTrailerFields = () => {
@@ -110,18 +107,23 @@ export const SemiTrailerForm = ({
 
   const setTrailerFields = (numberOfTrailers: number) => {
     const fields = Array(numberOfTrailers).fill({
+      vehicle: { licensePlate: '', chassis: '', renavam: '' },
       fleetNumber: '',
-      vehicle: { licensePlate: '', renavam: '' },
     })
 
     replace(fields)
   }
 
+  const onReset = () => {
+    form.reset({ model: '', year: '' })
+  }
+
   const { create, update } = action.semiTrailer()
 
   const { execute } = useAction(create, {
-    onSuccess: (data) => {
-      router.replace(String(data.id))
+    onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Semirreboque cadastrado com sucesso',
         description: 'O semirreboque foi cadastrado com sucesso! 🎉',

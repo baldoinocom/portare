@@ -28,7 +28,6 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Brand } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -43,8 +42,6 @@ export const TruckForm = ({
   units?: UnitResource[]
   aggregates?: AggregateResource[]
 }) => {
-  const router = useRouter()
-
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof TruckWithRelationshipTypeSchema>>({
@@ -60,11 +57,25 @@ export const TruckForm = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({
+      vehicle: {
+        licensePlate: '',
+        model: '',
+        year: '',
+        chassis: '',
+        renavam: '',
+      },
+      compressorModel: '',
+    })
+  }
+
   const { create, update } = action.truck()
 
   const { execute } = useAction(create, {
-    onSuccess: (data) => {
-      router.replace(String(data.id))
+    onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Caminhão cadastrado com sucesso',
         description: 'O caminhão foi cadastrado com sucesso! 🎉',

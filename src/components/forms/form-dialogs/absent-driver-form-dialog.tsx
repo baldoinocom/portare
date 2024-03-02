@@ -66,10 +66,16 @@ export const AbsentDriverFormDialog = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({ note: '', status: form.getValues('status') })
+  }
+
   const { create, update } = action.absentDriver()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Ausência de motorista registrada com sucesso',
         description: 'A ausência de motorista foi registrada com sucesso! 🎉',
@@ -172,6 +178,7 @@ export const AbsentDriverFormDialog = ({
                     </FormLabel>
 
                     <Select
+                      {...field}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >

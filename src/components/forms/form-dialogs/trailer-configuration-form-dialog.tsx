@@ -43,10 +43,16 @@ export const TrailerConfigurationFormDialog = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({ name: '', numberOfTrailers: 1 })
+  }
+
   const { create, update } = action.trailerConfiguration()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Configuração de reboque registrada com sucesso',
         description: 'A configuração de reboque foi registrada com sucesso! 🎉',

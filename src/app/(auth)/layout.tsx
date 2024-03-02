@@ -1,4 +1,4 @@
-import { currentUser } from '@/lib/auth-service'
+import { authenticated } from '@/lib/auth-service'
 import { Authenticated } from './_components/authenticated'
 
 export default async function Layout({
@@ -6,9 +6,9 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const user = await currentUser()
+  const auth = await authenticated()
 
-  if (user) {
+  if (auth) {
     return (
       <main>
         <Authenticated />

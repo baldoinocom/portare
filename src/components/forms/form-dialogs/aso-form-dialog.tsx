@@ -69,10 +69,16 @@ export const ASOFormDialog = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({ expirationType: form.getValues('expirationType') })
+  }
+
   const { create, update } = action.aso()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'A.S.O registrado com sucesso',
         description: 'O A.S.O foi registrado com sucesso! 🎉',
@@ -198,6 +204,7 @@ export const ASOFormDialog = ({
                     </FormLabel>
 
                     <Select
+                      {...field}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >

@@ -16,13 +16,10 @@ import { useAction } from '@/hooks/use-action'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 export const UnitForm = ({ initialData }: { initialData?: UnitResource }) => {
-  const router = useRouter()
-
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof UnitSchema>>({
@@ -30,11 +27,23 @@ export const UnitForm = ({ initialData }: { initialData?: UnitResource }) => {
     defaultValues: nullAsUndefined(initialData),
   })
 
+  const onReset = () => {
+    form.reset({
+      company: {
+        name: '',
+        tradeName: '',
+        document: '',
+        address: { zipCode: '', state: '', city: '', locale: '' },
+      },
+    })
+  }
+
   const { create, update } = action.unit()
 
   const { execute } = useAction(create, {
-    onSuccess: (data) => {
-      router.replace(String(data.companyId))
+    onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Unidade cadastrada com sucesso',
         description: 'A unidade foi cadastrada com sucesso! 🎉',

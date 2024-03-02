@@ -24,7 +24,6 @@ import {
   LandPlotIcon,
   Loader2,
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -33,8 +32,6 @@ export const ClientForm = ({
 }: {
   initialData?: ClientResource
 }) => {
-  const router = useRouter()
-
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof ClientSchema>>({
@@ -45,11 +42,23 @@ export const ClientForm = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({
+      company: {
+        name: '',
+        tradeName: '',
+        document: '',
+        address: { zipCode: '', state: '', city: '', locale: '' },
+      },
+    })
+  }
+
   const { create, update } = action.client()
 
   const { execute } = useAction(create, {
-    onSuccess: (data) => {
-      router.replace(String(data.companyId))
+    onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Cliente cadastrado com sucesso',
         description: 'O cliente foi cadastrado com sucesso! 🎉',

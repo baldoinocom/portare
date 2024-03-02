@@ -69,10 +69,16 @@ export const TrailerCertificateFormDialog = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({ expirationType: form.getValues('expirationType') })
+  }
+
   const { create, update } = action.trailerCertificate()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Laudo de reboque registrado com sucesso',
         description: 'O laudo de reboque foi registrado com sucesso! 🎉',
@@ -202,6 +208,7 @@ export const TrailerCertificateFormDialog = ({
                     </FormLabel>
 
                     <Select
+                      {...field}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >

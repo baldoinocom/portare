@@ -36,10 +36,16 @@ export const BrandFormDialog = ({ initialData }: { initialData?: Brand }) => {
     defaultValues: nullAsUndefined(initialData),
   })
 
+  const onReset = () => {
+    form.reset({ name: '' })
+  }
+
   const { create, update } = action.brand()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Marca registrada com sucesso',
         description: 'A marca foi registrada com sucesso! 🎉',

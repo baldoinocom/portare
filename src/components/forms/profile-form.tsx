@@ -56,7 +56,9 @@ export const ProfileForm = ({
   const onSubmit = async (
     values: z.infer<typeof PersonWithoutRelationshipSchema>,
   ) => {
-    if (initialData) await execute({ id: initialData.id, ...values })
+    if (initialData) {
+      await execute({ id: initialData.id, ...values })
+    }
   }
 
   return (

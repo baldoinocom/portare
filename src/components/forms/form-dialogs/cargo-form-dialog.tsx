@@ -36,10 +36,16 @@ export const CargoFormDialog = ({ initialData }: { initialData?: Cargo }) => {
     defaultValues: nullAsUndefined(initialData),
   })
 
+  const onReset = () => {
+    form.reset({ name: '' })
+  }
+
   const { create, update } = action.cargo()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Carga registrada com sucesso',
         description: 'A carga foi registrada com sucesso! 🎉',

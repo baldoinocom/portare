@@ -40,10 +40,16 @@ export const TrailerTypeFormDialog = ({
     defaultValues: nullAsUndefined(initialData),
   })
 
+  const onReset = () => {
+    form.reset({ name: '' })
+  }
+
   const { create, update } = action.trailerType()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Tipo de reboque registrado com sucesso',
         description: 'O tipo de reboque foi registrado com sucesso! 🎉',

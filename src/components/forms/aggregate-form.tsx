@@ -26,7 +26,6 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CompanyType } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -38,8 +37,6 @@ export const AggregateForm = ({
   initialData?: AggregateResource
   units?: UnitResource[]
 }) => {
-  const router = useRouter()
-
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof AggregateSchema>>({
@@ -49,11 +46,23 @@ export const AggregateForm = ({
     },
   })
 
+  const onReset = () => {
+    form.reset({
+      company: {
+        name: '',
+        tradeName: '',
+        document: '',
+        address: { zipCode: '', state: '', city: '', locale: '' },
+      },
+    })
+  }
+
   const { create, update } = action.aggregate()
 
   const { execute } = useAction(create, {
-    onSuccess: (data) => {
-      router.replace(String(data.companyId))
+    onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Agregado cadastrado com sucesso',
         description: 'O agregado foi cadastrado com sucesso! 🎉',

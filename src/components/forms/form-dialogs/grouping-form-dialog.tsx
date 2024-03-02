@@ -44,10 +44,16 @@ export const GroupingFormDialog = ({
     defaultValues: nullAsUndefined(initialData),
   })
 
+  const onReset = () => {
+    form.reset()
+  }
+
   const { create, update } = action.grouping()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
+      onReset()
+
       toast({
         title: 'Agrupamento registrado com sucesso',
         description: 'O agrupamento foi registrado com sucesso! 🎉',
