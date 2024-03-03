@@ -20,7 +20,7 @@ import { nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Person } from '@prisma/client'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { z } from 'zod'
 
 export const ProfileForm = ({
   initialData,

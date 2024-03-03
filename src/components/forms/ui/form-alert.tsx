@@ -9,7 +9,7 @@ export const FormAlert = ({ children }: { children?: React.ReactNode }) => {
 
   const errorRootMessage: (error: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [x: string]: any
+    [key: string]: any
   }) => string | null = (error) => {
     const message = error?.root?.message || error?.['']?.message
     if (message) return message || null

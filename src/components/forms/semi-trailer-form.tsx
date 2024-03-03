@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { SemiTrailerSchema } from '@/actions/semi-trailer/schema'
 import { SemiTrailerResource, UnitResource } from '@/actions/types'
+import { BrandSelect } from '@/components/forms/ui/brand-select'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { FormFields } from '@/components/forms/ui/form-fields'
 import { FormSession } from '@/components/forms/ui/form-session'
@@ -25,6 +26,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFormField,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
@@ -47,7 +49,8 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Brand, Cargo, TrailerConfiguration, TrailerType } from '@prisma/client'
 import { Check, ChevronsUpDown, Info, Loader2 } from 'lucide-react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import * as React from 'react'
+import { useFieldArray, useForm, useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
 const axles = [{ label: 'Normal' }, { label: '4 Eixos', value: 4 }]
@@ -188,61 +191,10 @@ export const SemiTrailerForm = ({
                 <FormField
                   control={form.control}
                   name="brandId"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Marca</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                'justify-between',
-                                !field.value && 'text-muted-foreground',
-                              )}
-                            >
-                              {field.value
-                                ? brands?.find(({ id }) => id === field.value)
-                                    ?.name
-                                : 'Selecione a marca'}
-                              <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-
-                        <PopoverContent className="p-0">
-                          <Command>
-                            <CommandInput placeholder="Pesquisar" />
-                            <CommandEmpty>Nenhum</CommandEmpty>
-                            <CommandGroup>
-                              <ScrollArea className="flex max-h-72 flex-col">
-                                {brands?.map(({ id, name }, index) => (
-                                  <CommandItem
-                                    key={index}
-                                    value={name}
-                                    onSelect={() =>
-                                      form.setValue(field.name, id, {
-                                        shouldDirty: true,
-                                      })
-                                    }
-                                  >
-                                    <Check
-                                      className={cn(
-                                        'mr-2 size-4',
-                                        id === field.value
-                                          ? 'opacity-100'
-                                          : 'opacity-0',
-                                      )}
-                                    />
-                                    {name}
-                                  </CommandItem>
-                                ))}
-                              </ScrollArea>
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                      <BrandSelect brands={brands} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -300,62 +252,10 @@ export const SemiTrailerForm = ({
                 <FormField
                   control={form.control}
                   name="typeId"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Tipo</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                'justify-between',
-                                !field.value && 'text-muted-foreground',
-                              )}
-                            >
-                              {field.value
-                                ? trailerTypes?.find(
-                                    ({ id }) => id === field.value,
-                                  )?.name
-                                : 'Selecione o tipo'}
-                              <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-
-                        <PopoverContent className="p-0">
-                          <Command>
-                            <CommandInput placeholder="Pesquisar" />
-                            <CommandEmpty>Nenhum</CommandEmpty>
-                            <CommandGroup>
-                              <ScrollArea className="flex max-h-72 flex-col">
-                                {trailerTypes?.map(({ id, name }, index) => (
-                                  <CommandItem
-                                    key={index}
-                                    value={name}
-                                    onSelect={() =>
-                                      form.setValue(field.name, id, {
-                                        shouldDirty: true,
-                                      })
-                                    }
-                                  >
-                                    <Check
-                                      className={cn(
-                                        'mr-2 size-4',
-                                        id === field.value
-                                          ? 'opacity-100'
-                                          : 'opacity-0',
-                                      )}
-                                    />
-                                    {name}
-                                  </CommandItem>
-                                ))}
-                              </ScrollArea>
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                      <TrailerTypeSelect trailerTypes={trailerTypes} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -455,65 +355,12 @@ export const SemiTrailerForm = ({
                 <FormField
                   control={form.control}
                   name="configurationId"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Configuração</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                'justify-between',
-                                !field.value && 'text-muted-foreground',
-                              )}
-                            >
-                              {field.value
-                                ? trailerConfigurations?.find(
-                                    ({ id }) => id === field.value,
-                                  )?.name
-                                : 'Selecione a configuração'}
-                              <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-
-                        <PopoverContent className="p-0">
-                          <Command>
-                            <CommandInput placeholder="Pesquisar" />
-                            <CommandEmpty>Nenhum</CommandEmpty>
-                            <CommandGroup>
-                              <ScrollArea className="flex max-h-72 flex-col">
-                                {trailerConfigurations?.map(
-                                  ({ id, name, numberOfTrailers }, index) => (
-                                    <CommandItem
-                                      key={index}
-                                      value={name}
-                                      onSelect={() => {
-                                        form.setValue(field.name, id, {
-                                          shouldDirty: true,
-                                        })
-                                        setTrailerFields(numberOfTrailers)
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          'mr-2 size-4',
-                                          id === field.value
-                                            ? 'opacity-100'
-                                            : 'opacity-0',
-                                        )}
-                                      />
-                                      {name}
-                                    </CommandItem>
-                                  ),
-                                )}
-                              </ScrollArea>
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                      <TrailerConfigurationSelect
+                        trailerConfigurations={trailerConfigurations}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -534,7 +381,6 @@ export const SemiTrailerForm = ({
                           onValueChange={(e) =>
                             field.onChange(e === 'undefined' ? null : e)
                           }
-                          defaultValue={String(field.value)}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -747,5 +593,130 @@ export const SemiTrailerForm = ({
         </div>
       </form>
     </Form>
+  )
+}
+
+const TrailerTypeSelect = ({
+  trailerTypes,
+}: {
+  trailerTypes?: TrailerType[]
+}) => {
+  const [open, setOpen] = React.useState(false)
+
+  const { getValues, setValue } = useFormContext()
+  const { name } = useFormField()
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <FormControl>
+          <Button
+            variant="outline"
+            role="combobox"
+            className={cn(
+              'justify-between',
+              !getValues(name) && 'text-muted-foreground',
+            )}
+          >
+            {getValues(name)
+              ? trailerTypes?.find(({ id }) => id === getValues(name))?.name
+              : 'Selecione o tipo'}
+            <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+          </Button>
+        </FormControl>
+      </PopoverTrigger>
+
+      <PopoverContent className="p-0">
+        <Command>
+          <CommandInput placeholder="Pesquisar" />
+          <CommandEmpty>Nenhum</CommandEmpty>
+          <CommandGroup>
+            <ScrollArea className="flex max-h-72 flex-col">
+              {trailerTypes?.map(({ id, name }, index) => (
+                <CommandItem
+                  key={index}
+                  value={name}
+                  onSelect={() => {
+                    setValue(name, id, { shouldDirty: true })
+                    setOpen(false)
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      'mr-2 size-4',
+                      id === getValues(name) ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
+                  {name}
+                </CommandItem>
+              ))}
+            </ScrollArea>
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
+const TrailerConfigurationSelect = ({
+  trailerConfigurations,
+}: {
+  trailerConfigurations?: TrailerConfiguration[]
+}) => {
+  const [open, setOpen] = React.useState(false)
+
+  const { getValues, setValue } = useFormContext()
+  const { name } = useFormField()
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <FormControl>
+          <Button
+            variant="outline"
+            role="combobox"
+            className={cn(
+              'justify-between',
+              !getValues(name) && 'text-muted-foreground',
+            )}
+          >
+            {getValues(name)
+              ? trailerConfigurations?.find(({ id }) => id === getValues(name))
+                  ?.name
+              : 'Selecione a configuração'}
+            <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+          </Button>
+        </FormControl>
+      </PopoverTrigger>
+
+      <PopoverContent className="p-0">
+        <Command>
+          <CommandInput placeholder="Pesquisar" />
+          <CommandEmpty>Nenhum</CommandEmpty>
+          <CommandGroup>
+            <ScrollArea className="flex max-h-72 flex-col">
+              {trailerConfigurations?.map(({ id, name }, index) => (
+                <CommandItem
+                  key={index}
+                  value={name}
+                  onSelect={() => {
+                    setValue(name, id, { shouldDirty: true })
+                    setOpen(false)
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      'mr-2 size-4',
+                      id === getValues(name) ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
+                  {name}
+                </CommandItem>
+              ))}
+            </ScrollArea>
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }

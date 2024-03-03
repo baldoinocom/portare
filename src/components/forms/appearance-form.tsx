@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { z } from 'zod'
 
 const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark'], {

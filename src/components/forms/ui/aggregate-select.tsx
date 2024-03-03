@@ -1,3 +1,5 @@
+'use client'
+
 import { AggregateResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
 import { Button } from '@/components/ui/button'
@@ -19,6 +21,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatDocument } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import * as React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 export const AggregateSelect = ({
@@ -26,6 +29,8 @@ export const AggregateSelect = ({
 }: {
   aggregates?: AggregateResource[]
 }) => {
+  const [open, setOpen] = React.useState(false)
+
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -44,7 +49,7 @@ export const AggregateSelect = ({
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl>
           <Button
@@ -73,7 +78,7 @@ export const AggregateSelect = ({
             <ScrollArea className="flex max-h-72 flex-col">
               {selectedAggregate && (
                 <>
-                  <CommandItem>
+                  <CommandItem onSelect={() => setOpen(false)}>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     <CompanyDetailCard company={selectedAggregate.company} />
                   </CommandItem>
@@ -86,9 +91,10 @@ export const AggregateSelect = ({
                   <CommandItem
                     key={index}
                     value={searchValue(aggregate)}
-                    onSelect={() =>
+                    onSelect={() => {
                       setValue(name, aggregate.companyId, { shouldDirty: true })
-                    }
+                      setOpen(false)
+                    }}
                   >
                     <div className="w-6" />
                     <CompanyDetailCard company={aggregate.company} />

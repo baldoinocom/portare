@@ -1,3 +1,5 @@
+'use client'
+
 import { TrailerResource } from '@/actions/types'
 import { TrailerDetailCard } from '@/components/forms/ui/trailer-detail-card'
 import { Button } from '@/components/ui/button'
@@ -19,6 +21,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatLicensePlate } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import * as React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 export const TrailerSelect = ({
@@ -26,6 +29,8 @@ export const TrailerSelect = ({
 }: {
   trailers?: TrailerResource[]
 }) => {
+  const [open, setOpen] = React.useState(false)
+
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -42,7 +47,7 @@ export const TrailerSelect = ({
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl className="col-span-3">
           <Button
@@ -71,7 +76,7 @@ export const TrailerSelect = ({
             <ScrollArea className="flex max-h-72 flex-col">
               {selectedTrailer && (
                 <>
-                  <CommandItem>
+                  <CommandItem onSelect={() => setOpen(false)}>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     <TrailerDetailCard trailer={selectedTrailer} />
                   </CommandItem>
@@ -85,9 +90,10 @@ export const TrailerSelect = ({
                   <CommandItem
                     key={index}
                     value={searchTrailer(value)}
-                    onSelect={() =>
+                    onSelect={() => {
                       setValue(name, value.id, { shouldDirty: true })
-                    }
+                      setOpen(false)
+                    }}
                   >
                     <div className="w-6" />
                     <TrailerDetailCard trailer={value} />

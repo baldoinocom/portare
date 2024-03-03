@@ -46,6 +46,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFormField,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -74,7 +75,7 @@ import { Cargo, TripStatus } from '@prisma/client'
 import { Check, ChevronsUpDown, Edit3Icon, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
 type TripFormValues = z.infer<typeof TripWithStepSchema>
@@ -272,6 +273,15 @@ export const TripForm = ({
     'semiTrailerId',
   ]
 
+  React.useEffect(() => {
+    if (selectedSemiTrailer?.cargos?.length) {
+      form.setValue('cargoId', selectedSemiTrailer.cargos.at(0)?.id, {
+        shouldDirty: true,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.getValues('semiTrailerId')])
+
   return (
     <div className="space-y-12">
       <TripFormSteps step={step} onStep={onStep} />
@@ -301,11 +311,7 @@ export const TripForm = ({
                             <FormItem>
                               <FormLabel>Status da viagem</FormLabel>
 
-                              <Select
-                                {...field}
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
+                              <Select {...field} onValueChange={field.onChange}>
                                 <FormControl>
                                   <SelectTrigger>
                                     <SelectValue placeholder="Selecione o status" />
@@ -485,62 +491,10 @@ export const TripForm = ({
                         <FormField
                           control={form.control}
                           name="cargoId"
-                          render={({ field }) => (
+                          render={() => (
                             <FormItem className="flex flex-col">
                               <FormLabel>Carga</FormLabel>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <FormControl>
-                                    <Button
-                                      variant="outline"
-                                      role="combobox"
-                                      className={cn(
-                                        'justify-between',
-                                        !field.value && 'text-muted-foreground',
-                                      )}
-                                    >
-                                      {field.value
-                                        ? cargos?.find(
-                                            ({ id }) => id === field.value,
-                                          )?.name
-                                        : 'Selecione'}
-                                      <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                                    </Button>
-                                  </FormControl>
-                                </PopoverTrigger>
-
-                                <PopoverContent className="p-0">
-                                  <Command>
-                                    <CommandInput placeholder="Pesquisar" />
-                                    <CommandEmpty>Nenhum</CommandEmpty>
-                                    <CommandGroup>
-                                      <ScrollArea className="flex max-h-72 flex-col">
-                                        {cargos?.map(({ id, name }, index) => (
-                                          <CommandItem
-                                            key={index}
-                                            value={name}
-                                            onSelect={() =>
-                                              form.setValue(field.name, id, {
-                                                shouldDirty: true,
-                                              })
-                                            }
-                                          >
-                                            <Check
-                                              className={cn(
-                                                'mr-2 size-4',
-                                                id === field.value
-                                                  ? 'opacity-100'
-                                                  : 'opacity-0',
-                                              )}
-                                            />
-                                            {name}
-                                          </CommandItem>
-                                        ))}
-                                      </ScrollArea>
-                                    </CommandGroup>
-                                  </Command>
-                                </PopoverContent>
-                              </Popover>
+                              <CargoSelect cargos={cargos} />
                               <FormMessage />
                             </FormItem>
                           )}
@@ -725,5 +679,63 @@ export const TripForm = ({
         </FormDialogContent>
       </Dialog>
     </div>
+  )
+}
+
+const CargoSelect = ({ cargos }: { cargos?: Cargo[] }) => {
+  const [open, setOpen] = React.useState(false)
+
+  const { getValues, setValue } = useFormContext()
+  const { name } = useFormField()
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <FormControl>
+          <Button
+            variant="outline"
+            role="combobox"
+            className={cn(
+              'justify-between',
+              !getValues(name) && 'text-muted-foreground',
+            )}
+          >
+            {getValues(name)
+              ? cargos?.find(({ id }) => id === getValues(name))?.name
+              : 'Selecione a configuração'}
+            <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+          </Button>
+        </FormControl>
+      </PopoverTrigger>
+
+      <PopoverContent className="p-0">
+        <Command>
+          <CommandInput placeholder="Pesquisar" />
+          <CommandEmpty>Nenhum</CommandEmpty>
+          <CommandGroup>
+            <ScrollArea className="flex max-h-72 flex-col">
+              {cargos?.map(({ id, name }, index) => (
+                <CommandItem
+                  key={index}
+                  value={name}
+                  onSelect={() => {
+                    setValue(name, id, { shouldDirty: true })
+                    setOpen(false)
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      'mr-2 size-4',
+                      id === getValues(name) ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
+                  {name}
+                </CommandItem>
+              ))}
+            </ScrollArea>
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }

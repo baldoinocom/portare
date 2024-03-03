@@ -1,3 +1,5 @@
+'use client'
+
 import { TruckResource } from '@/actions/types'
 import { TruckDetailCard } from '@/components/forms/ui/truck-detail-card'
 import { Button } from '@/components/ui/button'
@@ -19,9 +21,12 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatLicensePlate } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import * as React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 export const TruckSelect = ({ trucks }: { trucks?: TruckResource[] }) => {
+  const [open, setOpen] = React.useState(false)
+
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -38,7 +43,7 @@ export const TruckSelect = ({ trucks }: { trucks?: TruckResource[] }) => {
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl className="col-span-3">
           <Button
@@ -67,7 +72,7 @@ export const TruckSelect = ({ trucks }: { trucks?: TruckResource[] }) => {
             <ScrollArea className="flex max-h-72 flex-col">
               {selectedTruck && (
                 <>
-                  <CommandItem>
+                  <CommandItem onSelect={() => setOpen(false)}>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     <TruckDetailCard truck={selectedTruck} />
                   </CommandItem>
@@ -81,9 +86,10 @@ export const TruckSelect = ({ trucks }: { trucks?: TruckResource[] }) => {
                   <CommandItem
                     key={index}
                     value={searchValue(value)}
-                    onSelect={() =>
+                    onSelect={() => {
                       setValue(name, value.id, { shouldDirty: true })
-                    }
+                      setOpen(false)
+                    }}
                   >
                     <div className="w-6" />
                     <TruckDetailCard truck={value} />

@@ -1,3 +1,5 @@
+'use client'
+
 import { GroupingResource } from '@/actions/types'
 import {
   GroupingDetailCard,
@@ -22,6 +24,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatCPF, formatLicensePlate } from '@/lib/formatters'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import * as React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 export const GroupingSelect = ({
@@ -29,6 +32,8 @@ export const GroupingSelect = ({
 }: {
   groupings?: GroupingResource[]
 }) => {
+  const [open, setOpen] = React.useState(false)
+
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -59,7 +64,7 @@ export const GroupingSelect = ({
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl>
           <Button
@@ -90,7 +95,7 @@ export const GroupingSelect = ({
             <ScrollArea className="flex max-h-72 flex-col">
               {selectedGrouping && (
                 <>
-                  <CommandItem>
+                  <CommandItem onSelect={() => setOpen(false)}>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     <GroupingPreviewCard grouping={selectedGrouping} />
                   </CommandItem>
@@ -116,6 +121,8 @@ export const GroupingSelect = ({
                       setValue('semiTrailerId', value?.semiTrailerId, {
                         shouldDirty: true,
                       })
+
+                      setOpen(false)
                     }}
                   >
                     <div className="w-6" />

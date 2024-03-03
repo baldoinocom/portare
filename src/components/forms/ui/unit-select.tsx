@@ -1,3 +1,5 @@
+'use client'
+
 import { UnitResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
 import { Button } from '@/components/ui/button'
@@ -19,9 +21,12 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatCNPJ } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import * as React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 export const UnitSelect = ({ units }: { units?: UnitResource[] }) => {
+  const [open, setOpen] = React.useState(false)
+
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -40,7 +45,7 @@ export const UnitSelect = ({ units }: { units?: UnitResource[] }) => {
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl>
           <Button
@@ -69,7 +74,7 @@ export const UnitSelect = ({ units }: { units?: UnitResource[] }) => {
             <ScrollArea className="flex max-h-72 flex-col">
               {selectedUnit && (
                 <>
-                  <CommandItem>
+                  <CommandItem onSelect={() => setOpen(false)}>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     <CompanyDetailCard company={selectedUnit.company} />
                   </CommandItem>
@@ -82,9 +87,10 @@ export const UnitSelect = ({ units }: { units?: UnitResource[] }) => {
                   <CommandItem
                     key={index}
                     value={searchValue(unit)}
-                    onSelect={() =>
+                    onSelect={() => {
                       setValue(name, unit.companyId, { shouldDirty: true })
-                    }
+                      setOpen(false)
+                    }}
                   >
                     <div className="w-6" />
                     <CompanyDetailCard company={unit.company} />

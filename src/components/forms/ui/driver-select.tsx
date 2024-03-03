@@ -1,3 +1,5 @@
+'use client'
+
 import { DriverResource } from '@/actions/types'
 import { DriverDetailCard } from '@/components/forms/ui/driver-detail-card'
 import { Button } from '@/components/ui/button'
@@ -19,9 +21,12 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatCPF } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import * as React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 export const DriverSelect = ({ drivers }: { drivers?: DriverResource[] }) => {
+  const [open, setOpen] = React.useState(false)
+
   const { getValues, setValue } = useFormContext()
   const { name } = useFormField()
 
@@ -40,7 +45,7 @@ export const DriverSelect = ({ drivers }: { drivers?: DriverResource[] }) => {
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl className="col-span-3">
           <Button
@@ -69,7 +74,7 @@ export const DriverSelect = ({ drivers }: { drivers?: DriverResource[] }) => {
             <ScrollArea className="flex max-h-72 flex-col">
               {selectedDriver && (
                 <>
-                  <CommandItem>
+                  <CommandItem onSelect={() => setOpen(false)}>
                     <Check className="mr-2 size-4 shrink-0 opacity-100" />
                     <DriverDetailCard driver={selectedDriver} />
                   </CommandItem>
@@ -83,9 +88,10 @@ export const DriverSelect = ({ drivers }: { drivers?: DriverResource[] }) => {
                   <CommandItem
                     key={index}
                     value={searchValue(value)}
-                    onSelect={() =>
+                    onSelect={() => {
                       setValue(name, value.personId, { shouldDirty: true })
-                    }
+                      setOpen(false)
+                    }}
                   >
                     <div className="w-6" />
                     <DriverDetailCard driver={value} />

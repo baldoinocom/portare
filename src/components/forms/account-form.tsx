@@ -21,7 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { User } from '@prisma/client'
 import { LockKeyholeIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { z } from 'zod'
 
 export const AccountForm = ({ initialData }: { initialData?: User }) => {
   const { toast } = useToast()

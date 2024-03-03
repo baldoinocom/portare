@@ -178,11 +178,7 @@ export const StoppedVehicleFormDialog = ({
                       Status do veículo
                     </FormLabel>
 
-                    <Select
-                      {...field}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select {...field} onValueChange={field.onChange}>
                       <FormControl className="col-span-2">
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione o status" />
