@@ -104,21 +104,21 @@ export const GroupingSelect = ({
               )}
               {groupings
                 ?.filter(({ id }) => id !== getValues(name))
-                ?.map((grouping, index) => (
+                ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchValue(grouping)}
+                    value={searchValue(value)}
                     onSelect={() => {
-                      const value = nullAsUndefined(grouping)
+                      const data = nullAsUndefined(value)
 
-                      setValue(name, grouping.id, { shouldDirty: true })
-                      setValue('driverId', value?.driverId, {
+                      setValue(name, value.id, { shouldDirty: true })
+                      setValue('driverId', data?.driverId, {
                         shouldDirty: true,
                       })
-                      setValue('truckId', value?.truckId, {
+                      setValue('truckId', data?.truckId, {
                         shouldDirty: true,
                       })
-                      setValue('semiTrailerId', value?.semiTrailerId, {
+                      setValue('semiTrailerId', data?.semiTrailerId, {
                         shouldDirty: true,
                       })
 
@@ -126,7 +126,7 @@ export const GroupingSelect = ({
                     }}
                   >
                     <div className="w-6" />
-                    <GroupingPreviewCard grouping={grouping} />
+                    <GroupingPreviewCard grouping={value} />
                   </CommandItem>
                 ))}
             </ScrollArea>

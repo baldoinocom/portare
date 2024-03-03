@@ -87,17 +87,17 @@ export const AggregateSelect = ({
               )}
               {aggregates
                 ?.filter(({ companyId }) => companyId !== getValues(name))
-                ?.map((aggregate, index) => (
+                ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchValue(aggregate)}
+                    value={searchValue(value)}
                     onSelect={() => {
-                      setValue(name, aggregate.companyId, { shouldDirty: true })
+                      setValue(name, value.companyId, { shouldDirty: true })
                       setOpen(false)
                     }}
                   >
                     <div className="w-6" />
-                    <CompanyDetailCard company={aggregate.company} />
+                    <CompanyDetailCard company={value.company} />
                   </CommandItem>
                 ))}
             </ScrollArea>

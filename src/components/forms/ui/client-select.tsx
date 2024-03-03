@@ -83,17 +83,17 @@ export const ClientSelect = ({ clients }: { clients?: ClientResource[] }) => {
               )}
               {clients
                 ?.filter(({ companyId }) => companyId !== getValues(name))
-                ?.map((client, index) => (
+                ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchValue(client)}
+                    value={searchValue(value)}
                     onSelect={() => {
-                      setValue(name, client.companyId, { shouldDirty: true })
+                      setValue(name, value.companyId, { shouldDirty: true })
                       setOpen(false)
                     }}
                   >
                     <div className="w-6" />
-                    <CompanyDetailCard company={client.company} />
+                    <CompanyDetailCard company={value.company} />
                   </CommandItem>
                 ))}
             </ScrollArea>

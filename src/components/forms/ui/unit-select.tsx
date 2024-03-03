@@ -83,17 +83,17 @@ export const UnitSelect = ({ units }: { units?: UnitResource[] }) => {
               )}
               {units
                 ?.filter(({ companyId }) => companyId !== getValues(name))
-                ?.map((unit, index) => (
+                ?.map((value, index) => (
                   <CommandItem
                     key={index}
-                    value={searchValue(unit)}
+                    value={searchValue(value)}
                     onSelect={() => {
-                      setValue(name, unit.companyId, { shouldDirty: true })
+                      setValue(name, value.companyId, { shouldDirty: true })
                       setOpen(false)
                     }}
                   >
                     <div className="w-6" />
-                    <CompanyDetailCard company={unit.company} />
+                    <CompanyDetailCard company={value.company} />
                   </CommandItem>
                 ))}
             </ScrollArea>

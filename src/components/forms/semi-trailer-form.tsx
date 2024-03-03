@@ -360,6 +360,7 @@ export const SemiTrailerForm = ({
                       <FormLabel>Configuração</FormLabel>
                       <TrailerConfigurationSelect
                         trailerConfigurations={trailerConfigurations}
+                        setTrailerFields={setTrailerFields}
                       />
                       <FormMessage />
                     </FormItem>
@@ -632,22 +633,24 @@ const TrailerTypeSelect = ({
           <CommandEmpty>Nenhum</CommandEmpty>
           <CommandGroup>
             <ScrollArea className="flex max-h-72 flex-col">
-              {trailerTypes?.map(({ id, name }, index) => (
+              {trailerTypes?.map((value, index) => (
                 <CommandItem
                   key={index}
-                  value={name}
+                  value={value.name}
                   onSelect={() => {
-                    setValue(name, id, { shouldDirty: true })
+                    setValue(name, value.id, { shouldDirty: true })
                     setOpen(false)
                   }}
                 >
                   <Check
                     className={cn(
                       'mr-2 size-4',
-                      id === getValues(name) ? 'opacity-100' : 'opacity-0',
+                      value.id === getValues(name)
+                        ? 'opacity-100'
+                        : 'opacity-0',
                     )}
                   />
-                  {name}
+                  {value.name}
                 </CommandItem>
               ))}
             </ScrollArea>
@@ -660,8 +663,10 @@ const TrailerTypeSelect = ({
 
 const TrailerConfigurationSelect = ({
   trailerConfigurations,
+  setTrailerFields,
 }: {
   trailerConfigurations?: TrailerConfiguration[]
+  setTrailerFields: (numberOfTrailers: number) => void
 }) => {
   const [open, setOpen] = React.useState(false)
 
@@ -695,22 +700,25 @@ const TrailerConfigurationSelect = ({
           <CommandEmpty>Nenhum</CommandEmpty>
           <CommandGroup>
             <ScrollArea className="flex max-h-72 flex-col">
-              {trailerConfigurations?.map(({ id, name }, index) => (
+              {trailerConfigurations?.map((value, index) => (
                 <CommandItem
                   key={index}
-                  value={name}
+                  value={value.name}
                   onSelect={() => {
-                    setValue(name, id, { shouldDirty: true })
+                    setValue(name, value.id, { shouldDirty: true })
+                    setTrailerFields(value.numberOfTrailers)
                     setOpen(false)
                   }}
                 >
                   <Check
                     className={cn(
                       'mr-2 size-4',
-                      id === getValues(name) ? 'opacity-100' : 'opacity-0',
+                      value.id === getValues(name)
+                        ? 'opacity-100'
+                        : 'opacity-0',
                     )}
                   />
-                  {name}
+                  {value.name}
                 </CommandItem>
               ))}
             </ScrollArea>

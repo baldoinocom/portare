@@ -51,19 +51,21 @@ export const BrandSelect = ({ brands }: { brands?: Brand[] }) => {
           <CommandEmpty>Nenhum</CommandEmpty>
           <CommandGroup>
             <ScrollArea className="flex max-h-72 flex-col">
-              {brands?.map(({ id, name }, index) => (
+              {brands?.map((value, index) => (
                 <CommandItem
                   key={index}
-                  value={name}
+                  value={value.name}
                   onSelect={() => {
-                    setValue(name, id, { shouldDirty: true })
+                    setValue(name, value.id, { shouldDirty: true })
                     setOpen(false)
                   }}
                 >
                   <Check
                     className={cn(
                       'mr-2 size-4',
-                      id === getValues(name) ? 'opacity-100' : 'opacity-0',
+                      value.id === getValues(name)
+                        ? 'opacity-100'
+                        : 'opacity-0',
                     )}
                   />
                   {name}
