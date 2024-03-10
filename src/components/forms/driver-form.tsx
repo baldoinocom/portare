@@ -60,7 +60,7 @@ export const DriverForm = ({
     form.reset({
       person: { name: '', nickname: '', document: '', phoneNumber: '' },
       cnh: '',
-      cnhRegistry: '',
+      cnhMirror: '',
     })
   }
 
@@ -161,15 +161,15 @@ export const DriverForm = ({
               <div className="sm:col-span-4">
                 <FormField
                   control={form.control}
-                  name="cnhRegistry"
+                  name="cnhMirror"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Rergistro da CNH</FormLabel>
+                      <FormLabel>CNH espelho</FormLabel>
                       <FormControl>
                         <InputMask
                           {...field}
-                          mask="99999999999"
-                          placeholder="12345678901"
+                          mask="9999999999"
+                          placeholder="1234567890"
                         />
                       </FormControl>
                       <FormMessage />

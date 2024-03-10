@@ -68,7 +68,7 @@ export const BrandSelect = ({ brands }: { brands?: Brand[] }) => {
                         : 'opacity-0',
                     )}
                   />
-                  {name}
+                  {value.name}
                 </CommandItem>
               ))}
             </ScrollArea>

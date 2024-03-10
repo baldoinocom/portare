@@ -53,7 +53,10 @@ import * as React from 'react'
 import { useFieldArray, useForm, useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
-const axles = [{ label: 'Normal' }, { label: '4 Eixos', value: 4 }]
+const axles = [
+  { label: 'Normal', value: 0 },
+  { label: '4 Eixos', value: 4 },
+]
 
 export const SemiTrailerForm = ({
   initialData,
@@ -87,6 +90,7 @@ export const SemiTrailerForm = ({
   const form = useForm<z.infer<typeof SemiTrailerSchema>>({
     resolver: zodResolver(SemiTrailerSchema),
     defaultValues: {
+      axle: 0,
       ...nullAsUndefined(initialData),
       ...nullAsUndefined(initialData?.trailers?.at(0)?.vehicle),
       trailers: getTrailerFields(),
@@ -118,7 +122,7 @@ export const SemiTrailerForm = ({
   }
 
   const onReset = () => {
-    form.reset({ model: '', year: '' })
+    form.reset({ model: '', year: '', cargos: [], trailers: [] })
   }
 
   const { create, update } = action.semiTrailer()
@@ -379,9 +383,7 @@ export const SemiTrailerForm = ({
 
                         <Select
                           value={String(field.value)}
-                          onValueChange={(e) =>
-                            field.onChange(e === 'undefined' ? null : e)
-                          }
+                          onValueChange={field.onChange}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -459,24 +461,6 @@ export const SemiTrailerForm = ({
 
                   <FormField
                     control={form.control}
-                    name={`trailers.${index}.vehicle.renavam`}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Renavam</FormLabel>
-                        <FormControl>
-                          <InputMask
-                            {...field}
-                            mask="9999 99999 99"
-                            placeholder="1234 56789 01"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
                     name={`trailers.${index}.vehicle.chassis`}
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
@@ -487,6 +471,24 @@ export const SemiTrailerForm = ({
                             mask="*** ****** ** ******"
                             placeholder="1AB 123AB1 CD 123456"
                             className="uppercase"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`trailers.${index}.vehicle.renavam`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Renavam</FormLabel>
+                        <FormControl>
+                          <InputMask
+                            {...field}
+                            mask="9999 99999 99"
+                            placeholder="1234 56789 01"
                           />
                         </FormControl>
                         <FormMessage />

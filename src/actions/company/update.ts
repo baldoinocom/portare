@@ -32,10 +32,15 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     // if (type || document) {
     //   const find = await db.company.findFirst({ where: { id } })
 
-    //   if (find?.type || emptyAsNull(document) !== find?.document) {
-    //     if () {
+    //   if (emptyAsNull(document) !== find?.document || type !== find?.type) {
+    //     if (
+    //       validDocument(
+    //         document || find?.document || undefined,
+    //         type || find?.type || undefined,
+    //       )
+    //     ) {
     //       return {
-    //         error: 'É necessário informar o tipo e o documento para atualizar',
+    //         error: 'O documento informado é inválido',
     //       }
     //     }
     //   }

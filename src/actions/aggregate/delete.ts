@@ -1,5 +1,6 @@
 'use server'
 
+import { action } from '@/actions'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Aggregate } from '@prisma/client'
@@ -17,6 +18,14 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     aggregate = await db.aggregate.delete({ where: { companyId } })
+
+    if (aggregate) {
+      const { error } = await action
+        .company()
+        .delete({ id: aggregate.companyId })
+
+      if (error) return { error }
+    }
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }
   }

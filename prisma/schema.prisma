@@ -154,8 +154,8 @@ model Driver {
   personId Int    @id @map("person_id")
   person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
-  cnh         String? @unique @db.VarChar(11) // CNH - Carteira Nacional de Habilitação
-  cnhRegistry String? @unique @db.VarChar(11) // Registro da CNH
+  cnh       String? @unique @db.VarChar(11) // CNH - Carteira Nacional de Habilitação
+  cnhMirror String? @unique @map("cnh_mirror") @db.VarChar(10) // CNH Espelho
 
   aso      ASO[]
   absences AbsentDriver[]

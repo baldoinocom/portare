@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator'
 import { LucideIcon, SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
 import { ListMenuItem, OtherListMenuItem } from './list-menu-item'
-import { ButtonToggle } from './short-menu/button-toggle'
+import { ToggleButton } from './short-menu/toggle-button'
 
 export type MenuItemProps = {
   name: string
@@ -26,7 +26,7 @@ export const Menu = ({ mobile }: { mobile?: boolean }) => {
           <LogoSlogan className="w-auto" />
         </div>
 
-        {!mobile && <ButtonToggle />}
+        {!mobile && <ToggleButton />}
       </div>
 
       <nav className="flex flex-1 flex-col">

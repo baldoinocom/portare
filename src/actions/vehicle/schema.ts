@@ -1,6 +1,6 @@
 import { RelationshipTypeEnum } from '@/actions/enums'
 import { extractNumber } from '@/lib/utils'
-import { validChassis, validLicensePlate, validRenavam } from '@/lib/validators'
+import { validLicensePlate, validRenavam } from '@/lib/validators'
 import { z } from 'zod'
 
 export const VehicleIdSchema = z.object({
@@ -38,7 +38,6 @@ export const VehicleSchema = z.object({
     z.coerce
       .number()
       .int()
-      .positive()
       .refine(({ toString: { length } }) => !length || length === 1, {
         message: 'O número deve ter no mínimo 1 e no máximo 9 eixos',
       })
@@ -53,8 +52,7 @@ export const VehicleSchema = z.object({
       .transform((value) => value?.replace(/\s/g, ''))
       .refine(({ length }) => !length || length === 17, {
         message: 'O chassi deve ter exatamente 17 caracteres',
-      })
-      .refine(validChassis, { message: 'O chassi deve ser válido' }),
+      }),
   ),
 
   renavam: z.optional(

@@ -58,7 +58,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         licensePlate,
         model: emptyAsNull(model),
         year: emptyAsNull(year),
-        axle,
+        axle: axle === 0 ? null : axle,
         chassis: emptyAsNull(chassis),
         renavam: emptyAsNull(renavam),
         brandId,

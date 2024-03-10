@@ -18,7 +18,6 @@ const handler = async (data: MDFeType): Promise<ReturnType> => {
       })),
     })
   } catch (error) {
-    console.error(error)
     return { error: 'Ocorreu um erro ao importar, tente novamente mais tarde' }
   }
 

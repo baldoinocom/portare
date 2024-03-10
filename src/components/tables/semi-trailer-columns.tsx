@@ -48,6 +48,17 @@ export const semiTrailerColumns: ColumnDef<SemiTrailerResource>[] = [
   },
 
   {
+    id: 'ID',
+    accessorFn: (row) => row.id,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div className="font-semibold">{getValue<number>()}</div>
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+  },
+
+  {
     id: 'Marca',
     accessorFn: (row) => row.trailers?.at(0)?.vehicle.brand?.name,
     header: ({ column }) => {

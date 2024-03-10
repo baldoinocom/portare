@@ -49,6 +49,7 @@ export const TruckForm = ({
     defaultValues: {
       ...nullAsUndefined(initialData),
       vehicle: {
+        axle: 0,
         ...nullAsUndefined(initialData?.vehicle),
         relationshipType: initialData?.vehicle?.aggregateId
           ? RelationshipTypeEnum.aggregate
@@ -151,7 +152,7 @@ export const TruckForm = ({
                   control={form.control}
                   name="compressor"
                   render={({ field: { value, onChange } }) => (
-                    <FormItem className="flex flex-col rounded-lg border p-4">
+                    <FormItem className="flex flex-col rounded-lg border bg-popover p-4">
                       <div className="flex flex-row items-center justify-between">
                         <div className="space-y-0.5">
                           <FormLabel className="text-base">

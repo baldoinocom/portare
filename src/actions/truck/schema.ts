@@ -2,7 +2,6 @@ import {
   VehicleWithRelationshipTypeSchema,
   VehicleWithUniqueRelationshipSchema,
 } from '@/actions/vehicle/schema'
-import { emptyAsNull } from '@/lib/utils'
 import { z } from 'zod'
 
 export const TruckIdSchema = z.object({
@@ -28,16 +27,17 @@ export const TruckWithRelationshipTypeSchema = TruckSchema.pick({
 
 export const TruckUpdateSchema = TruckIdSchema.merge(TruckSchema.deepPartial())
 
-export const TruckImportSchema = z
-  .object({
-    Placa: z.string().trim().nullish().transform(emptyAsNull),
-    Modelo: z.string().trim().nullish().transform(emptyAsNull),
-    Ano: z.string().trim().nullish().transform(emptyAsNull),
-    Eixo: z.string().trim().nullish().transform(emptyAsNull),
-    Chassi: z.string().trim().nullish().transform(emptyAsNull),
-    Renavam: z.string().trim().nullish().transform(emptyAsNull),
-    Marca: z.string().trim().nullish().transform(emptyAsNull),
-    Frota: z.string().trim().nullish().transform(emptyAsNull),
-    Compressor: z.string().trim().nullish().transform(emptyAsNull),
-  })
-  .array()
+export const TruckImportSchema = z.object({
+  Unidade: z.coerce.string().nullish(),
+  Agregado: z.coerce.string().nullish(),
+
+  Placa: z.coerce.string().nullish(),
+  Marca: z.coerce.string().nullish(),
+  Modelo: z.coerce.string().nullish(),
+  Ano: z.coerce.string().nullish(),
+  Eixos: z.coerce.string().nullish(),
+  Chassi: z.coerce.string().nullish(),
+  Renavam: z.coerce.string().nullish(),
+
+  'Compressor - Modelo': z.coerce.string().nullish(),
+})

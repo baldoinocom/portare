@@ -29,15 +29,6 @@ export const validRenavam = (renavam: string | undefined) => {
   return result === parseInt(renavam.charAt(renavam.length - 1))
 }
 
-export const validChassis = (chassis: string | undefined) => {
-  if (!chassis) return true
-
-  chassis = chassis.replace(/[^\d]/g, '')
-  if (chassis.length !== 17) return false
-
-  return !/^(\d)\1+$/.test(chassis)
-}
-
 export const validCEP = (cep: string | undefined) => {
   if (!cep) return true
 
@@ -54,11 +45,22 @@ export const validCNH = (cnh: string | undefined) => {
   return !/^(\d)\1+$/.test(cnh)
 }
 
-export const validDocument = (document: string | undefined) => {
+export const validDocument = (
+  document: string | undefined,
+  type?: 'cpf' | 'cnpj',
+) => {
   if (!document) return true
 
   document = document.replace(/[^\d]/g, '')
   if (document.length !== 11 && document.length !== 14) return false
+
+  if (type) {
+    if (type === 'cpf') {
+      return validCPF(document)
+    } else {
+      return validCNPJ(document)
+    }
+  }
 
   return validCPF(document) || validCNPJ(document)
 }

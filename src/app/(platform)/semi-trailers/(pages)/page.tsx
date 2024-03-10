@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { CheckIcon, ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
 import Link from 'next/link'
+import { ImportButton } from './_components/import-button'
 
 export default async function Page() {
   const semiTrailers = await action.semiTrailer().findMany()
@@ -32,7 +33,9 @@ export default async function Page() {
             </div>
           </div>
 
-          <div className="mt-3 sm:ml-4 sm:mt-0">
+          <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
+            <ImportButton />
+
             <Button asChild>
               <Link href="/semi-trailers/new">
                 <PlusIcon className="mr-1.5" />

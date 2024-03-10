@@ -10,3 +10,14 @@ export const UnitSchema = z.object({
 })
 
 export const UnitUpdateSchema = UnitIdSchema.merge(UnitSchema.deepPartial())
+
+export const UnitImportSchema = z.object({
+  Nome: z.coerce.string().nullish(),
+  'Nome fantasia': z.coerce.string().nullish(),
+  CNPJ: z.coerce.string().nullish(),
+
+  CEP: z.coerce.string().nullish(),
+  Estado: z.coerce.string().nullish(),
+  Cidade: z.coerce.string().nullish(),
+  Endereço: z.coerce.string().nullish(),
+})

@@ -46,6 +46,17 @@ export const truckColumns: ColumnDef<TruckResource>[] = [
   },
 
   {
+    id: 'ID',
+    accessorFn: (row) => row.id,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div className="font-semibold">{getValue<number>()}</div>
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+  },
+
+  {
     id: 'Placa',
     accessorFn: (row) => formatLicensePlate(row.vehicle.licensePlate),
     header: ({ column }) => {

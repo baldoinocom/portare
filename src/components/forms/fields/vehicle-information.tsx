@@ -20,7 +20,10 @@ import { Brand } from '@prisma/client'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
-const axles = [{ label: 'Normal' }, { label: '4 Eixos', value: 4 }]
+const axles = [
+  { label: 'Normal', value: 0 },
+  { label: '4 Eixos', value: 4 },
+]
 
 export const VehicleInformation = ({ brands }: { brands?: Brand[] }) => {
   const { control } = useFormContext<{
@@ -106,9 +109,7 @@ export const VehicleInformation = ({ brands }: { brands?: Brand[] }) => {
 
               <Select
                 value={String(field.value)}
-                onValueChange={(e) =>
-                  field.onChange(e === 'undefined' ? null : e)
-                }
+                onValueChange={field.onChange}
               >
                 <FormControl>
                   <SelectTrigger>

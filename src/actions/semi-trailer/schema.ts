@@ -112,3 +112,35 @@ export const SemiTrailerUpdateSchema = SemiTrailerIdSchema.merge(
       'É necessário informar os reboques e a configuração do semirreboque para atualizar',
   },
 )
+
+export const SemiTrailerImportSchema = z.object({
+  Unidade: z.coerce.string().nullish(),
+
+  Marca: z.coerce.string().nullish(),
+  Modelo: z.coerce.string().nullish(),
+  Ano: z.coerce.string().nullish(),
+  Tipo: z.coerce.string().nullish(),
+  Cargas: z.coerce.string().nullish(),
+  Configuração: z.coerce.string().nullish(),
+  Eixos: z.coerce.string().nullish(),
+
+  Placa: z.coerce.string().nullish(),
+  Chassi: z.coerce.string().nullish(),
+  Renavam: z.coerce.string().nullish(),
+  'Nº de frota': z.coerce.string().nullish(),
+
+  '2-Placa': z.coerce.string().nullish(),
+  '2-Chassi': z.coerce.string().nullish(),
+  '2-Renavam': z.coerce.string().nullish(),
+  '2-Nº de frota': z.coerce.string().nullish(),
+
+  '3-Placa': z.coerce.string().nullish(),
+  '3-Chassi': z.coerce.string().nullish(),
+  '3-Renavam': z.coerce.string().nullish(),
+  '3-Nº de frota': z.coerce.string().nullish(),
+
+  '4-Placa': z.coerce.string().nullish(),
+  '4-Chassi': z.coerce.string().nullish(),
+  '4-Renavam': z.coerce.string().nullish(),
+  '4-Nº de frota': z.coerce.string().nullish(),
+})

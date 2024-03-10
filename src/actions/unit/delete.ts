@@ -1,5 +1,6 @@
 'use server'
 
+import { action } from '@/actions'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Unit } from '@prisma/client'
@@ -17,6 +18,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     unit = await db.unit.delete({ where: { companyId } })
+
+    if (unit) {
+      const { error } = await action.company().delete({ id: unit.companyId })
+
+      if (error) return { error }
+    }
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }
   }

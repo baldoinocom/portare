@@ -12,6 +12,7 @@ import {
   UserPlus2Icon,
 } from 'lucide-react'
 import Link from 'next/link'
+import { ImportButton } from './_components/import-button'
 
 export default async function Page() {
   const drivers = await action.driver().findMany()
@@ -38,7 +39,9 @@ export default async function Page() {
             </div>
           </div>
 
-          <div className="mt-3 sm:ml-4 sm:mt-0">
+          <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
+            <ImportButton />
+
             <Button asChild>
               <Link href="/drivers/new">
                 <PlusIcon className="mr-1.5" />

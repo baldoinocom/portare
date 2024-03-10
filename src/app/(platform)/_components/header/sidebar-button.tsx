@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { useSidebar } from '@/store/use-sidebar'
 import { MenuIcon } from 'lucide-react'
 
-export const ButtonSidebar = () => {
+export const SidebarButton = () => {
   const { collapsed, onOpen } = useSidebar()
 
   return (

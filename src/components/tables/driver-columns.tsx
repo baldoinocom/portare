@@ -46,6 +46,17 @@ export const driverColumns: ColumnDef<DriverResource>[] = [
   },
 
   {
+    id: 'ID',
+    accessorFn: (row) => row.personId,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div className="font-semibold">{getValue<number>()}</div>
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+  },
+
+  {
     id: 'Nome Completo',
     accessorFn: (row) => row.person.name,
     header: ({ column }) => {

@@ -4,69 +4,84 @@ import { BrandSchema } from '@/actions/brand/schema'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Truck } from '@prisma/client'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { TruckImportSchema, TruckSchema } from './schema'
 
-type InputType = z.infer<typeof TruckImportSchema>
+const arraySchema = z.array(TruckImportSchema)
+
+type InputType = z.infer<typeof arraySchema>
 type ReturnType = ActionState<InputType, Truck[]>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   let trucks
 
   try {
+    const trucksSchema = z.array(
+      z.object({ vehicle: z.object({ brand: BrandSchema }) }).and(TruckSchema),
+    )
+
+    const parsedData = trucksSchema.parse(
+      data.map((truck) => ({
+        vehicle: {
+          unitId: Number(truck.Unidade) || undefined,
+          aggregateId: Number(truck.Agregado) || undefined,
+
+          licensePlate: truck.Placa,
+          brand: { name: truck.Marca },
+          model: truck.Modelo,
+          year: truck.Ano,
+          axle: truck.Eixos ? 4 : null,
+          chassis: truck.Chassi,
+          renavam: truck.Renavam,
+
+          brandId: 1, // ignore
+        },
+        compressor: Boolean(truck['Compressor - Modelo']),
+        compressorModel: truck['Compressor - Modelo'],
+      })),
+    )
+
     trucks = await db.$transaction(
-      data.map((truck) => {
-        console.log('truck', truck)
-
-        const value = TruckSchema.and(
-          z.object({ vehicle: z.object({ brand: BrandSchema }) }),
-        ).parse({
-          vehicle: {
-            licensePlate: truck.Placa,
-            model: truck.Modelo,
-            year: truck.Ano,
-            axle: truck.Eixo ? 4 : null,
-            chassis: truck.Chassi,
-            renavam: truck.Renavam,
-            brand: { name: truck.Marca },
-            unitId: truck.Frota === 'Unidade' ? 1 : null,
-          },
-          compressor: truck.Compressor === 'SIM',
-        })
-
+      parsedData.map(({ vehicle, compressor, compressorModel }) => {
         return db.truck.create({
           data: {
-            compressor: value.compressor,
             vehicle: {
               create: {
-                licensePlate: value.vehicle.licensePlate,
-                year: value.vehicle.year || null,
-                model: value.vehicle.model || null,
-                axle: value.vehicle.axle || null,
-                chassis: value.vehicle.chassis || null,
-                renavam: value.vehicle.renavam || null,
-                brand: value.vehicle.brand.name
-                  ? {
-                      connectOrCreate: {
-                        where: { name: value.vehicle.brand.name },
-                        create: { name: value.vehicle.brand.name },
-                      },
-                    }
+                unit: vehicle.unitId
+                  ? { connect: { companyId: vehicle.unitId } }
                   : undefined,
-                unit: value.vehicle.unitId
-                  ? { connect: { companyId: value.vehicle.unitId } }
+                aggregate: vehicle.aggregateId
+                  ? { connect: { companyId: vehicle.aggregateId } }
                   : undefined,
+
+                licensePlate: vehicle.licensePlate,
+                brand: {
+                  connectOrCreate: {
+                    where: { name: vehicle.brand.name },
+                    create: { name: vehicle.brand.name },
+                  },
+                },
+                year: vehicle.year,
+                model: vehicle.model,
+                axle: vehicle.axle,
+                chassis: vehicle.chassis,
+                renavam: vehicle.renavam,
               },
             },
+            compressor,
+            compressorModel: compressor ? compressorModel : null,
           },
         })
       }),
     )
   } catch (error) {
-    return { error: JSON.stringify(error) }
+    return { error: 'Erro ao importar os caminhões' }
   }
+
+  revalidatePath('/trucks')
 
   return { data: trucks }
 }
 
-export const importManyAction = safeAction(TruckImportSchema, handler)
+export const importManyAction = safeAction(arraySchema, handler)

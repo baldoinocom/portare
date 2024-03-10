@@ -18,3 +18,16 @@ export const ClientSchema = z.object({
 export const ClientUpdateSchema = ClientIdSchema.merge(
   ClientSchema.deepPartial(),
 )
+
+export const ClientImportSchema = z.object({
+  'Tipo (Origem/Ambos/Destino)': z.coerce.string().nullish(),
+
+  Nome: z.coerce.string().nullish(),
+  'Nome fantasia': z.coerce.string().nullish(),
+  CNPJ: z.coerce.string().nullish(),
+
+  CEP: z.coerce.string().nullish(),
+  Estado: z.coerce.string().nullish(),
+  Cidade: z.coerce.string().nullish(),
+  Endereço: z.coerce.string().nullish(),
+})

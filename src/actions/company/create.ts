@@ -27,7 +27,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }
     }
 
-    if (address && Object.keys(address).length) {
+    if (address && Object.values(address).some(Boolean)) {
       const { data, error } = await action.address().create(address)
 
       if (error) return { error }

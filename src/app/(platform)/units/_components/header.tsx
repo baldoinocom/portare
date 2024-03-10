@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
 import Link from 'next/link'
+import { ImportButton } from './import-button'
 
 export const Header = () => {
   return (
@@ -22,7 +23,9 @@ export const Header = () => {
           </div>
         </div>
 
-        <div className="mt-5 flex lg:ml-4 lg:mt-0">
+        <div className="mt-5 flex space-x-2 lg:ml-4 lg:mt-0">
+          <ImportButton />
+
           <Button asChild>
             <Link href="/units/new">
               <PlusIcon className="mr-1.5" />

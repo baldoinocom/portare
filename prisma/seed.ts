@@ -163,8 +163,8 @@ main()
   .then(async () => {
     await db.$disconnect()
   })
-  .catch(async (e) => {
-    console.error(e)
+  .catch(async (error) => {
+    console.error(error)
     await db.$disconnect()
     process.exit(1)
   })

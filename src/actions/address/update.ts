@@ -24,7 +24,6 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       locale: emptyAsNull(locale),
     }
 
-    // if all values are null, delete the address
     if (Object.values(createData).every((v) => v === null)) {
       await db.address.delete({ where: { id } })
 
@@ -33,8 +32,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     address = await db.address.update({ where: { id }, data: createData })
 
-    // if all values are null, delete the address
-    if (Object.values(createData).every((v) => !v)) {
+    if (!Object.values(createData).some(Boolean)) {
       await db.address.delete({ where: { id } })
 
       return { data: undefined }

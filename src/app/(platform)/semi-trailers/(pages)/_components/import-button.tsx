@@ -1,31 +1,31 @@
 'use client'
 
 import { action } from '@/actions'
-import { TruckImportSchema } from '@/actions/truck/schema'
+import { SemiTrailerImportSchema } from '@/actions/semi-trailer/schema'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { Loader2, UploadIcon } from 'lucide-react'
 import * as React from 'react'
 import * as XLSX from 'xlsx'
+import { z } from 'zod'
 
-export const ButtonImport = () => {
+export const ImportButton = () => {
   const { toast } = useToast()
 
-  const { importMany } = action.truck()
+  const { importMany } = action.semiTrailer()
 
   const { execute } = useAction(importMany, {
     onSuccess: () => {
       toast({
-        title: 'Caminhões importados com sucesso',
-        description: 'Os caminhões foram importados com sucesso! 🎉',
+        title: 'Semirreboques importados com sucesso',
+        description: 'Os semirreboques foram importados com sucesso! 🎉',
       })
     },
     onError: (error) => {
-      console.error('importMany', error)
       toast({
         variant: 'destructive',
-        title: 'Erro ao importar caminhões',
+        title: 'Erro ao importar semirreboques',
         description: error,
       })
     },
@@ -50,7 +50,7 @@ export const ButtonImport = () => {
     if (!selectedFile || !fileTypes.includes(selectedFile.type)) {
       toast({
         variant: 'destructive',
-        title: 'Erro ao importar caminhões',
+        title: 'Erro ao importar semirreboques',
         description:
           'Tipo de arquivo inválido, selecione um arquivo do tipo .xls, .xlsx ou .csv e tente novamente',
       })
@@ -76,8 +76,7 @@ export const ButtonImport = () => {
         const sheet = workbook.Sheets[sheetName]
 
         const json = XLSX.utils.sheet_to_json(sheet)
-
-        const data = TruckImportSchema.parse(json)
+        const data = z.array(SemiTrailerImportSchema).parse(json)
 
         await execute(data)
 
@@ -86,7 +85,7 @@ export const ButtonImport = () => {
     } catch (error) {
       toast({
         variant: 'destructive',
-        title: 'Erro ao importar caminhões',
+        title: 'Erro ao importar semirreboques',
         description:
           'Verifique se o dados do arquivo estão corretos e tente novamente',
       })

@@ -1,5 +1,6 @@
 'use server'
 
+import { action } from '@/actions'
 import { ClientIdSchema } from '@/actions/client/schema'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
@@ -17,6 +18,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     client = await db.client.delete({ where: { companyId } })
+
+    if (client) {
+      const { error } = await action.company().delete({ id: client.companyId })
+
+      if (error) return { error }
+    }
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }
   }

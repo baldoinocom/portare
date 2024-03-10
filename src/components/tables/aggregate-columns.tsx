@@ -46,6 +46,17 @@ export const aggregateColumns: ColumnDef<AggregateResource>[] = [
   },
 
   {
+    id: 'ID',
+    accessorFn: (row) => row.companyId,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div className="font-semibold">{getValue<number>()}</div>
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+  },
+
+  {
     id: 'Nome',
     accessorFn: (row) => row.company?.name,
     header: ({ column }) => {

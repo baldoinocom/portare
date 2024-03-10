@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { useSidebar } from '@/store/use-sidebar'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
-export const ButtonToggle = () => {
+export const ToggleButton = () => {
   const { collapsed, onExpand, onCollapse } = useSidebar()
 
   return (

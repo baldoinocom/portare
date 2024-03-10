@@ -60,7 +60,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
               vehicle: {
                 create: {
                   model,
-                  axle,
+                  axle: axle === 0 ? null : axle,
                   licensePlate: vehicle.licensePlate,
                   chassis: emptyAsNull(vehicle.chassis),
                   renavam: emptyAsNull(vehicle.renavam),

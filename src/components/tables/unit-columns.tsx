@@ -45,6 +45,17 @@ export const unitColumns: ColumnDef<UnitResource>[] = [
   },
 
   {
+    id: 'ID',
+    accessorFn: (row) => row.companyId,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div className="font-semibold">{getValue<number>()}</div>
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+  },
+
+  {
     id: 'Razão Social',
     accessorFn: (row) => row.company.name,
     header: ({ column }) => {

@@ -1,5 +1,6 @@
 'use server'
 
+import { action } from '@/actions'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { SemiTrailer } from '@prisma/client'
@@ -16,7 +17,20 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let semiTrailer
 
   try {
-    semiTrailer = await db.semiTrailer.delete({ where: { id } })
+    semiTrailer = await db.semiTrailer.delete({
+      where: { id },
+      include: { trailers: true },
+    })
+
+    if (semiTrailer) {
+      const { error } = await action
+        .vehicle()
+        .deleteMany(
+          semiTrailer.trailers.map(({ vehicleId }) => ({ id: vehicleId })),
+        )
+
+      if (error) return { error }
+    }
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }
   }

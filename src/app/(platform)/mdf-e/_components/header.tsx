@@ -1,4 +1,4 @@
-import { ButtonImport } from './button-import'
+import { ImportButton } from './import-button'
 import { TabBar } from './tab-bar'
 
 export const Header = ({
@@ -19,7 +19,7 @@ export const Header = ({
           </div>
 
           <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
-            <ButtonImport />
+            <ImportButton />
           </div>
         </div>
 

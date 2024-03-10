@@ -17,6 +17,10 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     company = await db.company.delete({ where: { id } })
+
+    if (company && company.addressId) {
+      await db.address.delete({ where: { id: company.addressId } })
+    }
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }
   }

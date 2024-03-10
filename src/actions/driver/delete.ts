@@ -1,5 +1,6 @@
 'use server'
 
+import { action } from '@/actions'
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Driver } from '@prisma/client'
@@ -17,6 +18,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   try {
     driver = await db.driver.delete({ where: { personId } })
+
+    if (driver) {
+      const { error } = await action.person().delete({ id: driver.personId })
+
+      if (error) return { error }
+    }
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }
   }

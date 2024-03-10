@@ -1,12 +1,12 @@
 import { Separator } from '@/components/ui/separator'
-import { ButtonSidebar } from './button-sidebar'
 import { ModeToggle } from './mode-toggle'
 import { ProfileDropdown } from './profile-dropdown'
+import { SidebarButton } from './sidebar-button'
 
 export const Header = () => {
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-border bg-background px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-      <ButtonSidebar />
+      <SidebarButton />
 
       <Separator className="h-6 w-px lg:hidden" orientation="vertical" />
 

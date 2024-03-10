@@ -8,8 +8,8 @@ import {
 } from '@/components/ui/tooltip'
 import { LucideIcon, SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
-import { ButtonToggle } from './button-toggle'
 import { ShortListMenuItem, ShortOtherListMenuItem } from './list-menu-item'
+import { ToggleButton } from './toggle-button'
 
 export type MenuItemProps = {
   name: string
@@ -27,7 +27,7 @@ export const ShortMenu = () => {
   return (
     <div className="group flex grow flex-col gap-y-5 overflow-y-auto bg-background px-4 pb-4">
       <div className="flex h-16 shrink-0 items-center">
-        <ButtonToggle />
+        <ToggleButton />
       </div>
 
       <TooltipProvider delayDuration={0}>

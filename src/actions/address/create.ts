@@ -24,8 +24,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       locale: emptyAsNull(locale),
     }
 
-    // if all values are null, no need to create
-    if (Object.values(createData).every((v) => !v)) {
+    if (!Object.values(createData).some(Boolean)) {
       return { data: undefined }
     }
 

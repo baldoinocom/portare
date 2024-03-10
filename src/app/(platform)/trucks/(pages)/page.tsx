@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { CheckIcon, ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
 import Link from 'next/link'
+import { ImportButton } from './_components/import-button'
 
 export default async function Page() {
   const trucks = await action.truck().findMany()
@@ -33,7 +34,7 @@ export default async function Page() {
           </div>
 
           <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
-            {/* <ButtonImport /> */}
+            <ImportButton />
 
             <Button asChild>
               <Link href="/trucks/new">
