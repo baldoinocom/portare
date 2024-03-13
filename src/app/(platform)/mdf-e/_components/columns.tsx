@@ -103,7 +103,7 @@ export const columns: ColumnDef<MDFeResource>[] = [
       <div className="whitespace-nowrap">
         <div className="flex flex-col items-start uppercase">
           <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Dt. Emissao']}</span>
+          <span className="text-xs">{original.data['Emis Nf Cli']}</span>
         </div>
       </div>
     ),
@@ -117,7 +117,7 @@ export const columns: ColumnDef<MDFeResource>[] = [
       <div className="whitespace-nowrap">
         <div className="flex flex-col items-start uppercase">
           <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Emis Nf Cli']}</span>
+          <span className="text-xs">{original.data['Dt. Emissao']}</span>
         </div>
       </div>
     ),
