@@ -9,29 +9,31 @@ export const ShieldProvider = async ({
 }: {
   children: React.ReactNode
 }) => {
-  let data = useShield.getState().permissions
+  const data = useShield.getState().permissions
 
   if (!data?.length) {
     const user = await currentUser()
 
     if (user) {
-      const find = await db.user.findUniqueOrThrow({
+      const find = await db.user.findUnique({
         where: { id: user.id },
         select: {
           groups: { select: { roles: { select: { permissions: true } } } },
         },
       })
 
-      data = find.groups.reduce((acc: Permission[], group) => {
-        const groupPermissions = group.roles.reduce(
-          (acc: Permission[], role) => {
-            return [...acc, ...role.permissions]
-          },
-          [],
-        )
+      if (find) {
+        find.groups.reduce((acc: Permission[], group) => {
+          const groupPermissions = group.roles.reduce(
+            (acc: Permission[], role) => {
+              return [...acc, ...role.permissions]
+            },
+            [],
+          )
 
-        return [...acc, ...groupPermissions]
-      }, [])
+          return [...acc, ...groupPermissions]
+        }, [])
+      }
     }
 
     useShield.setState({ permissions: data })
