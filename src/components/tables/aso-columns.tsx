@@ -4,6 +4,7 @@ import { action } from '@/actions'
 import { ASOResource } from '@/actions/types'
 import { ASOFormDialog } from '@/components/forms/form-dialogs/aso-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -130,9 +131,9 @@ const CellActions = ({ item }: { item: ASOResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.aso()
+  const { delete: del } = action.aso()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'A.S.O. deletado com sucesso',
@@ -164,17 +165,21 @@ const CellActions = ({ item }: { item: ASOResource }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          <DialogTrigger asChild>
-            <DropdownMenuItem>
-              <Eye className="mr-2 size-4" />
-              Visualizar
-            </DropdownMenuItem>
-          </DialogTrigger>
+          <Shield permission="aso.update">
+            <DialogTrigger asChild>
+              <DropdownMenuItem>
+                <Eye className="mr-2 size-4" />
+                Visualizar
+              </DropdownMenuItem>
+            </DialogTrigger>
+          </Shield>
 
-          <DropdownMenuItem onClick={handleDelete}>
-            <Trash2Icon className="mr-2 size-4" />
-            Excluir
-          </DropdownMenuItem>
+          <Shield permission="aso.delete">
+            <DropdownMenuItem onClick={handleDelete}>
+              <Trash2Icon className="mr-2 size-4" />
+              Excluir
+            </DropdownMenuItem>
+          </Shield>
         </DropdownMenuContent>
       </DropdownMenu>
 

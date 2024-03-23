@@ -5,17 +5,20 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const navs = [
+const navs: {
+  name: string
+  href: string
+}[] = [
   {
-    title: 'Perfil',
+    name: 'Perfil',
     href: '/settings',
   },
   {
-    title: 'Conta',
+    name: 'Conta',
     href: '/settings/account',
   },
   {
-    title: 'Aparência',
+    name: 'Aparência',
     href: '/settings/appearance',
   },
 ]
@@ -37,7 +40,7 @@ export function SidebarNav() {
             'justify-start',
           )}
         >
-          {nav.title}
+          {nav.name}
         </Link>
       ))}
     </nav>

@@ -18,15 +18,15 @@ export const Main = ({
   trucks,
   semiTrailers,
 }: {
-  groupings: GroupingResource[]
-  drivers: DriverResource[]
-  trucks: TruckResource[]
-  semiTrailers: SemiTrailerResource[]
+  groupings?: GroupingResource[]
+  drivers?: DriverResource[]
+  trucks?: TruckResource[]
+  semiTrailers?: SemiTrailerResource[]
 }) => {
   return (
     <main>
       <div className="flex flex-col gap-y-8">
-        {!groupings.length && (
+        {!groupings?.length && (
           <DialogTrigger asChild>
             <EmptyState href="#">
               <PlusIcon
@@ -42,7 +42,7 @@ export const Main = ({
           </DialogTrigger>
         )}
 
-        {!!groupings.length && (
+        {!!groupings?.length && (
           <DataTable
             columns={groupingColumns({ drivers, trucks, semiTrailers })}
             data={groupings}

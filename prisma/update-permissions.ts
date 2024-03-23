@@ -1,14 +1,72 @@
-import { permissions } from '@/actions/permissions'
 import { db } from '@/lib/db'
-import { PermissionCode, PermissionGroup } from '@prisma/client'
+import { concatPermission, extractPermission, permissions } from '@/permissions'
 
-async function main() {
-  const data = permissions.map(({ value }) => {
-    const [group, code] = value.split('.') as [PermissionGroup, PermissionCode]
-    return { group, code }
-  })
+export const GROUP_ROOT = 'DESENVOLVEDOR'
+
+export const updatePermissions = async () => {
+  const data = []
+
+  for (const { value, guards } of permissions) {
+    const { group, code } = extractPermission(value)
+
+    for (const guard of guards) {
+      data.push({ group, code, guard })
+    }
+  }
+
+  const findManyPermissions = await db.permission.findMany()
+  const permissionsNotExists: string[] = []
+
+  for (const permission of findManyPermissions) {
+    const exists = data.some(
+      ({ group, code, guard }) =>
+        group === permission.group &&
+        code === permission.code &&
+        guard === permission.guard,
+    )
+
+    if (!exists) permissionsNotExists.push(permission.id)
+  }
+
+  if (permissionsNotExists.length) {
+    await db.permission.deleteMany({
+      where: { id: { in: permissionsNotExists } },
+    })
+  }
 
   await db.permission.createMany({ data, skipDuplicates: true })
+
+  const ids = await db.permission.findMany({ select: { id: true } })
+
+  await db.group.upsert({
+    where: { name: GROUP_ROOT },
+    create: {
+      name: GROUP_ROOT,
+      roles: {
+        connectOrCreate: {
+          where: { name: GROUP_ROOT },
+          create: { name: GROUP_ROOT },
+        },
+      },
+    },
+    update: {},
+  })
+
+  await db.role.update({
+    where: { name: GROUP_ROOT },
+    data: { permissions: { connect: ids } },
+  })
+
+  return data.map(({ group, code, guard }) => ({
+    permission: concatPermission(group, code),
+    guard,
+  }))
+}
+
+async function main() {
+  const data = await updatePermissions()
+
+  console.info('Permissions', data)
 }
 
 main()

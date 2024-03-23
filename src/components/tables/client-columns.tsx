@@ -2,6 +2,7 @@
 
 import { action } from '@/actions'
 import { ClientResource } from '@/actions/types'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -140,9 +141,9 @@ const CellActions = ({ item }: { item: ClientResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.client()
+  const { delete: del } = action.client()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Cliente deletado com sucesso',
@@ -173,17 +174,21 @@ const CellActions = ({ item }: { item: ClientResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <DropdownMenuItem asChild>
-          <Link href={'/clients/' + companyId}>
-            <Eye className="mr-2 size-4" />
-            Visualizar
-          </Link>
-        </DropdownMenuItem>
+        <Shield permission="client.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/clients/' + companyId}>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
 
-        <DropdownMenuItem onClick={handleDelete}>
-          <Trash2Icon className="mr-2 size-4" />
-          Excluir
-        </DropdownMenuItem>
+        <Shield permission="client.delete">
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </Shield>
       </DropdownMenuContent>
     </DropdownMenu>
   )

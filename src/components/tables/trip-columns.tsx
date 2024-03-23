@@ -4,6 +4,7 @@ import { action } from '@/actions'
 import { CompanyResource, TripResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
 import { GroupingPreviewCard } from '@/components/forms/ui/grouping-detail-card'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -23,6 +24,8 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { formatTripStatus } from '@/lib/formatters'
+import { checkPermission } from '@/permissions'
+import { useShield } from '@/store/use-shield'
 import { TripStatus } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -147,6 +150,8 @@ export const tripColumns: ColumnDef<TripResource>[] = [
 ]
 
 const CellUpdateStatus = ({ item }: { item: TripResource }) => {
+  const { permissions } = useShield()
+
   const { id } = item
 
   const { toast } = useToast()
@@ -173,8 +178,17 @@ const CellUpdateStatus = ({ item }: { item: TripResource }) => {
     await execute({ id, status })
   }
 
+  const check = checkPermission(
+    { permission: 'trip.updateStatus', guard: 'component' },
+    permissions,
+  )
+
   return (
-    <Select onValueChange={handleUpdateStatus} defaultValue={item.status}>
+    <Select
+      onValueChange={handleUpdateStatus}
+      defaultValue={item.status}
+      disabled={!check}
+    >
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
@@ -195,9 +209,9 @@ const CellActions = ({ item }: { item: TripResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.trip()
+  const { delete: del } = action.trip()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Viagem deletada com sucesso',
@@ -228,17 +242,21 @@ const CellActions = ({ item }: { item: TripResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <DropdownMenuItem asChild>
-          <Link href={'/trips/' + id}>
-            <Eye className="mr-2 size-4" />
-            Visualizar
-          </Link>
-        </DropdownMenuItem>
+        <Shield permission="trip.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/trips/' + id}>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
 
-        <DropdownMenuItem onClick={handleDelete}>
-          <Trash2Icon className="mr-2 size-4" />
-          Excluir
-        </DropdownMenuItem>
+        <Shield permission="trip.delete">
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </Shield>
       </DropdownMenuContent>
     </DropdownMenu>
   )

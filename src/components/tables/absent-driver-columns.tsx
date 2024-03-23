@@ -4,6 +4,7 @@ import { action } from '@/actions'
 import { AbsentDriverResource } from '@/actions/types'
 import { AbsentDriverFormDialog } from '@/components/forms/form-dialogs/absent-driver-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -135,9 +136,9 @@ const CellActions = ({ item }: { item: AbsentDriverResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.absentDriver()
+  const { delete: del } = action.absentDriver()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Ausência de motorista deletada com sucesso',
@@ -169,17 +170,21 @@ const CellActions = ({ item }: { item: AbsentDriverResource }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          <DialogTrigger asChild>
-            <DropdownMenuItem>
-              <Eye className="mr-2 size-4" />
-              Visualizar
-            </DropdownMenuItem>
-          </DialogTrigger>
+          <Shield permission="absentDriver.update">
+            <DialogTrigger asChild>
+              <DropdownMenuItem>
+                <Eye className="mr-2 size-4" />
+                Visualizar
+              </DropdownMenuItem>
+            </DialogTrigger>
+          </Shield>
 
-          <DropdownMenuItem onClick={handleDelete}>
-            <Trash2Icon className="mr-2 size-4" />
-            Excluir
-          </DropdownMenuItem>
+          <Shield permission="absentDriver.delete">
+            <DropdownMenuItem onClick={handleDelete}>
+              <Trash2Icon className="mr-2 size-4" />
+              Excluir
+            </DropdownMenuItem>
+          </Shield>
         </DropdownMenuContent>
       </DropdownMenu>
 

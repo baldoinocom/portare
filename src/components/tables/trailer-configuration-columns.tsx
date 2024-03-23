@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { TrailerConfigurationFormDialog } from '@/components/forms/form-dialogs/trailer-configuration-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -93,9 +94,9 @@ const CellActions = ({ item }: { item: TrailerConfiguration }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.trailerConfiguration()
+  const { delete: del } = action.trailerConfiguration()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Configuração de reboque deletada com sucesso',
@@ -127,17 +128,21 @@ const CellActions = ({ item }: { item: TrailerConfiguration }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          <DialogTrigger asChild>
-            <DropdownMenuItem>
-              <Eye className="mr-2 size-4" />
-              Visualizar
-            </DropdownMenuItem>
-          </DialogTrigger>
+          <Shield permission="trailerConfiguration.update">
+            <DialogTrigger asChild>
+              <DropdownMenuItem>
+                <Eye className="mr-2 size-4" />
+                Visualizar
+              </DropdownMenuItem>
+            </DialogTrigger>
+          </Shield>
 
-          <DropdownMenuItem onClick={handleDelete}>
-            <Trash2Icon className="mr-2 size-4" />
-            Excluir
-          </DropdownMenuItem>
+          <Shield permission="trailerConfiguration.delete">
+            <DropdownMenuItem onClick={handleDelete}>
+              <Trash2Icon className="mr-2 size-4" />
+              Excluir
+            </DropdownMenuItem>
+          </Shield>
         </DropdownMenuContent>
       </DropdownMenu>
 

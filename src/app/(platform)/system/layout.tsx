@@ -1,6 +1,6 @@
+import { PageContent } from '@/components/page-content'
 import { Separator } from '@/components/ui/separator'
 import { SidebarNav } from './_components/sidebar-nav'
-import { PageContent } from '@/components/page-content'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="space-y-0.5">
         <h2 className="text-2xl font-bold tracking-tight">Sistema</h2>
         <p className="text-muted-foreground">
-          Controle de usuários, grupos e permissões
+          Controle de usuários, grupos, cargos e permissões
         </p>
       </div>
 

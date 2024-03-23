@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { DriverResource, PersonResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -150,9 +151,9 @@ const CellActions = ({ item }: { item: DriverResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.driver()
+  const { delete: del } = action.driver()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Motorista deletado com sucesso',
@@ -183,17 +184,21 @@ const CellActions = ({ item }: { item: DriverResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <DropdownMenuItem asChild>
-          <Link href={'/drivers/' + personId}>
-            <Eye className="mr-2 size-4" />
-            Visualizar
-          </Link>
-        </DropdownMenuItem>
+        <Shield permission="driver.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/drivers/' + personId}>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
 
-        <DropdownMenuItem onClick={handleDelete}>
-          <Trash2Icon className="mr-2 size-4" />
-          Excluir
-        </DropdownMenuItem>
+        <Shield permission="driver.delete">
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </Shield>
       </DropdownMenuContent>
     </DropdownMenu>
   )

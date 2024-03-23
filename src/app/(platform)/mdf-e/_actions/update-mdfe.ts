@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
+import { shieldAction } from '@/lib/shield-action'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { MDFeUpdateSchema } from './type'
@@ -28,4 +29,6 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   return { data: 'Alterados com sucesso' }
 }
 
-export const updateMDFe = safeAction(MDFeUpdateSchema, handler)
+const action = safeAction(MDFeUpdateSchema, handler)
+
+export const updateMDFe = shieldAction({ action, permission: 'mdfe.view' })

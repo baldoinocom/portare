@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { TruckResource, VehicleResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -158,9 +159,9 @@ const CellActions = ({ item }: { item: TruckResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.truck()
+  const { delete: del } = action.truck()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Caminhão deletado com sucesso',
@@ -191,17 +192,21 @@ const CellActions = ({ item }: { item: TruckResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <DropdownMenuItem asChild>
-          <Link href={'/trucks/' + id}>
-            <Eye className="mr-2 size-4" />
-            Visualizar
-          </Link>
-        </DropdownMenuItem>
+        <Shield permission="truck.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/trucks/' + id}>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
 
-        <DropdownMenuItem onClick={handleDelete}>
-          <Trash2Icon className="mr-2 size-4" />
-          Excluir
-        </DropdownMenuItem>
+        <Shield permission="truck.delete">
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </Shield>
       </DropdownMenuContent>
     </DropdownMenu>
   )

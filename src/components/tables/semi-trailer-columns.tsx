@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { CompanyResource, SemiTrailerResource } from '@/actions/types'
 import { CompanyDetailCard } from '@/components/forms/ui/company-detail-card'
+import { Shield } from '@/components/shield'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -210,9 +211,9 @@ const CellActions = ({ item }: { item: SemiTrailerResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.semiTrailer()
+  const { delete: del } = action.semiTrailer()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Semirreboque deletado com sucesso',
@@ -243,17 +244,21 @@ const CellActions = ({ item }: { item: SemiTrailerResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <DropdownMenuItem asChild>
-          <Link href={'/semi-trailers/' + id}>
-            <Eye className="mr-2 size-4" />
-            Visualizar
-          </Link>
-        </DropdownMenuItem>
+        <Shield permission="semiTrailer.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/semi-trailers/' + id}>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
 
-        <DropdownMenuItem onClick={handleDelete}>
-          <Trash2Icon className="mr-2 size-4" />
-          Excluir
-        </DropdownMenuItem>
+        <Shield permission="semiTrailer.delete">
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </Shield>
       </DropdownMenuContent>
     </DropdownMenu>
   )

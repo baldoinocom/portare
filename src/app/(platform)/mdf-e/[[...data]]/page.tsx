@@ -1,6 +1,8 @@
 import { DataNotFound } from '@/app/not-found'
 import { PageContent } from '@/components/page-content'
 import { db } from '@/lib/db'
+import { checkPermission } from '@/permissions'
+import { useShield } from '@/store/use-shield'
 import { PrismaPromise } from '@prisma/client'
 import { MDFeResource } from '../_actions/type'
 import { columns } from '../_components/columns'
@@ -13,6 +15,15 @@ export default async function Page({
 }: {
   params: { data?: string[] }
 }) {
+  const { permissions } = useShield.getState()
+
+  const check = checkPermission(
+    { permission: 'mdfe.view', guard: 'page' },
+    permissions,
+  )
+
+  if (!check) return null
+
   const routeInvalid =
     (data?.[0] !== 'sc' && data?.[0] !== 'pr') ||
     (data?.[1] !== undefined && data?.[1] !== 'closed')

@@ -1,3 +1,4 @@
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { DialogTrigger } from '@/components/ui/dialog'
 import { PlusIcon } from 'lucide-react'
@@ -16,12 +17,14 @@ export const Header = () => {
         </div>
 
         <div className="mt-5 flex lg:ml-4 lg:mt-0">
-          <DialogTrigger asChild>
-            <Button>
-              <PlusIcon className="mr-1.5" />
-              Registrar
-            </Button>
-          </DialogTrigger>
+          <Shield permission="trailerType.create">
+            <DialogTrigger asChild>
+              <Button>
+                <PlusIcon className="mr-1.5" />
+                Registrar
+              </Button>
+            </DialogTrigger>
+          </Shield>
         </div>
       </div>
     </header>

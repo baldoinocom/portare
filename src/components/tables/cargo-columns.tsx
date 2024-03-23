@@ -3,6 +3,7 @@
 import { action } from '@/actions'
 import { CargoFormDialog } from '@/components/forms/form-dialogs/cargo-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -76,9 +77,9 @@ const CellActions = ({ item }: { item: Cargo }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.cargo()
+  const { delete: del } = action.cargo()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Carga deletada com sucesso',
@@ -110,17 +111,21 @@ const CellActions = ({ item }: { item: Cargo }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          <DialogTrigger asChild>
-            <DropdownMenuItem>
-              <Eye className="mr-2 size-4" />
-              Visualizar
-            </DropdownMenuItem>
-          </DialogTrigger>
+          <Shield permission="cargo.update">
+            <DialogTrigger asChild>
+              <DropdownMenuItem>
+                <Eye className="mr-2 size-4" />
+                Visualizar
+              </DropdownMenuItem>
+            </DialogTrigger>
+          </Shield>
 
-          <DropdownMenuItem onClick={handleDelete}>
-            <Trash2Icon className="mr-2 size-4" />
-            Excluir
-          </DropdownMenuItem>
+          <Shield permission="cargo.delete">
+            <DropdownMenuItem onClick={handleDelete}>
+              <Trash2Icon className="mr-2 size-4" />
+              Excluir
+            </DropdownMenuItem>
+          </Shield>
         </DropdownMenuContent>
       </DropdownMenu>
 

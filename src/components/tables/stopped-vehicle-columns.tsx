@@ -4,6 +4,7 @@ import { action } from '@/actions'
 import { StoppedVehicleResource } from '@/actions/types'
 import { StoppedVehicleFormDialog } from '@/components/forms/form-dialogs/stopped-vehicle-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -137,9 +138,9 @@ const CellActions = ({ item }: { item: StoppedVehicleResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.stoppedVehicle()
+  const { delete: del } = action.stoppedVehicle()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Parada de veículo deletada com sucesso',
@@ -171,17 +172,21 @@ const CellActions = ({ item }: { item: StoppedVehicleResource }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          <DialogTrigger asChild>
-            <DropdownMenuItem>
-              <Eye className="mr-2 size-4" />
-              Visualizar
-            </DropdownMenuItem>
-          </DialogTrigger>
+          <Shield permission="stoppedVehicle.update">
+            <DialogTrigger asChild>
+              <DropdownMenuItem>
+                <Eye className="mr-2 size-4" />
+                Visualizar
+              </DropdownMenuItem>
+            </DialogTrigger>
+          </Shield>
 
-          <DropdownMenuItem onClick={handleDelete}>
-            <Trash2Icon className="mr-2 size-4" />
-            Excluir
-          </DropdownMenuItem>
+          <Shield permission="stoppedVehicle.delete">
+            <DropdownMenuItem onClick={handleDelete}>
+              <Trash2Icon className="mr-2 size-4" />
+              Excluir
+            </DropdownMenuItem>
+          </Shield>
         </DropdownMenuContent>
       </DropdownMenu>
 

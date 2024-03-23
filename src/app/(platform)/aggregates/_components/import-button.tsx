@@ -2,6 +2,7 @@
 
 import { action } from '@/actions'
 import { AggregateImportSchema } from '@/actions/aggregate/schema'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
@@ -97,19 +98,21 @@ export const ImportButton = () => {
   const [loading, setLoading] = React.useState(false)
 
   return (
-    <Button variant="outline" onClick={handleFileSelect} disabled={loading}>
-      {loading ? (
-        <Loader2 className="mr-2 animate-spin" />
-      ) : (
-        <UploadIcon className="mr-1.5" />
-      )}
-      Importar
-      <input
-        id="file"
-        type="file"
-        className="sr-only"
-        onChange={handleFileChange}
-      />
-    </Button>
+    <Shield permission="aggregate.import">
+      <Button variant="outline" onClick={handleFileSelect} disabled={loading}>
+        {loading ? (
+          <Loader2 className="mr-2 animate-spin" />
+        ) : (
+          <UploadIcon className="mr-1.5" />
+        )}
+        Importar
+        <input
+          id="file"
+          type="file"
+          className="sr-only"
+          onChange={handleFileChange}
+        />
+      </Button>
+    </Shield>
   )
 }

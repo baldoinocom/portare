@@ -1,3 +1,4 @@
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
 import Link from 'next/link'
@@ -26,12 +27,14 @@ export const Header = () => {
         <div className="mt-5 flex space-x-2 lg:ml-4 lg:mt-0">
           <ImportButton />
 
-          <Button asChild>
-            <Link href="/units/new">
-              <PlusIcon className="mr-1.5" />
-              Cadastrar
-            </Link>
-          </Button>
+          <Shield permission="unit.create">
+            <Button asChild>
+              <Link href="/units/new">
+                <PlusIcon className="mr-1.5" />
+                Cadastrar
+              </Link>
+            </Button>
+          </Shield>
         </div>
       </div>
     </header>

@@ -1,11 +1,13 @@
 import { db } from '@/lib/db'
 
 async function main() {
+  // await updatePermissions()
   // await db.$transaction([
   //   db.user.create({
   //     data: {
   //       username: 'nicolasbaldoino',
   //       externalUserId: 'user_2bHmtB9K8lWIhDEJCiaYSNaTQu2',
+  //       groups: { connect: { name: GROUP_ROOT } },
   //     },
   //   }),
   //   db.unit.create({

@@ -10,16 +10,37 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { checkNavigationPermission } from '@/permissions'
+import { useShield } from '@/store/use-shield'
+import { PermissionGroup } from '@prisma/client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
-const tabs = [
-  { name: 'Cadastros', href: '/drivers' },
-  { name: 'A.S.O', href: '/drivers/aso' },
-  { name: 'Ausências', href: '/drivers/absents' },
+const tabs: {
+  name: string
+  href: string
+  groups?: PermissionGroup[]
+}[] = [
+  {
+    name: 'Cadastros',
+    href: '/drivers',
+    groups: ['driver'],
+  },
+  {
+    name: 'A.S.O',
+    href: '/drivers/aso',
+    groups: ['aso'],
+  },
+  {
+    name: 'Ausências',
+    href: '/drivers/absents',
+    groups: ['absentDriver'],
+  },
 ]
 
 export const TabBar = () => {
+  const { permissions } = useShield()
+
   const router = useRouter()
   const pathname = usePathname()
 
@@ -38,11 +59,17 @@ export const TabBar = () => {
 
           <SelectContent>
             <SelectGroup>
-              {tabs.map((tab, index) => (
-                <SelectItem key={index} value={tab.href}>
-                  {tab.name}
-                </SelectItem>
-              ))}
+              {tabs.map(({ groups, ...tab }, index) => {
+                const check = checkNavigationPermission(groups, permissions)
+
+                if (!check) return null
+
+                return (
+                  <SelectItem key={index} value={tab.href}>
+                    {tab.name}
+                  </SelectItem>
+                )
+              })}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -50,23 +77,29 @@ export const TabBar = () => {
 
       <div className="hidden sm:block">
         <nav className="-mb-px flex space-x-8">
-          {tabs.map((tab, index) => (
-            <Button
-              key={index}
-              variant="ghost"
-              asChild
-              className={cn(
-                current(tab.href)
-                  ? 'border-primary text-primary hover:text-primary'
-                  : 'border-transparent text-muted-foreground',
-                'whitespace-nowrap rounded-none border-b-2 px-1 pb-4 hover:bg-transparent',
-              )}
-            >
-              <Link key={index} href={tab.href}>
-                {tab.name}
-              </Link>
-            </Button>
-          ))}
+          {tabs.map(({ groups, ...tab }, index) => {
+            const check = checkNavigationPermission(groups, permissions)
+
+            if (!check) return null
+
+            return (
+              <Button
+                key={index}
+                variant="ghost"
+                asChild
+                className={cn(
+                  current(tab.href)
+                    ? 'border-primary text-primary hover:text-primary'
+                    : 'border-transparent text-muted-foreground',
+                  'whitespace-nowrap rounded-none border-b-2 px-1 pb-4 hover:bg-transparent',
+                )}
+              >
+                <Link key={index} href={tab.href}>
+                  {tab.name}
+                </Link>
+              </Button>
+            )
+          })}
         </nav>
       </div>
     </>

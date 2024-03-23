@@ -8,6 +8,7 @@ import { clientAction } from './client'
 import { companyAction } from './company'
 import { driverAction } from './driver'
 import { groupingAction } from './grouping'
+import { permissionAction } from './permission'
 import { personAction } from './person'
 import { semiTrailerAction } from './semi-trailer'
 import { stoppedVehicleAction } from './stopped-vehicle'
@@ -32,6 +33,7 @@ export const action = {
   company: companyAction,
   driver: driverAction,
   grouping: groupingAction,
+  permission: permissionAction,
   person: personAction,
   semiTrailer: semiTrailerAction,
   stoppedVehicle: stoppedVehicleAction,

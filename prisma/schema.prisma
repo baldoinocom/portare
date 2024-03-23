@@ -76,46 +76,70 @@ model Role {
 
 model Permission {
   id    String          @id @default(cuid())
-  code  PermissionCode
   group PermissionGroup
+  code  PermissionCode
+  guard PermissionGuard
 
   roles Role[] @relation("RolePermission", map: "role_permission")
 
-  @@unique([code, group])
+  @@unique([group, code, guard])
   @@map("permissions")
 }
 
 enum PermissionCode {
+  list
   view
   create
   update
   delete
 
-  menu
+  import
+
+  navigate
+
+  updateStatus @map("update_status")
 
   @@map("permission_code")
 }
 
 enum PermissionGroup {
   // System
+  user
   group
-  permission
   role
+  permission
 
   trip
   grouping
 
   driver
+  aso
+  absentDriver
+
   aggregate
   client
   unit
 
-  // Vehicle
   truck
   semiTrailer
+  trailerConfiguration @map("trailer_configuration")
+  trailerType          @map("trailer_type")
+  cargo
+  trailerCertificate   @map("trailer_certificate")
+  stoppedVehicle       @map("stopped_vehicle")
   brand
 
+  mdfe
+
   @@map("permission_group")
+}
+
+enum PermissionGuard {
+  action
+  page
+  component
+
+  @@map("permission_guard")
 }
 
 model Person {

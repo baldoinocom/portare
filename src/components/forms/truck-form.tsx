@@ -38,7 +38,7 @@ export const TruckForm = ({
   aggregates,
 }: {
   initialData?: TruckResource
-  brands: Brand[]
+  brands?: Brand[]
   units?: UnitResource[]
   aggregates?: AggregateResource[]
 }) => {

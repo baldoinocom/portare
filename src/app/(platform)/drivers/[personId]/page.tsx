@@ -2,6 +2,7 @@ import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
 import { DriverForm } from '@/components/forms/driver-form'
 import { PageContent } from '@/components/page-content'
+import { Shield } from '@/components/shield'
 import { Header } from './_components/header'
 
 export default async function Page({
@@ -10,7 +11,7 @@ export default async function Page({
   params: { personId: string }
 }) {
   const driver = await action
-    .driver()
+    .driver({ overwriter: 'driver.update' })
     .find({ personId: Number(params.personId) })
 
   if (!driver.data) {
@@ -18,21 +19,23 @@ export default async function Page({
   }
 
   const [units, aggregates] = await Promise.all([
-    action.unit().findMany(),
-    action.aggregate().findMany(),
+    action.unit({ overwriter: 'driver.update' }).findMany(),
+    action.aggregate({ overwriter: 'driver.update' }).findMany(),
   ])
 
   return (
-    <PageContent>
-      <Header />
+    <Shield page permission="driver.update">
+      <PageContent>
+        <Header />
 
-      <main>
-        <DriverForm
-          initialData={driver.data}
-          units={units.data}
-          aggregates={aggregates.data}
-        />
-      </main>
-    </PageContent>
+        <main>
+          <DriverForm
+            initialData={driver.data}
+            units={units.data}
+            aggregates={aggregates.data}
+          />
+        </main>
+      </PageContent>
+    </Shield>
   )
 }

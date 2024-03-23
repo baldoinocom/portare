@@ -2,6 +2,7 @@
 
 import { action } from '@/actions'
 import { UnitResource } from '@/actions/types'
+import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -140,9 +141,9 @@ const CellActions = ({ item }: { item: UnitResource }) => {
 
   const { toast } = useToast()
 
-  const { delete: deleteAction } = action.unit()
+  const { delete: del } = action.unit()
 
-  const { execute } = useAction(deleteAction, {
+  const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
         title: 'Unidade deletada com sucesso',
@@ -173,17 +174,21 @@ const CellActions = ({ item }: { item: UnitResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <DropdownMenuItem asChild>
-          <Link href={'/units/' + companyId}>
-            <Eye className="mr-2 size-4" />
-            Visualizar
-          </Link>
-        </DropdownMenuItem>
+        <Shield permission="unit.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/units/' + companyId}>
+              <Eye className="mr-2 size-4" />
+              Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
 
-        <DropdownMenuItem onClick={handleDelete}>
-          <Trash2Icon className="mr-2 size-4" />
-          Excluir
-        </DropdownMenuItem>
+        <Shield permission="unit.delete">
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2Icon className="mr-2 size-4" />
+            Excluir
+          </DropdownMenuItem>
+        </Shield>
       </DropdownMenuContent>
     </DropdownMenu>
   )

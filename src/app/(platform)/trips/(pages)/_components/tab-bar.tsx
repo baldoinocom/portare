@@ -13,9 +13,12 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
-const tabs = [
+const tabs: {
+  name: string
+  href: string
+}[] = [
   { name: 'Programações', href: '/trips' },
-  { name: 'Pré-programação (0)', href: '/trips/drafts' },
+  { name: 'Pré-programação ({{count}})', href: '/trips/drafts' },
 ]
 
 export const TabBar = () => {
@@ -39,7 +42,7 @@ export const TabBar = () => {
             <SelectGroup>
               {tabs.map((tab, index) => (
                 <SelectItem key={index} value={tab.href}>
-                  {tab.name}
+                  {tab.name?.replace('{{count}}', String(0))}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -62,7 +65,7 @@ export const TabBar = () => {
               )}
             >
               <Link key={index} href={tab.href}>
-                {tab.name}
+                {tab.name?.replace('{{count}}', String(0))}
               </Link>
             </Button>
           ))}

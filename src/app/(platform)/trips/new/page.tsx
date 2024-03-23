@@ -1,6 +1,7 @@
 import { action } from '@/actions'
 import { TripForm } from '@/components/forms/trip-form'
 import { PageContent } from '@/components/page-content'
+import { Shield } from '@/components/shield'
 import { Header } from './_components/header'
 
 export default async function Page() {
@@ -13,30 +14,34 @@ export default async function Page() {
     semiTrailers,
     cargos,
   ] = await Promise.all([
-    action.client().findMany({ type: 'origin' }),
-    action.client().findMany({ type: 'destination' }),
-    action.grouping().findMany(),
-    action.driver().findMany(),
-    action.truck().findMany(),
-    action.semiTrailer().findMany(),
-    action.cargo().findMany(),
+    action.client({ overwriter: 'trip.create' }).findMany({ type: 'origin' }),
+    action
+      .client({ overwriter: 'trip.create' })
+      .findMany({ type: 'destination' }),
+    action.grouping({ overwriter: 'trip.create' }).findMany(),
+    action.driver({ overwriter: 'trip.create' }).findMany(),
+    action.truck({ overwriter: 'trip.create' }).findMany(),
+    action.semiTrailer({ overwriter: 'trip.create' }).findMany(),
+    action.cargo({ overwriter: 'trip.create' }).findMany(),
   ])
 
   return (
-    <PageContent>
-      <Header />
+    <Shield page permission="trip.create">
+      <PageContent>
+        <Header />
 
-      <main>
-        <TripForm
-          origins={origins.data}
-          destinations={destinations.data}
-          groupings={groupings.data}
-          drivers={drivers.data}
-          trucks={trucks.data}
-          semiTrailers={semiTrailers.data}
-          cargos={cargos.data}
-        />
-      </main>
-    </PageContent>
+        <main>
+          <TripForm
+            origins={origins.data}
+            destinations={destinations.data}
+            groupings={groupings.data}
+            drivers={drivers.data}
+            trucks={trucks.data}
+            semiTrailers={semiTrailers.data}
+            cargos={cargos.data}
+          />
+        </main>
+      </PageContent>
+    </Shield>
   )
 }

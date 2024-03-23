@@ -2,6 +2,7 @@ import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
 import { UnitForm } from '@/components/forms/unit-form'
 import { PageContent } from '@/components/page-content'
+import { Shield } from '@/components/shield'
 import { Header } from './_components/header'
 
 export default async function Page({
@@ -9,19 +10,23 @@ export default async function Page({
 }: {
   params: { companyId: string }
 }) {
-  const unit = await action.unit().find({ companyId: Number(params.companyId) })
+  const unit = await action
+    .unit({ overwriter: 'unit.update' })
+    .find({ companyId: Number(params.companyId) })
 
   if (!unit.data) {
     return DataNotFound()
   }
 
   return (
-    <PageContent>
-      <Header />
+    <Shield page permission="unit.update">
+      <PageContent>
+        <Header />
 
-      <main>
-        <UnitForm initialData={unit.data} />
-      </main>
-    </PageContent>
+        <main>
+          <UnitForm initialData={unit.data} />
+        </main>
+      </PageContent>
+    </Shield>
   )
 }

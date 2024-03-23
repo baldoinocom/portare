@@ -1,6 +1,7 @@
 import { action } from '@/actions'
 import { ClientForm } from '@/components/forms/client-form'
 import { PageContent } from '@/components/page-content'
+import { Shield } from '@/components/shield'
 import { DataNotFound } from '../../../not-found'
 import { Header } from './_components/header'
 
@@ -10,7 +11,7 @@ export default async function Page({
   params: { companyId: string }
 }) {
   const client = await action
-    .client()
+    .client({ overwriter: 'client.update' })
     .find({ companyId: Number(params.companyId) })
 
   if (!client.data) {
@@ -18,12 +19,14 @@ export default async function Page({
   }
 
   return (
-    <PageContent>
-      <Header />
+    <Shield page permission="client.update">
+      <PageContent>
+        <Header />
 
-      <main>
-        <ClientForm initialData={client.data} />
-      </main>
-    </PageContent>
+        <main>
+          <ClientForm initialData={client.data} />
+        </main>
+      </PageContent>
+    </Shield>
   )
 }

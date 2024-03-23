@@ -7,7 +7,7 @@ import {
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { MenuItemProps } from '.'
+import { MenuItemProps } from '..'
 
 export const ShortMenuItem = ({ item }: { item: MenuItemProps }) => {
   const pathname = usePathname()

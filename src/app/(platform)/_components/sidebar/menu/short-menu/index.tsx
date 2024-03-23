@@ -1,27 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { LucideIcon, SettingsIcon } from 'lucide-react'
-import Link from 'next/link'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { ShortFooterMenuItem } from './footer-menu-item'
 import { ShortListMenuItem, ShortOtherListMenuItem } from './list-menu-item'
 import { ToggleButton } from './toggle-button'
-
-export type MenuItemProps = {
-  name: string
-  href?: string
-  icon: LucideIcon
-  count?: string
-  children?: {
-    name: string
-    href: string
-    icon?: LucideIcon
-  }[]
-}
 
 export const ShortMenu = () => {
   return (
@@ -38,33 +18,11 @@ export const ShortMenu = () => {
             </li>
 
             <li>
-              <Separator className="mb-2" />
               <ShortOtherListMenuItem />
             </li>
 
             <li className="mt-auto">
-              <ul role="list" className="space-y-1">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      asChild
-                      className="justify-start px-2"
-                    >
-                      <Link
-                        href="/system/users"
-                        className="group flex w-full items-center gap-x-3 rounded-md hover:bg-accent"
-                      >
-                        <SettingsIcon className="shrink-0" />
-                      </Link>
-                    </Button>
-                  </TooltipTrigger>
-
-                  <TooltipContent side="right" className="ml-2 bg-foreground">
-                    <p className="text-background">Sistema</p>
-                  </TooltipContent>
-                </Tooltip>
-              </ul>
+              <ShortFooterMenuItem />
             </li>
           </ul>
         </nav>
