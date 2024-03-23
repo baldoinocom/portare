@@ -1,7 +1,5 @@
-import { db } from '@/lib/db'
+import { action } from '@/actions'
 import { useShield } from '@/store/use-shield'
-import { currentUser } from '@clerk/nextjs'
-import { Permission } from '@prisma/client'
 import { ShieldClientProvider } from './client'
 
 export const ShieldProvider = async ({
@@ -9,32 +7,34 @@ export const ShieldProvider = async ({
 }: {
   children: React.ReactNode
 }) => {
-  const data = useShield.getState().permissions
+  let data = useShield.getState().permissions
 
   if (!data?.length) {
-    const user = await currentUser()
+    data = (await action.permission().findMany()).data || []
 
-    if (user) {
-      const find = await db.user.findUnique({
-        where: { id: user.id },
-        select: {
-          groups: { select: { roles: { select: { permissions: true } } } },
-        },
-      })
+    // const user = await currentUser()
 
-      if (find) {
-        find.groups.reduce((acc: Permission[], group) => {
-          const groupPermissions = group.roles.reduce(
-            (acc: Permission[], role) => {
-              return [...acc, ...role.permissions]
-            },
-            [],
-          )
+    // if (user) {
+    //   const find = await db.user.findUnique({
+    //     where: { id: user.id },
+    //     select: {
+    //       groups: { select: { roles: { select: { permissions: true } } } },
+    //     },
+    //   })
 
-          return [...acc, ...groupPermissions]
-        }, [])
-      }
-    }
+    //   if (find) {
+    //     find.groups.reduce((acc: Permission[], group) => {
+    //       const groupPermissions = group.roles.reduce(
+    //         (acc: Permission[], role) => {
+    //           return [...acc, ...role.permissions]
+    //         },
+    //         [],
+    //       )
+
+    //       return [...acc, ...groupPermissions]
+    //     }, [])
+    //   }
+    // }
 
     useShield.setState({ permissions: data })
   }
