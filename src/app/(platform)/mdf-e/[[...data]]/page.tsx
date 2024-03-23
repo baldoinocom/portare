@@ -1,8 +1,7 @@
+import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
 import { PageContent } from '@/components/page-content'
 import { db } from '@/lib/db'
-import { checkPermission } from '@/permissions'
-import { useShield } from '@/store/use-shield'
 import { PrismaPromise } from '@prisma/client'
 import { MDFeResource } from '../_actions/type'
 import { columns } from '../_components/columns'
@@ -15,12 +14,9 @@ export default async function Page({
 }: {
   params: { data?: string[] }
 }) {
-  const { permissions } = useShield.getState()
-
-  const check = checkPermission(
-    { permission: 'mdfe.view', guard: 'page' },
-    permissions,
-  )
+  const { data: check } = await action
+    .permission()
+    .check({ permission: 'mdfe.view', guard: 'page' })
 
   if (!check) return null
 
