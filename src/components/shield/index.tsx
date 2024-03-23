@@ -1,3 +1,5 @@
+'use client'
+
 import { PermissionGroupCode, checkPermission } from '@/permissions'
 import { useShield } from '@/store/use-shield'
 
@@ -8,7 +10,7 @@ type ShieldProps = {
 }
 
 export const Shield = ({ page, permission, children }: ShieldProps) => {
-  const { permissions } = useShield.getState()
+  const { permissions } = useShield()
 
   const guard = page ? 'page' : 'component'
 

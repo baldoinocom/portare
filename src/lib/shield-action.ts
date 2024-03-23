@@ -1,5 +1,7 @@
+import { db } from '@/lib/db'
 import { ActionState } from '@/lib/safe-action'
 import { extractPermission, PermissionGroupCode } from '@/permissions'
+import { currentUser } from '@clerk/nextjs'
 
 export const shieldAction = <TInput, TOutput>({
   action,
@@ -17,26 +19,26 @@ export const shieldAction = <TInput, TOutput>({
       (overwriter || permission) as PermissionGroupCode,
     )
 
-    const check = true
+    let check
 
-    // const user = await currentUser()
+    const user = await currentUser()
 
-    // if (user) {
-    //   check = await db.user.findUnique({
-    //     where: {
-    //       id: user.id,
-    //       groups: {
-    //         some: {
-    //           roles: {
-    //             some: {
-    //               permissions: { some: { group, code, guard: 'action' } },
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //   })
-    // }
+    if (user) {
+      check = await db.user.findUnique({
+        where: {
+          externalUserId: user.id,
+          groups: {
+            some: {
+              roles: {
+                some: {
+                  permissions: { some: { group, code, guard: 'action' } },
+                },
+              },
+            },
+          },
+        },
+      })
+    }
 
     if (!check) {
       return { error: 'Usuário não tem permissão para realizar esta ação' }
