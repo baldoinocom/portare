@@ -1,6 +1,7 @@
-import { action as ac } from '@/actions'
-import { PermissionGroupCode } from '@/permissions'
-import { ActionState } from './safe-action'
+import { db } from '@/lib/db'
+import { ActionState } from '@/lib/safe-action'
+import { extractPermission, PermissionGroupCode } from '@/permissions'
+import { currentUser } from '@clerk/nextjs'
 
 export const shieldAction = <TInput, TOutput>({
   action,
@@ -14,9 +15,30 @@ export const shieldAction = <TInput, TOutput>({
   if ((!permission && !overwriter) || overwriter === null) return action
 
   return async (data: TInput): Promise<ActionState<TInput, TOutput>> => {
-    const { data: check } = await ac
-      .permission()
-      .check({ permission: String(overwriter || permission), guard: 'action' })
+    const { group, code } = extractPermission(
+      (overwriter || permission) as PermissionGroupCode,
+    )
+
+    let check
+
+    const user = await currentUser()
+
+    if (user) {
+      check = await db.user.findUnique({
+        where: {
+          id: user.id,
+          groups: {
+            some: {
+              roles: {
+                some: {
+                  permissions: { some: { group, code, guard: 'action' } },
+                },
+              },
+            },
+          },
+        },
+      })
+    }
 
     if (!check) {
       return { error: 'Usuário não tem permissão para realizar esta ação' }
