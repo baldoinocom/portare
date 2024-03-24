@@ -1,4 +1,4 @@
-import { action } from '@/actions'
+import { userPermissions } from '@/lib/auth-service'
 import { ShieldClientProvider } from './client'
 
 export const ShieldProvider = async ({
@@ -6,9 +6,11 @@ export const ShieldProvider = async ({
 }: {
   children: React.ReactNode
 }) => {
-  const { data } = await action.permission().list()
+  const permissions = await userPermissions()
 
   return (
-    <ShieldClientProvider permissions={data}>{children}</ShieldClientProvider>
+    <ShieldClientProvider permissions={permissions}>
+      {children}
+    </ShieldClientProvider>
   )
 }

@@ -1,9 +1,9 @@
-import { action } from '@/actions'
+import { checkUserPermission } from '@/lib/auth-service'
 import { PermissionGroupCode } from '@/permissions'
 import { ActionState } from './safe-action'
 
 export const shieldAction = <TInput, TOutput>({
-  action: actionFunc,
+  action,
   permission,
   overwriter,
 }: {
@@ -11,18 +11,19 @@ export const shieldAction = <TInput, TOutput>({
   permission?: PermissionGroupCode
   overwriter?: PermissionGroupCode | null
 }) => {
-  if ((!permission && !overwriter) || overwriter === null) return actionFunc
+  if ((!permission && !overwriter) || overwriter === null) return action
 
   return async (data: TInput): Promise<ActionState<TInput, TOutput>> => {
-    const { data: check } = await action
-      .permission()
-      .check({ permission: String(overwriter || permission), guard: 'action' })
+    const check = await checkUserPermission({
+      permission: overwriter || permission,
+      guard: 'action',
+    })
 
     if (!check) {
       return { error: 'Usuário não tem permissão para realizar esta ação' }
     }
 
-    return actionFunc(data)
+    return action(data)
   }
 }
 
