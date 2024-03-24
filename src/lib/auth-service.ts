@@ -26,22 +26,31 @@ export const currentUser = async (): Promise<UserResource> => {
 }
 
 export const userPermissions = async (): Promise<Permission[]> => {
+  let permissions: Permission[] = []
+
   const clerkUser = await currentUserClerk()
 
-  const user = await db.user.findUniqueOrThrow({
-    where: { externalUserId: clerkUser?.id },
-    select: {
-      groups: { select: { roles: { select: { permissions: true } } } },
-    },
-  })
+  if (clerkUser) {
+    const user = await db.user.findUnique({
+      where: { externalUserId: clerkUser.id },
+      select: {
+        groups: { select: { roles: { select: { permissions: true } } } },
+      },
+    })
 
-  return user.groups.reduce((acc: Permission[], group) => {
-    const groupPermissions = group.roles.reduce((acc: Permission[], role) => {
-      return [...acc, ...role.permissions]
-    }, [])
+    if (user) {
+      permissions = user.groups.reduce((acc: Permission[], { roles }) => {
+        const groupPermissions = roles.reduce(
+          (acc: Permission[], { permissions }) => [...acc, ...permissions],
+          [],
+        )
 
-    return [...acc, ...groupPermissions]
-  }, [])
+        return [...acc, ...groupPermissions]
+      }, [])
+    }
+  }
+
+  return permissions
 }
 
 export const checkUserPermission = async ({
@@ -51,22 +60,28 @@ export const checkUserPermission = async ({
   permission?: PermissionGroupCode
   guard?: PermissionGuard
 }): Promise<boolean> => {
-  if (!permission || !guard) return false
+  if (permission && guard) {
+    const clerkUser = await currentUserClerk()
 
-  const clerkUser = await currentUserClerk()
+    const { group, code } = extractPermission(permission)
 
-  const { group, code } = extractPermission(permission)
-
-  const user = await db.user.findUniqueOrThrow({
-    where: {
-      externalUserId: clerkUser?.id,
-      groups: {
-        some: {
-          roles: { some: { permissions: { some: { group, code, guard } } } },
+    if (clerkUser) {
+      const user = await db.user.findUnique({
+        where: {
+          externalUserId: clerkUser.id,
+          groups: {
+            some: {
+              roles: {
+                some: { permissions: { some: { group, code, guard } } },
+              },
+            },
+          },
         },
-      },
-    },
-  })
+      })
 
-  return Boolean(user)
+      if (user) return true
+    }
+  }
+
+  return false
 }
