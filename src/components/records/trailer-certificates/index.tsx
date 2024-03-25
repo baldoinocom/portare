@@ -11,11 +11,10 @@ import { PlusIcon } from 'lucide-react'
 import { Header } from './header'
 
 export const TrailerCertificates = async () => {
-  const trailerCertificates = await action.trailerCertificate().findMany()
-
-  const trailers = await action
-    .trailer({ overwriter: 'trailerCertificate.list' })
-    .findMany()
+  const [trailerCertificates, trailers] = await Promise.all([
+    action.trailerCertificate().findMany(),
+    action.trailer({ overwriter: 'trailerCertificate.list' }).findMany(),
+  ])
 
   return (
     <Shield page permission="trailerCertificate.list">

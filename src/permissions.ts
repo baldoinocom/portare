@@ -298,3 +298,37 @@ export const permissions: Permission[] = handlePermissionsHelper().concat([
     guards: ['component'],
   },
 ])
+
+export type PermissionByGroup = {
+  groupLabel: string
+  guards: Record<PermissionGuard, Pick<Permission, 'codeLabel' | 'value'>[]>
+}
+
+export const permissionsByGroup = permissions.reduce(
+  (acc: PermissionByGroup[], item) => {
+    const { groupLabel, guards, ...permission } = item
+    const group = acc.find((group) => group.groupLabel === groupLabel)
+
+    if (group) {
+      guards.forEach((guard) => {
+        if (!group.guards[guard]) group.guards[guard] = []
+
+        group.guards[guard].push(permission)
+      })
+    } else {
+      acc.push({
+        groupLabel,
+        guards: { [guards[0]]: [permission] },
+      } as PermissionByGroup)
+    }
+
+    return acc
+  },
+  [],
+)
+
+export const guardLabels = {
+  action: 'Ações',
+  page: 'Páginas',
+  component: 'Componentes',
+}

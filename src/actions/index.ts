@@ -7,9 +7,11 @@ import { cargoAction } from './cargo'
 import { clientAction } from './client'
 import { companyAction } from './company'
 import { driverAction } from './driver'
+import { groupAction } from './group'
 import { groupingAction } from './grouping'
 import { permissionAction } from './permission'
 import { personAction } from './person'
+import { roleAction } from './role'
 import { semiTrailerAction } from './semi-trailer'
 import { stoppedVehicleAction } from './stopped-vehicle'
 import { trailerAction } from './trailer'
@@ -32,9 +34,11 @@ export const action = {
   client: clientAction,
   company: companyAction,
   driver: driverAction,
+  group: groupAction,
   grouping: groupingAction,
   permission: permissionAction,
   person: personAction,
+  role: roleAction,
   semiTrailer: semiTrailerAction,
   stoppedVehicle: stoppedVehicleAction,
   trailer: trailerAction,

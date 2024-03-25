@@ -16,7 +16,7 @@ export default async function Page() {
 
       <Separator />
 
-      <ProfileForm initialData={user.person} />
+      <ProfileForm initialData={user?.person} />
     </div>
   )
 }

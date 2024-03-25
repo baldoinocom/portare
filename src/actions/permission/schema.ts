@@ -1,7 +1,9 @@
 import { z } from 'zod'
 
-export const PermissionCheckSchema = z.object({
-  permission: z.string(),
+export const PermissionSchema = z.object({
+  group: z.string(),
+
+  code: z.string(),
 
   guard: z.string(),
 })

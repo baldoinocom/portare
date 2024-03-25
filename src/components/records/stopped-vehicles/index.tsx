@@ -11,11 +11,10 @@ import { PlusIcon } from 'lucide-react'
 import { Header } from './header'
 
 export const StoppedVehicles = async () => {
-  const stoppedVehicles = await action.stoppedVehicle().findMany()
-
-  const vehicles = await action
-    .vehicle({ overwriter: 'stoppedVehicle.list' })
-    .findMany()
+  const [stoppedVehicles, vehicles] = await Promise.all([
+    action.stoppedVehicle().findMany(),
+    action.vehicle({ overwriter: 'stoppedVehicle.list' }).findMany(),
+  ])
 
   return (
     <Shield page permission="stoppedVehicle.list">

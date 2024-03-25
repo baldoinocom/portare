@@ -11,11 +11,10 @@ import { PlusIcon } from 'lucide-react'
 import { Header } from './header'
 
 export const AbsentDrivers = async () => {
-  const absentDrivers = await action.absentDriver().findMany()
-
-  const drivers = await action
-    .driver({ overwriter: 'absentDriver.list' })
-    .findMany()
+  const [absentDrivers, drivers] = await Promise.all([
+    action.absentDriver().findMany(),
+    action.driver({ overwriter: 'absentDriver.list' }).findMany(),
+  ])
 
   return (
     <Shield page permission="absentDriver.list">

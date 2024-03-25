@@ -20,7 +20,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     return { error: 'Ocorreu um erro ao deletar, tente novamente mais tarde' }
   }
 
-  revalidatePath('/users')
+  revalidatePath('/system/users')
 
   return { data: JSON.parse(JSON.stringify(user)) }
 }

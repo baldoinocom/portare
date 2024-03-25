@@ -1,6 +1,6 @@
+import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
 import { PageContent } from '@/components/page-content'
-import { checkUserPermission } from '@/lib/auth-service'
 import { db } from '@/lib/db'
 import { PrismaPromise } from '@prisma/client'
 import { MDFeResource } from '../_actions/type'
@@ -14,7 +14,7 @@ export default async function Page({
 }: {
   params: { data?: string[] }
 }) {
-  const check = await checkUserPermission({
+  const check = await action.permission().checkUser({
     permission: 'mdfe.view',
     guard: 'page',
   })

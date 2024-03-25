@@ -11,9 +11,10 @@ import { PlusIcon } from 'lucide-react'
 import { Header } from './header'
 
 export const ASO = async () => {
-  const aso = await action.aso().findMany()
-
-  const drivers = await action.driver({ overwriter: 'aso.list' }).findMany()
+  const [aso, drivers] = await Promise.all([
+    action.aso().findMany(),
+    action.driver({ overwriter: 'aso.list' }).findMany(),
+  ])
 
   return (
     <Shield page permission="aso.list">

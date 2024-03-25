@@ -9,7 +9,7 @@ import { Main } from './main'
 
 export const Groupings = async () => {
   const [groupings, drivers, trucks, semiTrailers] = await Promise.all([
-    action.grouping({ overwriter: 'grouping.list' }).findMany(),
+    action.grouping().findMany(),
     action.driver({ overwriter: 'grouping.list' }).findMany(),
     action.truck({ overwriter: 'grouping.list' }).findMany(),
     action.semiTrailer({ overwriter: 'grouping.list' }).findMany(),

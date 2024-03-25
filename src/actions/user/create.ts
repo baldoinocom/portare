@@ -11,7 +11,7 @@ type InputType = z.infer<typeof UserSchema>
 type ReturnType = ActionState<InputType, User>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { username, password } = data
+  const { username, password, groups } = data
 
   let user
 
@@ -31,7 +31,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     return { error: 'Ocorreu um erro ao criar, tente novamente mais tarde' }
   }
 
-  revalidatePath('/users')
+  revalidatePath('/system/users')
 
   return { data: JSON.parse(JSON.stringify(user)) }
 }

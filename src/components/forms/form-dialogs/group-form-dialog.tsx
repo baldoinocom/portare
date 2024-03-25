@@ -1,8 +1,8 @@
 'use client'
 
 import { action } from '@/actions'
-import { GroupResource, UserResource } from '@/actions/types'
-import { UserSchema, UserUpsertSchema } from '@/actions/user/schema'
+import { GroupSchema } from '@/actions/group/schema'
+import { GroupResource, RoleResource } from '@/actions/types'
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -22,7 +22,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -43,45 +42,45 @@ import { Check, ChevronsUpDown, Loader2 } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-export const UserFormDialog = ({
+export const GroupFormDialog = ({
   initialData,
-  groups,
+  roles,
 }: {
-  initialData?: UserResource
-  groups?: GroupResource[]
+  initialData?: GroupResource
+  roles?: RoleResource[]
 }) => {
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof UserUpsertSchema>>({
-    resolver: zodResolver(UserUpsertSchema),
-    defaultValues: { new: !initialData, ...nullAsUndefined(initialData) },
+  const form = useForm<z.infer<typeof GroupSchema>>({
+    resolver: zodResolver(GroupSchema),
+    defaultValues: nullAsUndefined(initialData),
   })
 
   const {
-    fields: groupFields,
+    fields: roleFields,
     append,
     remove,
-  } = useFieldArray({ control: form.control, name: 'groups', keyName: 'key' })
+  } = useFieldArray({ control: form.control, name: 'roles', keyName: 'key' })
 
   const onReset = () => {
-    form.reset({ username: '', password: '', groups: [] })
+    form.reset({ name: '', roles: [] })
   }
 
-  const { create, update } = action.user()
+  const { create, update } = action.group()
 
   const { execute } = useAction(create, {
     onSuccess: () => {
       onReset()
 
       toast({
-        title: 'Usuário cadastro com sucesso',
-        description: 'O usuário foi cadastro com sucesso! 🎉',
+        title: 'Grupo registrado com sucesso',
+        description: 'O grupo foi registrado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao cadastrar o usuário',
+        title: 'Erro ao registrar o grupo',
         description: error,
       })
     },
@@ -90,27 +89,24 @@ export const UserFormDialog = ({
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
-        title: 'Usuário atualizado com sucesso',
-        description: 'O usuário foi atualizado com sucesso! 🎉',
+        title: 'Grupo atualizado com sucesso',
+        description: 'O grupo foi atualizado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao atualizar o usuário',
+        title: 'Erro ao atualizar o grupo',
         description: error,
       })
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof UserUpsertSchema>) => {
+  const onSubmit = async (values: z.infer<typeof GroupSchema>) => {
     if (initialData) {
-      await executeUpdate({
-        externalUserId: initialData.externalUserId,
-        ...values,
-      })
+      await executeUpdate({ id: initialData.id, ...values })
     } else {
-      await execute(UserSchema.parse(values))
+      await execute(values)
     }
   }
 
@@ -120,23 +116,23 @@ export const UserFormDialog = ({
         <div className="space-y-4">
           <DialogHeader>
             <DialogTitle>
-              {initialData ? 'Cadastro do usuário' : 'Cadastro de usuário'}
+              {initialData ? 'Registro do grupo' : 'Registro de grupo'}
             </DialogTitle>
 
             <DialogDescription>
-              {initialData ? 'Altere os usuários' : 'Cadastre novos usuários'}
+              {initialData ? 'Altere os grupos' : 'Regstre novos grupos'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4">
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome de usuário</FormLabel>
+                  <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="uppercase" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -145,30 +141,10 @@ export const UserFormDialog = ({
 
             <FormField
               control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{initialData ? 'Nova senha' : 'Senha'}</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-
-                  {initialData && (
-                    <FormDescription>
-                      Deixe em branco para manter a senha atual
-                    </FormDescription>
-                  )}
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="groups"
+              name="roles"
               render={() => (
                 <FormItem>
-                  <FormLabel>Grupo</FormLabel>
+                  <FormLabel>Cargo</FormLabel>
 
                   <Popover>
                     <PopoverTrigger asChild>
@@ -178,14 +154,14 @@ export const UserFormDialog = ({
                           role="combobox"
                           className={cn(
                             'h-auto justify-between',
-                            !groupFields?.length && 'text-muted-foreground',
+                            !roleFields?.length && 'text-muted-foreground',
                           )}
                         >
-                          {groupFields?.length ? (
+                          {roleFields?.length ? (
                             <div className="flex flex-wrap gap-2">
-                              {groups
+                              {roles
                                 ?.filter(({ id }) =>
-                                  groupFields.some((v) => v.id === id),
+                                  roleFields.some((v) => v.id === id),
                                 )
                                 .map(({ name }, index) => (
                                   <Badge
@@ -198,7 +174,7 @@ export const UserFormDialog = ({
                                 ))}
                             </div>
                           ) : (
-                            'Selecione o grupo'
+                            'Selecione o cargo'
                           )}
                           <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                         </Button>
@@ -211,14 +187,14 @@ export const UserFormDialog = ({
                         <CommandEmpty>Nenhum</CommandEmpty>
                         <CommandGroup>
                           <ScrollArea className="flex max-h-72 flex-col">
-                            {groups?.map(({ id, name }, index) => (
+                            {roles?.map(({ id, name }, index) => (
                               <CommandItem
                                 key={index}
                                 value={name}
                                 onSelect={() => {
-                                  if (groupFields?.some((v) => v.id === id)) {
+                                  if (roleFields?.some((v) => v.id === id)) {
                                     remove(
-                                      groupFields.findIndex((v) => v.id === id),
+                                      roleFields.findIndex((v) => v.id === id),
                                     )
                                   } else {
                                     append({ id })
@@ -228,8 +204,8 @@ export const UserFormDialog = ({
                                 <Check
                                   className={cn(
                                     'mr-2 size-4',
-                                    groupFields?.length &&
-                                      groupFields.some((v) => v.id === id)
+                                    roleFields?.length &&
+                                      roleFields.some((v) => v.id === id)
                                       ? 'opacity-100'
                                       : 'opacity-0',
                                   )}

@@ -12,7 +12,7 @@ type InputType = z.infer<typeof UserUpdateSchema>
 type ReturnType = ActionState<InputType, User>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { externalUserId, username, password } = data
+  const { externalUserId, username, password, groups } = data
 
   let user
 
@@ -34,7 +34,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     return { error: 'Ocorreu um erro ao atualizar, tente novamente mais tarde' }
   }
 
-  revalidatePath('/users')
+  revalidatePath(`/system/users/${externalUserId}`)
+  revalidatePath('/system/users')
 
   return { data: JSON.parse(JSON.stringify(user)) }
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { revalidateAction } from '@/actions/revalidate'
 import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import {
@@ -58,6 +59,9 @@ export default function Page() {
 
       if (result?.status === 'complete' && setActive) {
         await setActive({ session: result.createdSessionId })
+
+        await revalidateAction()
+
         return router.push(redirectUrl ?? '/#')
       }
     } catch (error) {

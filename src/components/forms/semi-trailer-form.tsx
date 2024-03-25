@@ -101,11 +101,7 @@ export const SemiTrailerForm = ({
     fields: cargoFields,
     append,
     remove,
-  } = useFieldArray({
-    control: form.control,
-    name: 'cargos',
-    keyName: 'key',
-  })
+  } = useFieldArray({ control: form.control, name: 'cargos', keyName: 'key' })
 
   const { fields: trailerFields, replace } = useFieldArray({
     control: form.control,

@@ -1,9 +1,11 @@
+import { action } from '@/actions'
 import { Shield } from '@/components/shield'
+import { permissionColumns } from '@/components/tables/permission-columns'
 import { DataTable } from '@/components/tables/ui/data-table'
 import { Separator } from '@/components/ui/separator'
 
 export default async function Page() {
-  const permissions = { data: [] }
+  const permissions = await action.permission().findMany()
 
   return (
     <Shield page permission="permission.list">
@@ -20,7 +22,10 @@ export default async function Page() {
         <Separator />
 
         <main>
-          <DataTable columns={[]} data={permissions.data} />
+          <DataTable
+            columns={permissionColumns}
+            data={permissions.data || []}
+          />
         </main>
       </div>
     </Shield>

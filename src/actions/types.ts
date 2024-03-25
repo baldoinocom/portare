@@ -119,3 +119,13 @@ export const groupingResource = Prisma.validator<Prisma.GroupingDefaultArgs>()({
 export type GroupingResource = Prisma.GroupingGetPayload<
   typeof groupingResource
 >
+
+export const groupResource = Prisma.validator<Prisma.GroupDefaultArgs>()({
+  include: { roles: true },
+})
+export type GroupResource = Prisma.GroupGetPayload<typeof groupResource>
+
+export const roleResource = Prisma.validator<Prisma.RoleDefaultArgs>()({
+  include: { permissions: true },
+})
+export type RoleResource = Prisma.RoleGetPayload<typeof roleResource>
