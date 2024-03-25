@@ -25,6 +25,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       if (find) return { error: 'Já existe um usuário com esse nome' }
     }
 
+    await db.user.update({
+      where: { externalUserId },
+      data: {
+        groups: { set: (groups || []).filter(Boolean) as { id: number }[] },
+      },
+    })
+
     user = await clerk.users.updateUser(externalUserId, {
       username,
       password: emptyAsNull(password) || undefined,
@@ -36,6 +43,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   revalidatePath(`/system/users/${externalUserId}`)
   revalidatePath('/system/users')
+
+  revalidatePath('/')
 
   return { data: JSON.parse(JSON.stringify(user)) }
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { action } from '@/actions'
-import { UserResource } from '@/actions/types'
+import { GroupResource, UserResource } from '@/actions/types'
 import { UserFormDialog } from '@/components/forms/form-dialogs/user-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Shield } from '@/components/shield'
@@ -20,7 +20,11 @@ import { useAction } from '@/hooks/use-action'
 import { ColumnDef } from '@tanstack/react-table'
 import { Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
 
-export const userColumns: ColumnDef<UserResource>[] = [
+export const userColumns = ({
+  groups,
+}: {
+  groups?: GroupResource[]
+}): ColumnDef<UserResource>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -64,12 +68,18 @@ export const userColumns: ColumnDef<UserResource>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => <CellActions item={row.original} />,
+    cell: ({ row }) => <CellActions item={row.original} groups={groups} />,
     enableHiding: false,
   },
 ]
 
-export const CellActions = ({ item }: { item: UserResource }) => {
+export const CellActions = ({
+  item,
+  groups,
+}: {
+  item: UserResource
+  groups?: GroupResource[]
+}) => {
   const { externalUserId } = item
 
   const { toast } = useToast()
@@ -127,7 +137,7 @@ export const CellActions = ({ item }: { item: UserResource }) => {
       </DropdownMenu>
 
       <FormDialogContent>
-        <UserFormDialog initialData={item} />
+        <UserFormDialog initialData={item} groups={groups} />
       </FormDialogContent>
     </Dialog>
   )

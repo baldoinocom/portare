@@ -11,7 +11,7 @@ type InputType = z.infer<typeof UserSchema>
 type ReturnType = ActionState<InputType, User>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { username, password, groups } = data
+  const { username, password } = data
 
   let user
 

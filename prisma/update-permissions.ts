@@ -40,21 +40,21 @@ export const updatePermissions = async () => {
 
   await db.group.upsert({
     where: { name: GROUP_ROOT },
-    create: {
-      name: GROUP_ROOT,
-      roles: {
-        connectOrCreate: {
-          where: { name: GROUP_ROOT },
-          create: { name: GROUP_ROOT },
-        },
-      },
-    },
+    create: { name: GROUP_ROOT },
     update: {},
   })
 
-  await db.role.update({
+  await db.role.upsert({
     where: { name: GROUP_ROOT },
-    data: { permissions: { connect: ids } },
+    create: {
+      name: GROUP_ROOT,
+      groups: { connect: { name: GROUP_ROOT } },
+      permissions: { connect: ids },
+    },
+    update: {
+      groups: { set: { name: GROUP_ROOT } },
+      permissions: { set: ids },
+    },
   })
 
   return data.map(({ group, code, guard }) => ({

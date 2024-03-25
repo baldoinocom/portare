@@ -163,89 +163,93 @@ export const UserFormDialog = ({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="groups"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Grupo</FormLabel>
+            {initialData && (
+              <FormField
+                control={form.control}
+                name="groups"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Grupo</FormLabel>
 
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl className="w-full">
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            'h-auto justify-between',
-                            !groupFields?.length && 'text-muted-foreground',
-                          )}
-                        >
-                          {groupFields?.length ? (
-                            <div className="flex flex-wrap gap-2">
-                              {groups
-                                ?.filter(({ id }) =>
-                                  groupFields.some((v) => v.id === id),
-                                )
-                                .map(({ name }, index) => (
-                                  <Badge
-                                    key={index}
-                                    variant="outline"
-                                    className="font-medium"
-                                  >
-                                    {name}
-                                  </Badge>
-                                ))}
-                            </div>
-                          ) : (
-                            'Selecione o grupo'
-                          )}
-                          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl className="w-full">
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              'h-auto justify-between',
+                              !groupFields?.length && 'text-muted-foreground',
+                            )}
+                          >
+                            {groupFields?.length ? (
+                              <div className="flex flex-wrap gap-2">
+                                {groups
+                                  ?.filter(({ id }) =>
+                                    groupFields.some((v) => v.id === id),
+                                  )
+                                  .map(({ name }, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="outline"
+                                      className="font-medium"
+                                    >
+                                      {name}
+                                    </Badge>
+                                  ))}
+                              </div>
+                            ) : (
+                              'Selecione o grupo'
+                            )}
+                            <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
 
-                    <PopoverContent className="p-0">
-                      <Command>
-                        <CommandInput placeholder="Pesquisar" />
-                        <CommandEmpty>Nenhum</CommandEmpty>
-                        <CommandGroup>
-                          <ScrollArea className="flex max-h-72 flex-col">
-                            {groups?.map(({ id, name }, index) => (
-                              <CommandItem
-                                key={index}
-                                value={name}
-                                onSelect={() => {
-                                  if (groupFields?.some((v) => v.id === id)) {
-                                    remove(
-                                      groupFields.findIndex((v) => v.id === id),
-                                    )
-                                  } else {
-                                    append({ id })
-                                  }
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 size-4',
-                                    groupFields?.length &&
-                                      groupFields.some((v) => v.id === id)
-                                      ? 'opacity-100'
-                                      : 'opacity-0',
-                                  )}
-                                />
-                                {name}
-                              </CommandItem>
-                            ))}
-                          </ScrollArea>
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                      <PopoverContent className="p-0">
+                        <Command>
+                          <CommandInput placeholder="Pesquisar" />
+                          <CommandEmpty>Nenhum</CommandEmpty>
+                          <CommandGroup>
+                            <ScrollArea className="flex max-h-72 flex-col">
+                              {groups?.map(({ id, name }, index) => (
+                                <CommandItem
+                                  key={index}
+                                  value={name}
+                                  onSelect={() => {
+                                    if (groupFields?.some((v) => v.id === id)) {
+                                      remove(
+                                        groupFields.findIndex(
+                                          (v) => v.id === id,
+                                        ),
+                                      )
+                                    } else {
+                                      append({ id })
+                                    }
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 size-4',
+                                      groupFields?.length &&
+                                        groupFields.some((v) => v.id === id)
+                                        ? 'opacity-100'
+                                        : 'opacity-0',
+                                    )}
+                                  />
+                                  {name}
+                                </CommandItem>
+                              ))}
+                            </ScrollArea>
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
 
           <FormAlert />

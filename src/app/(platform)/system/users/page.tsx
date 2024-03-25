@@ -1,17 +1,18 @@
 import { action } from '@/actions'
-import { EmptyState } from '@/components/empty-state'
 import { UserFormDialog } from '@/components/forms/form-dialogs/user-form-dialog'
 import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Shield } from '@/components/shield'
-import { DataTable } from '@/components/tables/ui/data-table'
-import { userColumns } from '@/components/tables/user-columns'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { PlusIcon } from 'lucide-react'
+import { Main } from './main'
 
 export default async function Page() {
-  const users = await action.user().findMany()
+  const [users, groups] = await Promise.all([
+    action.user().findMany(),
+    action.group({ overwriter: 'user.list' }).findMany(),
+  ])
 
   return (
     <Shield page permission="user.list">
@@ -39,27 +40,7 @@ export default async function Page() {
 
           <Separator />
 
-          <main>
-            {!users.data?.length && (
-              <DialogTrigger asChild>
-                <EmptyState href="#">
-                  <PlusIcon
-                    strokeWidth={1.2}
-                    size={52}
-                    className="mx-auto text-muted-foreground"
-                  />
-
-                  <span className="mt-2 block text-sm font-semibold">
-                    Cadastrar um novo usuário
-                  </span>
-                </EmptyState>
-              </DialogTrigger>
-            )}
-
-            {!!users.data?.length && (
-              <DataTable columns={userColumns} data={users.data} />
-            )}
-          </main>
+          <Main users={users.data} groups={groups.data} />
         </div>
 
         <FormDialogContent>
