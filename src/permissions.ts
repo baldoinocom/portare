@@ -316,10 +316,14 @@ export const permissionsByGroup = permissions.reduce(
         group.guards[guard].push(permission)
       })
     } else {
-      acc.push({
+      const newGroup: PermissionByGroup = {
         groupLabel,
-        guards: { [guards[0]]: [permission] },
-      } as PermissionByGroup)
+        guards: { action: [], page: [], component: [] },
+      }
+
+      guards.forEach((guard) => newGroup.guards[guard].push(permission))
+
+      acc.push(newGroup)
     }
 
     return acc

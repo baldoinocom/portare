@@ -149,65 +149,70 @@ export const PermissionCheck = () => {
                 <Label className="text-base font-semibold">{groupLabel}</Label>
 
                 <div className="ms-2 space-y-4">
-                  {Object.entries(guards).map(([guard, permissions], index) => (
-                    <div key={index} className="space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`${group}:${guard}`}
-                          checked={guardSelected(
-                            groupLabel,
-                            group,
-                            guard as PermissionGuard,
-                          )}
-                          onCheckedChange={(value: boolean | 'indeterminate') =>
-                            onChangeGuard(
-                              value,
-                              groupLabel,
-                              group,
-                              guard as PermissionGuard,
-                            )
-                          }
-                        />
-
-                        <Label
-                          htmlFor={`${group}:${guard}`}
-                          className="font-semibold"
-                        >
-                          {guardLabels[guard as PermissionGuard]}
-                        </Label>
-                      </div>
-
-                      <div className="ms-2 grid grid-cols-3 gap-2">
-                        {permissions.map(
-                          ({ codeLabel, value: permission }, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center space-x-2"
-                            >
-                              <Checkbox
-                                id={`${permission}:${guard}`}
-                                checked={permissionSelected(
-                                  permission,
+                  {Object.entries(guards).map(
+                    ([guard, permissions], index) =>
+                      !!permissions.length && (
+                        <div key={index} className="space-y-3">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`${group}:${guard}`}
+                              checked={guardSelected(
+                                groupLabel,
+                                group,
+                                guard as PermissionGuard,
+                              )}
+                              onCheckedChange={(
+                                value: boolean | 'indeterminate',
+                              ) =>
+                                onChangeGuard(
+                                  value,
+                                  groupLabel,
+                                  group,
                                   guard as PermissionGuard,
-                                )}
-                                onCheckedChange={(value: boolean) =>
-                                  onChangePermission(
-                                    value,
-                                    permission,
-                                    guard as PermissionGuard,
-                                  )
-                                }
-                              />
+                                )
+                              }
+                            />
 
-                              <Label htmlFor={`${permission}:${guard}`}>
-                                {codeLabel}
-                              </Label>
-                            </div>
-                          ),
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                            <Label
+                              htmlFor={`${group}:${guard}`}
+                              className="font-semibold"
+                            >
+                              {guardLabels[guard as PermissionGuard]}
+                            </Label>
+                          </div>
+
+                          <div className="ms-2 grid grid-cols-3 gap-2">
+                            {permissions.map(
+                              ({ codeLabel, value: permission }, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center space-x-2"
+                                >
+                                  <Checkbox
+                                    id={`${permission}:${guard}`}
+                                    checked={permissionSelected(
+                                      permission,
+                                      guard as PermissionGuard,
+                                    )}
+                                    onCheckedChange={(value: boolean) =>
+                                      onChangePermission(
+                                        value,
+                                        permission,
+                                        guard as PermissionGuard,
+                                      )
+                                    }
+                                  />
+
+                                  <Label htmlFor={`${permission}:${guard}`}>
+                                    {codeLabel}
+                                  </Label>
+                                </div>
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      ),
+                  )}
                 </div>
               </div>
             )
