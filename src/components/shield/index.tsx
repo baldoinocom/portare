@@ -1,5 +1,6 @@
 'use client'
 
+import { Unauthorized } from '@/app/unauthorized'
 import { PermissionGroupCode, checkPermission } from '@/permissions'
 import { useShield } from '@/store/use-shield'
 
@@ -16,5 +17,5 @@ export const Shield = ({ page, permission, children }: ShieldProps) => {
 
   const check = checkPermission({ permission, guard }, permissions)
 
-  return check ? children : null
+  return check ? children : page ? <Unauthorized /> : null
 }

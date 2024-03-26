@@ -1,5 +1,6 @@
 import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
+import { Unauthorized } from '@/app/unauthorized'
 import { PageContent } from '@/components/page-content'
 import { db } from '@/lib/db'
 import { PrismaPromise } from '@prisma/client'
@@ -19,7 +20,7 @@ export default async function Page({
     guard: 'page',
   })
 
-  if (!check) return null
+  if (!check) return <Unauthorized />
 
   const routeInvalid =
     (data?.[0] !== 'sc' && data?.[0] !== 'pr') ||
