@@ -133,7 +133,7 @@ export const columns: ColumnDef<MDFeResource>[] = [
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
       <div className="whitespace-nowrap">
-        <div className="flex flex-col items-start uppercase">
+        <div className="flex flex-col items-start">
           <span className="text-xs">{getValue<string>()}</span>
         </div>
       </div>
