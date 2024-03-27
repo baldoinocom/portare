@@ -1,7 +1,9 @@
 'use client'
 
+import { FormDialogContent } from '@/components/forms/ui/form-dialog-content'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,10 +19,12 @@ import {
   ArrowUpDown,
   FileCheck2Icon,
   FileX2Icon,
+  MessageSquarePlus,
   MoreHorizontal,
 } from 'lucide-react'
 import { MDFeResource } from '../_actions/type'
 import { updateMDFe } from '../_actions/update-mdfe'
+import { FormDialog } from './form-dialog'
 
 export const columns: ColumnDef<MDFeResource>[] = [
   {
@@ -71,11 +75,11 @@ export const columns: ColumnDef<MDFeResource>[] = [
     id: 'Placa',
     accessorFn: (row) => row.data['Placa Veicul'],
     header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
+    cell: ({ getValue, row: { original } }) => (
       <div className="whitespace-nowrap">
         <div className="flex flex-col items-start uppercase">
           <span>{getValue<string>()}</span>
-          <span className="text-xs"></span>
+          <span className="text-xs">{original.data['Placa Reboque']}</span>
         </div>
       </div>
     ),
@@ -124,6 +128,19 @@ export const columns: ColumnDef<MDFeResource>[] = [
   },
 
   {
+    id: 'Observação',
+    accessorFn: (row) => row.note,
+    header: ({ column }) => column.id,
+    cell: ({ getValue }) => (
+      <div className="whitespace-nowrap">
+        <div className="flex flex-col items-start uppercase">
+          <span className="text-xs">{getValue<string>()}</span>
+        </div>
+      </div>
+    ),
+  },
+
+  {
     id: 'actions',
     cell: ({ row }) => <CellActions item={row.original} />,
     enableHiding: false,
@@ -158,29 +175,43 @@ const CellActions = ({ item }: { item: MDFe }) => {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="size-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Ações</DropdownMenuLabel>
-        <DropdownMenuItem asChild onClick={handleUpdate}>
-          {closedAt ? (
-            <div>
-              <FileCheck2Icon className="mr-2 size-4" />
-              Reabrir
-            </div>
-          ) : (
-            <div>
-              <FileX2Icon className="mr-2 size-4" />
-              Encerrar
-            </div>
-          )}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="size-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <MessageSquarePlus className="mr-2 size-4" />
+              Observação
+            </DropdownMenuItem>
+          </DialogTrigger>
+
+          <DropdownMenuItem asChild onClick={handleUpdate}>
+            {closedAt ? (
+              <div>
+                <FileCheck2Icon className="mr-2 size-4" />
+                Reabrir
+              </div>
+            ) : (
+              <div>
+                <FileX2Icon className="mr-2 size-4" />
+                Encerrar
+              </div>
+            )}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+
+        <FormDialogContent>
+          <FormDialog initialData={item} />
+        </FormDialogContent>
+      </DropdownMenu>
+    </Dialog>
   )
 }

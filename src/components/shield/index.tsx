@@ -3,6 +3,7 @@
 import { Unauthorized } from '@/app/unauthorized'
 import { PermissionGroupCode, checkPermission } from '@/permissions'
 import { useShield } from '@/store/use-shield'
+import * as React from 'react'
 
 type ShieldProps = {
   page?: boolean
@@ -17,5 +18,9 @@ export const Shield = ({ page, permission, children }: ShieldProps) => {
 
   const check = checkPermission({ permission, guard }, permissions)
 
-  return check ? children : page ? <Unauthorized /> : null
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => setLoading(false), [])
+
+  return check ? children : page && !loading ? Unauthorized() : null
 }
