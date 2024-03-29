@@ -47,7 +47,7 @@ export default async function Page({
   ])
 
   if (!status) {
-    const licensePlates = mdfe.map(({ data }) => data['Placa Veicul'])
+    const licensePlates = mdfe.map(({ data }) => data.Caminhão)
 
     const vehicles = await db.grouping.findMany({
       where: { truck: { vehicle: { licensePlate: { in: licensePlates } } } },
@@ -65,14 +65,14 @@ export default async function Page({
 
     for (const { data } of mdfe) {
       const vehicle = vehicles.find(
-        ({ truck }) => truck?.vehicle.licensePlate === data['Placa Veicul'],
+        ({ truck }) => truck?.vehicle.licensePlate === data.Caminhão,
       )
 
       const semiTrailer = vehicle?.semiTrailer?.trailers.map(
         ({ vehicle }) => vehicle.licensePlate,
       )
 
-      data['Placa Reboque'] = semiTrailer?.join(' | ')
+      data.Reboque = semiTrailer?.join(' | ')
     }
   }
 
