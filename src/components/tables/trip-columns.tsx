@@ -156,9 +156,9 @@ const CellUpdateStatus = ({ item }: { item: TripResource }) => {
 
   const { toast } = useToast()
 
-  const { update } = action.trip()
+  const { updateStatus } = action.trip()
 
-  const { execute } = useAction(update, {
+  const { execute } = useAction(updateStatus, {
     onSuccess: () => {
       toast({
         title: 'Status atualizado com sucesso',

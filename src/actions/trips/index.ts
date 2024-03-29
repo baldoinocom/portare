@@ -9,6 +9,8 @@ import { deleteAction } from './delete'
 import { findAction } from './find'
 import { findManyAction } from './find-many'
 import { updateAction } from './update'
+import { updateDraftAction } from './update-draft'
+import { updateStatusAction } from './update-status'
 
 export const tripAction = ({
   overwriter,
@@ -47,6 +49,18 @@ export const tripAction = ({
     update: shield({
       action: updateAction,
       permission: 'trip.update',
+      overwriter,
+    }),
+
+    updateDraft: shield({
+      action: updateDraftAction,
+      permission: 'trip.update',
+      overwriter,
+    }),
+
+    updateStatus: shield({
+      action: updateStatusAction,
+      permission: 'trip.updateStatus',
       overwriter,
     }),
   }

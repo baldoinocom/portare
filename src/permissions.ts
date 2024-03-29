@@ -269,7 +269,7 @@ export const permissions: Permission[] = handlePermissionsHelper().concat([
     groupLabel: 'Viagem',
     codeLabel: 'Editar Status',
     value: 'trip.updateStatus',
-    guards: ['component'],
+    guards: ['action', 'component'],
   },
 
   {

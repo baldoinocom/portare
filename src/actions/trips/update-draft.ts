@@ -6,9 +6,9 @@ import { emptyAsNull } from '@/lib/utils'
 import { Trip } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { TripUpdateSchema } from './schema'
+import { TripUpdateWithDraftSchema } from './schema'
 
-type InputType = z.infer<typeof TripUpdateSchema>
+type InputType = z.infer<typeof TripUpdateWithDraftSchema>
 type ReturnType = ActionState<InputType, Trip>
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -58,7 +58,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     trip = await db.trip.update({
       where: { id },
       data: {
-        draft: false,
+        draft: true,
         order: emptyAsNull(order),
         note: emptyAsNull(note),
         departedAt,
@@ -82,4 +82,4 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   return { data: trip }
 }
 
-export const updateAction = safeAction(TripUpdateSchema, handler)
+export const updateDraftAction = safeAction(TripUpdateWithDraftSchema, handler)

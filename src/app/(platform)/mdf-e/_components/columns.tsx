@@ -73,13 +73,13 @@ export const columns: ColumnDef<MDFeResource>[] = [
 
   {
     id: 'Placa',
-    accessorFn: (row) => row.data['Placa Veicul'],
+    accessorFn: (row) => row.data.Caminhão,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="whitespace-nowrap">
         <div className="flex flex-col items-start uppercase">
           <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Placa Reboque']}</span>
+          <span className="text-xs">{original.data.Reboque}</span>
         </div>
       </div>
     ),
@@ -87,13 +87,13 @@ export const columns: ColumnDef<MDFeResource>[] = [
 
   {
     id: 'Destinatário',
-    accessorFn: (row) => row.data['Nome Destina'],
+    accessorFn: (row) => row.data.Destinatário,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="whitespace-nowrap">
         <div className="flex flex-col items-start uppercase">
           <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Local Entreg']}</span>
+          <span className="text-xs">{original.data.Endereço}</span>
         </div>
       </div>
     ),
@@ -101,13 +101,13 @@ export const columns: ColumnDef<MDFeResource>[] = [
 
   {
     id: 'Nota Fiscal',
-    accessorFn: (row) => row.data['NF CLIENTE'],
+    accessorFn: (row) => row.data['Nota Fiscal'],
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="whitespace-nowrap">
         <div className="flex flex-col items-start uppercase">
           <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Emis Nf Cli']}</span>
+          <span className="text-xs">{original.data['Emissão da Nf']}</span>
         </div>
       </div>
     ),
@@ -115,13 +115,13 @@ export const columns: ColumnDef<MDFeResource>[] = [
 
   {
     id: 'CT-e',
-    accessorFn: (row) => row.data['Numero CTRC'],
+    accessorFn: (row) => row.data.CTe,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="whitespace-nowrap">
         <div className="flex flex-col items-start uppercase">
           <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Dt. Emissao']}</span>
+          <span className="text-xs">{original.data['Emissão do CTe']}</span>
         </div>
       </div>
     ),

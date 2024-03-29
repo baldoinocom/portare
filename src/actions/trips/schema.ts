@@ -66,7 +66,20 @@ export const TripSchema = z.object({
     .positive(),
 })
 
-export const TripUpdateSchema = TripIdSchema.merge(
+export const TripUpdateStatusSchema = TripIdSchema.merge(
+  TripSchema.pick({ status: true }).deepPartial(),
+)
+
+export const TripUpdateSchema = TripIdSchema.merge(TripSchema).refine(
+  ({ departedAt, arrivedAt }) => !departedAt === !arrivedAt,
+  {
+    path: ['departedAt'],
+    message:
+      'É necessário informar a data de partida e de chegada para atualizar',
+  },
+)
+
+export const TripUpdateWithDraftSchema = TripIdSchema.merge(
   TripSchema.deepPartial(),
 ).refine(({ departedAt, arrivedAt }) => !departedAt === !arrivedAt, {
   path: ['departedAt'],

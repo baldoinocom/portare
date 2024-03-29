@@ -71,9 +71,9 @@ import { useAction } from '@/hooks/use-action'
 import { formatTripStatus } from '@/lib/formatters'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Cargo, TripStatus } from '@prisma/client'
+import { Cargo, Trip, TripStatus } from '@prisma/client'
 import { Check, ChevronsUpDown, Edit3Icon, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useForm, useFormContext } from 'react-hook-form'
 import { z } from 'zod'
@@ -104,7 +104,10 @@ export const TripForm = ({
   semiTrailers?: SemiTrailerResource[]
   cargos?: Cargo[]
 }) => {
+  const pathname = usePathname()
   const router = useRouter()
+
+  const redirectView = pathname.replace(/\/edit$/, '')
 
   const { toast } = useToast()
 
@@ -122,60 +125,57 @@ export const TripForm = ({
     },
   })
 
-  const { create, createDraft, update } = action.trip()
+  const { create, createDraft, update, updateDraft } = action.trip()
 
-  const { execute } = useAction(create, {
-    onSuccess: (data) => {
-      router.replace(String(data.id))
+  const onSuccess = (data: Trip) => {
+    router.replace(String(data.id))
 
-      toast({
-        title: 'Viagem registrada com sucesso',
-        description: 'A viagem foi registrada com sucesso! 🎉',
-      })
-    },
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Erro ao registrar a viagem',
-        description: error,
-      })
-    },
-  })
+    toast({
+      title: 'Viagem registrada com sucesso',
+      description: 'A viagem foi registrada com sucesso! 🎉',
+    })
+  }
+
+  const onError = (error: string) => {
+    toast({
+      variant: 'destructive',
+      title: 'Erro ao registrar a viagem',
+      description: error,
+    })
+  }
+
+  const onSuccessUpdate = () => {
+    router.replace(redirectView)
+
+    toast({
+      title: 'Viagem atualizada com sucesso',
+      description: 'A viagem foi atualizada com sucesso! 🎉',
+    })
+  }
+
+  const onErrorUpdate = (error: string) => {
+    toast({
+      variant: 'destructive',
+      title: 'Erro ao atualizar a viagem',
+      description: error,
+    })
+  }
+
+  const { execute } = useAction(create, { onSuccess, onError })
 
   const { execute: executeDraft } = useAction(createDraft, {
-    onSuccess: (data) => {
-      router.replace(String(data.id))
-
-      toast({
-        title: 'Viagem registrada com sucesso',
-        description: 'A viagem foi registrada com sucesso! 🎉',
-      })
-    },
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Erro ao registrar a viagem',
-        description: error,
-      })
-    },
+    onSuccess,
+    onError,
   })
 
   const { execute: executeUpdate } = useAction(update, {
-    onSuccess: (data) => {
-      router.replace(String(data.id))
+    onSuccess: onSuccessUpdate,
+    onError: onErrorUpdate,
+  })
 
-      toast({
-        title: 'Viagem atualizada com sucesso',
-        description: 'A viagem foi atualizada com sucesso! 🎉',
-      })
-    },
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Erro ao atualizar a viagem',
-        description: error,
-      })
-    },
+  const { execute: executeUpdateDraft } = useAction(updateDraft, {
+    onSuccess: onSuccessUpdate,
+    onError: onErrorUpdate,
   })
 
   const onSubmit = async (values: TripFormValues) => {
@@ -187,7 +187,7 @@ export const TripForm = ({
       const data = TripWithDraftSchema.parse(values)
 
       if (initialData) {
-        await executeUpdate({ id: initialData.id, ...data })
+        await executeUpdateDraft({ id: initialData.id, ...data })
       } else {
         await executeDraft(data)
       }
@@ -616,7 +616,9 @@ export const TripForm = ({
                       />
                       {step !== TripSteps.three
                         ? 'Próximo'
-                        : 'Salvar alterações'}
+                        : initialData.draft
+                          ? 'Programar viagem'
+                          : 'Salvar alterações'}
                     </Button>
                   </div>
                 </>
@@ -660,7 +662,9 @@ export const TripForm = ({
                           !form.formState.isSubmitting && 'sr-only',
                         )}
                       />
-                      {step !== TripSteps.three ? 'Próximo' : 'Salvar'}
+                      {step !== TripSteps.three
+                        ? 'Próximo'
+                        : 'Programar viagem'}
                     </Button>
                   </div>
                 </>

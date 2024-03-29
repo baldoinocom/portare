@@ -4,17 +4,23 @@ import { db } from '@/lib/db'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { shieldAction } from '@/lib/shield-action'
 import { revalidatePath } from 'next/cache'
-import { MDFeSchema, MDFeType } from './type'
+import { z } from 'zod'
+import { MDFeSchema } from './type'
 
-type ReturnType = ActionState<MDFeType, string>
+const arraySchema = z.array(MDFeSchema)
 
-const handler = async (data: MDFeType): Promise<ReturnType> => {
+type InputType = z.infer<typeof arraySchema>
+type ReturnType = ActionState<InputType, string>
+
+const branch = (branch: string) => (branch.includes('18-') ? 'pr' : 'sc')
+
+const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     await db.mDFe.createMany({
       skipDuplicates: true,
-      data: data.map(({ 'No.Manifesto': id, Filial: branch, ...json }) => ({
-        id,
-        branch: branch?.includes('18-') ? 'pr' : 'sc',
+      data: data.map(({ Manifesto, Filial, ...json }) => ({
+        id: Manifesto,
+        branch: branch(Filial),
         data: json,
       })),
     })
@@ -27,6 +33,6 @@ const handler = async (data: MDFeType): Promise<ReturnType> => {
   return { data: 'Importação realizada com sucesso' }
 }
 
-const action = safeAction(MDFeSchema, handler)
+const action = safeAction(arraySchema, handler)
 
 export const importMDFe = shieldAction({ action, permission: 'mdfe.view' })

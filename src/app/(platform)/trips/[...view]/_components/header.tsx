@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Edit3Icon } from 'lucide-react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 const pages: BreadcrumbProps[] = [
   { name: 'Viagens', href: '/trips' },
@@ -13,9 +13,11 @@ const pages: BreadcrumbProps[] = [
 ]
 
 export const Header = () => {
-  const searchParams = useSearchParams()
+  const pathname = usePathname()
 
-  const edit = searchParams.get('edit') !== null
+  const editing = pathname.match(/\/edit$/)
+
+  const redirectEdit = pathname + '/edit'
 
   return (
     <div className="sticky top-16 z-10 -mt-10 space-y-8 bg-background pt-10">
@@ -32,8 +34,8 @@ export const Header = () => {
 
             <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
               <Button variant="outline" asChild>
-                {!edit && (
-                  <Link href={{ query: 'edit' }}>
+                {!editing && (
+                  <Link href={redirectEdit}>
                     <Edit3Icon className="mr-2 size-4" />
                     Editar
                   </Link>

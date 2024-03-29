@@ -2,10 +2,13 @@
 CREATE TYPE "action_type" AS ENUM ('create', 'update', 'delete');
 
 -- CreateEnum
-CREATE TYPE "permission_code" AS ENUM ('view', 'create', 'update', 'delete', 'menu');
+CREATE TYPE "permission_code" AS ENUM ('list', 'view', 'create', 'update', 'delete', 'import', 'navigate', 'update_status');
 
 -- CreateEnum
-CREATE TYPE "permission_group" AS ENUM ('groups', 'permissions', 'roles', 'trips', 'groupings', 'drivers', 'aggregates', 'units', 'clients', 'trucks', 'trailers');
+CREATE TYPE "permission_group" AS ENUM ('user', 'group', 'role', 'permission', 'trip', 'grouping', 'driver', 'aso', 'absentDriver', 'aggregate', 'client', 'unit', 'truck', 'semiTrailer', 'trailer_configuration', 'trailer_type', 'cargo', 'trailer_certificate', 'stopped_vehicle', 'brand', 'mdfe');
+
+-- CreateEnum
+CREATE TYPE "permission_guard" AS ENUM ('action', 'page', 'component');
 
 -- CreateEnum
 CREATE TYPE "driver_status" AS ENUM ('leave_of_absence', 'medical_certificate', 'break', 'vacation');
@@ -80,8 +83,9 @@ CREATE TABLE "roles" (
 -- CreateTable
 CREATE TABLE "permissions" (
     "id" TEXT NOT NULL,
-    "code" "permission_code" NOT NULL,
     "group" "permission_group" NOT NULL,
+    "code" "permission_code" NOT NULL,
+    "guard" "permission_guard" NOT NULL,
 
     CONSTRAINT "permissions_pkey" PRIMARY KEY ("id")
 );
@@ -105,6 +109,7 @@ CREATE TABLE "people" (
 CREATE TABLE "drivers" (
     "person_id" INTEGER NOT NULL,
     "cnh" VARCHAR(11),
+    "cnh_mirror" VARCHAR(10),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -239,6 +244,7 @@ CREATE TABLE "stopped_vehicles" (
 CREATE TABLE "trucks" (
     "id" SERIAL NOT NULL,
     "compressor" BOOLEAN NOT NULL DEFAULT false,
+    "compressor_model" TEXT,
     "vehicle_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -383,6 +389,7 @@ CREATE TABLE "mdfe" (
     "data" JSONB NOT NULL,
     "branch" TEXT,
     "closed_at" TIMESTAMP(3),
+    "note" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -438,7 +445,7 @@ CREATE UNIQUE INDEX "groups_name_key" ON "groups"("name");
 CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "permissions_code_group_key" ON "permissions"("code", "group");
+CREATE UNIQUE INDEX "permissions_group_code_guard_key" ON "permissions"("group", "code", "guard");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "people_document_key" ON "people"("document");
@@ -460,6 +467,9 @@ CREATE INDEX "people_aggregate_id_idx" ON "people"("aggregate_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "drivers_cnh_key" ON "drivers"("cnh");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "drivers_cnh_mirror_key" ON "drivers"("cnh_mirror");
 
 -- CreateIndex
 CREATE INDEX "absent_drivers_status_idx" ON "absent_drivers"("status");

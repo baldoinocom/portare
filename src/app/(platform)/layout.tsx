@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen">
       <Sidebar />
 
-      <div className="w-full overflow-auto">
+      <div className="w-full">
         <Header />
 
         <div>{children}</div>
