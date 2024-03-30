@@ -12,7 +12,7 @@ export const Logo = React.forwardRef<
       ref={ref}
       height={height}
       width={width}
-      className={cn('block size-6 dark:hidden', className)}
+      className={cn('flex size-6 dark:hidden', className)}
       {...props}
       src="/logo.png"
       alt="portare"
@@ -21,7 +21,7 @@ export const Logo = React.forwardRef<
       ref={ref}
       height={height}
       width={width}
-      className={cn('hidden size-6 dark:block', className)}
+      className={cn('hidden size-6 dark:flex', className)}
       {...props}
       src="/logo-dark.png"
       alt="portare"

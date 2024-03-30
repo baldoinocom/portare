@@ -5,10 +5,16 @@ import { PageContent } from '@/components/page-content'
 import { Shield } from '@/components/shield'
 import { Header } from './_components/header'
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { view: string[] } }) {
+  const [id, edit] = params.view
+
+  if (edit !== 'edit' && edit !== undefined) {
+    return DataNotFound()
+  }
+
   const truck = await action
     .truck({ overwriter: 'trip.update' })
-    .find({ id: Number(params.id) })
+    .find({ id: Number(id) })
 
   if (!truck.data) {
     return DataNotFound()

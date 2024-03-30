@@ -1,8 +1,8 @@
 import { action } from '@/actions'
+import { DataNotFound } from '@/app/not-found'
 import { ClientForm } from '@/components/forms/client-form'
 import { PageContent } from '@/components/page-content'
 import { Shield } from '@/components/shield'
-import { DataNotFound } from '../../../not-found'
 import { Header } from './_components/header'
 
 export default async function Page({

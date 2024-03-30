@@ -17,7 +17,7 @@ export const Header = () => {
           <ModeToggle />
 
           <Separator
-            className="hidden lg:block lg:h-6 lg:w-px"
+            className="hidden lg:flex lg:h-6 lg:w-px"
             orientation="vertical"
           />
 

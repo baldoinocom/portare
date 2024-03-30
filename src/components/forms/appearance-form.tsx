@@ -1,6 +1,5 @@
 'use client'
 
-import { PageWidthContext } from '@/components/page-content'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -13,9 +12,9 @@ import {
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { nullAsUndefined } from '@/lib/utils'
+import { usePageWidth } from '@/store/use-page-width'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
-import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -36,7 +35,7 @@ export function AppearanceForm({
   initialData?: Partial<AppearanceFormValues>
 }) {
   const { setTheme } = useTheme()
-  const { setWidth } = React.useContext(PageWidthContext)
+  const { setWidth } = usePageWidth()
 
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),

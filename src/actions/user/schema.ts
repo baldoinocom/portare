@@ -8,7 +8,10 @@ export const UserSchema = z.object({
   username: z
     .string({ required_error: 'O nome de usuário é obrigatório' })
     .min(4, { message: 'O nome de usuário deve ter no mínimo 4 caracteres' })
-    .max(50, { message: 'O nome de usuário deve ter no máximo 20 caracteres' }),
+    .max(50, { message: 'O nome de usuário deve ter no máximo 20 caracteres' })
+    .refine((value) => !value || /^[a-zA-Z0-9_-]+$/.test(value), {
+      message: 'O nome de usuário só pode conter letras, números, "_" e "-"',
+    }),
 
   password: z
     .string({ required_error: 'A senha é obrigatória' })

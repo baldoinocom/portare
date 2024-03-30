@@ -1,7 +1,7 @@
 import { TrailerSchema } from '@/actions/trailer/schema'
+import { VehicleSchema } from '@/actions/vehicle/schema'
 import { findRepeatedStrings } from '@/lib/utils'
 import { z } from 'zod'
-import { VehicleSchema } from '../vehicle/schema'
 
 export const SemiTrailerIdSchema = z.object({
   id: z.number().int().positive(),

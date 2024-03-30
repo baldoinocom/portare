@@ -11,9 +11,9 @@ export const SidebarButton = () => {
 
   return (
     <>
-      <LogoSlogan
-        className={cn('hidden w-auto lg:flex', !collapsed && 'sr-only')}
-      />
+      <div className="hidden lg:flex">
+        <LogoSlogan className={cn('w-auto', !collapsed && 'sr-only')} />
+      </div>
 
       <Button
         variant="ghost"

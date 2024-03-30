@@ -1,15 +1,14 @@
 'use client'
 
 import { AppearanceForm } from '@/components/forms/appearance-form'
-import { PageWidthContext } from '@/components/page-content'
 import { Separator } from '@/components/ui/separator'
+import { usePageWidth } from '@/store/use-page-width'
 import { useTheme } from 'next-themes'
 import { UseThemeProps } from 'next-themes/dist/types'
-import * as React from 'react'
 
 export default function Page() {
   const theme = useTheme().theme as UseThemeProps['systemTheme']
-  const width = React.useContext(PageWidthContext).width
+  const width = usePageWidth().width
 
   return (
     <div className="space-y-6">
