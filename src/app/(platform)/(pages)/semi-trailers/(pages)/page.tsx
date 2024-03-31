@@ -5,12 +5,25 @@ import { semiTrailerColumns } from '@/components/tables/semi-trailer-columns'
 import { DataTable } from '@/components/tables/ui/data-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { CheckIcon, ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
+import { db } from '@/lib/db'
+import { ClipboardIcon, PlusIcon, RocketIcon } from 'lucide-react'
 import Link from 'next/link'
 import { ImportButton } from './_components/import-button'
 
 export default async function Page() {
-  const semiTrailers = await action.semiTrailer().findMany()
+  const [semiTrailers, registrations, inOperation] = await Promise.all([
+    action.semiTrailer().findMany(),
+    db.semiTrailer.count(),
+    db.semiTrailer.count({
+      where: {
+        trips: {
+          some: {
+            status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
+          },
+        },
+      },
+    }),
+  ])
 
   return (
     <Shield page permission="semiTrailer.list">
@@ -22,15 +35,17 @@ export default async function Page() {
 
               <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
                 <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                  <ClipboardIcon className="mr-1.5" />0 Cadastrados
+                  <ClipboardIcon className="mr-1.5" />
+                  {registrations} Cadastrados
                 </div>
 
-                <div className="mt-2 flex items-center text-sm text-muted-foreground">
+                {/* <div className="mt-2 flex items-center text-sm text-muted-foreground">
                   <CheckIcon className="mr-1.5" />0 Disponíveis
-                </div>
+                </div> */}
 
                 <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                  <RocketIcon className="mr-1.5" />0 Em viagem
+                  <RocketIcon className="mr-1.5" />
+                  {inOperation} Em viagem
                 </div>
               </div>
             </div>

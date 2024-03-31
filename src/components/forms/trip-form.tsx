@@ -565,7 +565,7 @@ export const TripForm = ({
                 />
               )}
 
-              {initialData && form.formState.isDirty && (
+              {initialData && (
                 <>
                   <Separator />
 

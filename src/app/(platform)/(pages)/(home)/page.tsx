@@ -1,6 +1,7 @@
 import { PageContent } from '@/components/page-content'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { db } from '@/lib/db'
 import {
   CalendarCheck2Icon,
   CalendarCheckIcon,
@@ -8,7 +9,18 @@ import {
   CalendarDaysIcon,
 } from 'lucide-react'
 
-export default function Page() {
+export default async function Page() {
+  const [programmed, inProgress, finished, preProgrammed] = await Promise.all([
+    db.trip.count({ where: { status: 'scheduled' } }),
+    db.trip.count({
+      where: {
+        status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
+      },
+    }),
+    db.trip.count({ where: { status: 'finished' } }),
+    db.trip.count({ where: { draft: true } }),
+  ])
+
   return (
     <PageContent>
       <header>
@@ -33,10 +45,10 @@ export default function Page() {
             </CardHeader>
 
             <CardContent>
-              <div className="text-2xl font-bold">+0</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold">{programmed}</div>
+              {/* <p className="text-xs text-muted-foreground">
                 +0,0% do mês passado
-              </p>
+              </p> */}
             </CardContent>
           </Card>
 
@@ -50,10 +62,10 @@ export default function Page() {
             </CardHeader>
 
             <CardContent>
-              <div className="text-2xl font-bold">+0</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold">{inProgress}</div>
+              {/* <p className="text-xs text-muted-foreground">
                 +0,0% do mês passado
-              </p>
+              </p> */}
             </CardContent>
           </Card>
 
@@ -65,25 +77,27 @@ export default function Page() {
             </CardHeader>
 
             <CardContent>
-              <div className="text-2xl font-bold">+0</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold">{finished}</div>
+              {/* <p className="text-xs text-muted-foreground">
                 +0,0% do mês passado
-              </p>
+              </p> */}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Pré-progamados
+              </CardTitle>
 
               <CalendarCheck2Icon className="size-4 text-muted-foreground" />
             </CardHeader>
 
             <CardContent>
-              <div className="text-2xl font-bold">+0</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold">{preProgrammed}</div>
+              {/* <p className="text-xs text-muted-foreground">
                 +0,0% do mês passado
-              </p>
+              </p> */}
             </CardContent>
           </Card>
         </div>

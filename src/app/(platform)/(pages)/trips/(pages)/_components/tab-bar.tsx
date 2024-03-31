@@ -21,7 +21,7 @@ const tabs: {
   { name: 'Pré-programação ({{count}})', href: '/trips/drafts' },
 ]
 
-export const TabBar = () => {
+export const TabBar = ({ drafts }: { drafts: number }) => {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -42,7 +42,7 @@ export const TabBar = () => {
             <SelectGroup>
               {tabs.map((tab, index) => (
                 <SelectItem key={index} value={tab.href}>
-                  {tab.name?.replace('{{count}}', String(0))}
+                  {tab.name?.replace('{{count}}', String(drafts))}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -65,7 +65,7 @@ export const TabBar = () => {
               )}
             >
               <Link key={index} href={tab.href}>
-                {tab.name?.replace('{{count}}', String(0))}
+                {tab.name?.replace('{{count}}', String(drafts))}
               </Link>
             </Button>
           ))}

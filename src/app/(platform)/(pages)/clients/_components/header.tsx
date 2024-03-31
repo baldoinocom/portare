@@ -1,5 +1,6 @@
 import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
+import { db } from '@/lib/db'
 import {
   ClipboardIcon,
   FlagTriangleLeftIcon,
@@ -10,7 +11,14 @@ import {
 import Link from 'next/link'
 import { ImportButton } from './import-button'
 
-export const Header = () => {
+export const Header = async () => {
+  const [registrations, origins, both, destinations] = await Promise.all([
+    db.client.count(),
+    db.client.count({ where: { type: 'origin' } }),
+    db.client.count({ where: { type: 'both' } }),
+    db.client.count({ where: { type: 'destination' } }),
+  ])
+
   return (
     <header>
       <div className="lg:flex lg:items-center lg:justify-between">
@@ -21,19 +29,23 @@ export const Header = () => {
 
           <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <ClipboardIcon className="mr-1.5" />0 Cadastros
+              <ClipboardIcon className="mr-1.5" />
+              {registrations} Cadastros
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <FlagTriangleLeftIcon className="mr-1.5" />0 Origens
+              <FlagTriangleLeftIcon className="mr-1.5" />
+              {origins} Origens
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <LandPlotIcon className="mr-1.5" />0 Ambos
+              <LandPlotIcon className="mr-1.5" />
+              {both} Ambos
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <FlagTriangleRightIcon className="mr-1.5" />0 Destinos
+              <FlagTriangleRightIcon className="mr-1.5" />
+              {destinations} Destinos
             </div>
           </div>
         </div>

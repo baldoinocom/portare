@@ -1,5 +1,6 @@
 import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
+import { db } from '@/lib/db'
 import {
   BuildingIcon,
   ClipboardIcon,
@@ -10,7 +11,22 @@ import {
 import Link from 'next/link'
 import { ImportButton } from './import-button'
 
-export const Header = () => {
+export const Header = async () => {
+  const [registrations, CNPJs, CPFs, inOperation] = await Promise.all([
+    db.aggregate.count(),
+    db.aggregate.count({ where: { company: { type: 'cnpj' } } }),
+    db.aggregate.count({ where: { company: { type: 'cpf' } } }),
+    db.aggregate.count({
+      where: {
+        trips: {
+          some: {
+            status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
+          },
+        },
+      },
+    }),
+  ])
+
   return (
     <header>
       <div className="lg:flex lg:items-center lg:justify-between">
@@ -21,19 +37,23 @@ export const Header = () => {
 
           <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <ClipboardIcon className="mr-1.5" />0 Cadastros
+              <ClipboardIcon className="mr-1.5" />
+              {registrations} Cadastros
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <BuildingIcon className="mr-1.5" />0 CNPJ
+              <BuildingIcon className="mr-1.5" />
+              {CNPJs} CNPJ
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <Users2Icon className="mr-1.5" />0 CPF
+              <Users2Icon className="mr-1.5" />
+              {CPFs} CPF
             </div>
 
             <div className="mt-2 flex items-center text-sm text-muted-foreground">
-              <RocketIcon className="mr-1.5" />0 Em operação
+              <RocketIcon className="mr-1.5" />
+              {inOperation} Em operação
             </div>
           </div>
         </div>

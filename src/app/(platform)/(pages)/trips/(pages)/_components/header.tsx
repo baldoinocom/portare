@@ -1,6 +1,9 @@
+import { db } from '@/lib/db'
 import { TabBar } from './tab-bar'
 
-export const Header = () => {
+export const Header = async () => {
+  const count = await db.trip.count({ where: { draft: true } })
+
   return (
     <header>
       <div className="flex flex-col gap-1 border-b border-border pb-5 sm:pb-0">
@@ -8,7 +11,7 @@ export const Header = () => {
           Viagens
         </h2>
 
-        <TabBar />
+        <TabBar drafts={count} />
       </div>
     </header>
   )
