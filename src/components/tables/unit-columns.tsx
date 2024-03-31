@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useToast } from '@/components/ui/use-toast'
@@ -199,7 +200,9 @@ const CellActions = ({ item }: { item: UnitResource }) => {
         </Shield>
 
         <Shield permission="unit.delete">
-          <DropdownMenuItem onClick={handleDelete}>
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem className="text-destructive" onClick={handleDelete}>
             <Trash2Icon className="mr-2 size-4" />
             Excluir
           </DropdownMenuItem>

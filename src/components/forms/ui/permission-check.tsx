@@ -192,7 +192,7 @@ export const PermissionCheck = () => {
               <div key={index} className="space-y-2 border-b pb-6">
                 <Label className="text-base font-semibold">{groupLabel}</Label>
 
-                <div className="ms-2 space-y-4">
+                <div className="mx-2 space-y-4">
                   {Object.entries(guards).map(
                     ([guard, permissions], index) =>
                       !!permissions.length && (
@@ -225,7 +225,7 @@ export const PermissionCheck = () => {
                             </Label>
                           </div>
 
-                          <div className="ms-2 grid grid-cols-3 gap-2">
+                          <div className="mx-2 grid grid-cols-3 gap-2">
                             {permissions.map(
                               ({ codeLabel, value: permission }, index) => (
                                 <div
