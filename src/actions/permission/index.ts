@@ -1,11 +1,13 @@
 import { shieldPartialAction } from '@/lib/shield-action'
-import { PermissionGroupCode } from '@/permissions'
+import { PermissionOverwriter } from '@/permissions'
 import { checkUserAction } from './check-user'
 import { findManyAction } from './find-many'
 
 export const permissionAction = ({
   overwriter,
-}: { overwriter?: PermissionGroupCode | null } = {}) => {
+}: {
+  overwriter?: PermissionOverwriter
+} = {}) => {
   const actions = {
     checkUser: checkUserAction,
 

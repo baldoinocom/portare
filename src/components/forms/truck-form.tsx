@@ -28,6 +28,7 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Brand } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -42,6 +43,9 @@ export const TruckForm = ({
   units?: UnitResource[]
   aggregates?: AggregateResource[]
 }) => {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof TruckWithRelationshipTypeSchema>>({
@@ -93,6 +97,8 @@ export const TruckForm = ({
 
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
+      router.replace(pathname.replace(/\/edit$/, ''))
+
       toast({
         title: 'Caminhão atualizado com sucesso',
         description: 'O caminhão foi atualizado com sucesso! 🎉',

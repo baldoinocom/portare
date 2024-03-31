@@ -26,6 +26,7 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CompanyType } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -37,6 +38,9 @@ export const AggregateForm = ({
   initialData?: AggregateResource
   units?: UnitResource[]
 }) => {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof AggregateSchema>>({
@@ -79,6 +83,8 @@ export const AggregateForm = ({
 
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
+      router.replace(pathname.replace(/\/edit$/, ''))
+
       toast({
         title: 'Agregado atualizado com sucesso',
         description: 'O agregado foi atualizado com sucesso! 🎉',

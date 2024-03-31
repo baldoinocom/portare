@@ -1,5 +1,5 @@
 import { action } from '@/actions'
-import { PermissionGroupCode } from '@/permissions'
+import { PermissionGroupCode, PermissionOverwriter } from '@/permissions'
 import { ActionState } from './safe-action'
 
 export const shieldAction = <TInput, TOutput>({
@@ -9,13 +9,13 @@ export const shieldAction = <TInput, TOutput>({
 }: {
   action: (data: TInput) => Promise<ActionState<TInput, TOutput>>
   permission?: PermissionGroupCode
-  overwriter?: PermissionGroupCode | null
+  overwriter?: PermissionOverwriter
 }) => {
   if ((!permission && !overwriter) || overwriter === null) return actionFuc
 
   return async (data: TInput): Promise<ActionState<TInput, TOutput>> => {
     const check = await action.permission().checkUser({
-      permission: overwriter || permission,
+      permission: overwriter?.length ? overwriter : permission,
       guard: 'action',
     })
 
@@ -34,7 +34,7 @@ export const shieldPartialAction = <TInput, TOutput>({
 }: {
   action: (data?: TInput) => Promise<ActionState<TInput, TOutput>>
   permission?: PermissionGroupCode
-  overwriter?: PermissionGroupCode | null
+  overwriter?: PermissionOverwriter
 }) => {
   return shieldAction({ action, permission, overwriter }) as (
     data?: TInput,

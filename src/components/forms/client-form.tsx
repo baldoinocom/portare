@@ -24,6 +24,7 @@ import {
   LandPlotIcon,
   Loader2,
 } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -32,6 +33,9 @@ export const ClientForm = ({
 }: {
   initialData?: ClientResource
 }) => {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof ClientSchema>>({
@@ -75,6 +79,8 @@ export const ClientForm = ({
 
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
+      router.replace(pathname.replace(/\/edit$/, ''))
+
       toast({
         title: 'Cliente atualizado com sucesso',
         description: 'O cliente foi atualizado com sucesso! 🎉',

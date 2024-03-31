@@ -19,7 +19,13 @@ import { useAction } from '@/hooks/use-action'
 import { formatLicensePlate } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  Eye,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export const semiTrailerColumns: ColumnDef<SemiTrailerResource>[] = [
@@ -244,11 +250,20 @@ const CellActions = ({ item }: { item: SemiTrailerResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <Shield permission="semiTrailer.update">
+        <Shield permission="semiTrailer.view">
           <DropdownMenuItem asChild>
             <Link href={'/semi-trailers/' + id}>
               <Eye className="mr-2 size-4" />
               Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
+
+        <Shield permission="semiTrailer.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/semi-trailers/' + id + '/edit'}>
+              <Edit3Icon className="mr-2 size-4" />
+              Editar
             </Link>
           </DropdownMenuItem>
         </Shield>

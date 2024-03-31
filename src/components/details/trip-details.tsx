@@ -18,7 +18,7 @@ import { Cargo, TripStatus } from '@prisma/client'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-export const TripInformation = ({
+export const TripDetails = ({
   status,
   origin,
   destination,

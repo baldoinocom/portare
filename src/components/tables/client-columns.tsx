@@ -16,7 +16,13 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { formatCNPJ } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  Eye,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export const clientColumns: ColumnDef<ClientResource>[] = [
@@ -174,11 +180,20 @@ const CellActions = ({ item }: { item: ClientResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <Shield permission="client.update">
+        <Shield permission="client.view">
           <DropdownMenuItem asChild>
             <Link href={'/clients/' + companyId}>
               <Eye className="mr-2 size-4" />
               Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
+
+        <Shield permission="client.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/clients/' + companyId + '/edit'}>
+              <Edit3Icon className="mr-2 size-4" />
+              Editar
             </Link>
           </DropdownMenuItem>
         </Shield>

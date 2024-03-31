@@ -17,7 +17,13 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { formatDocument } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  Eye,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export const aggregateColumns: ColumnDef<AggregateResource>[] = [
@@ -188,11 +194,20 @@ const CellActions = ({ item }: { item: AggregateResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <Shield permission="aggregate.update">
+        <Shield permission="aggregate.view">
           <DropdownMenuItem asChild>
             <Link href={'/aggregates/' + companyId}>
               <Eye className="mr-2 size-4" />
               Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
+
+        <Shield permission="aggregate.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/aggregates/' + companyId + '/edit'}>
+              <Edit3Icon className="mr-2 size-4" />
+              Editar
             </Link>
           </DropdownMenuItem>
         </Shield>

@@ -10,6 +10,11 @@ export const SEPARATOR = '.'
 export type PermissionGroupCode =
   `${PermissionGroup}${typeof SEPARATOR}${PermissionCode}`
 
+export type PermissionOverwriter =
+  | PermissionGroupCode[]
+  | PermissionGroupCode
+  | null
+
 export type Permission = {
   groupLabel: string
   codeLabel: string

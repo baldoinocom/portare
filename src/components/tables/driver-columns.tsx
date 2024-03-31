@@ -17,7 +17,13 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { formatCPF, formatPhoneNumber } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  Eye,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export const driverColumns: ColumnDef<DriverResource>[] = [
@@ -184,11 +190,20 @@ const CellActions = ({ item }: { item: DriverResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <Shield permission="driver.update">
+        <Shield permission="driver.view">
           <DropdownMenuItem asChild>
             <Link href={'/drivers/' + personId}>
               <Eye className="mr-2 size-4" />
               Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
+
+        <Shield permission="driver.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/drivers/' + personId + '/edit'}>
+              <Edit3Icon className="mr-2 size-4" />
+              Editar
             </Link>
           </DropdownMenuItem>
         </Shield>

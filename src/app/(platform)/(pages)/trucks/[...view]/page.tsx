@@ -1,5 +1,6 @@
 import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
+import { TruckDetails } from '@/components/details/truck-details'
 import { TruckForm } from '@/components/forms/truck-form'
 import { PageContent } from '@/components/page-content'
 import { Shield } from '@/components/shield'
@@ -13,11 +14,25 @@ export default async function Page({ params }: { params: { view: string[] } }) {
   }
 
   const truck = await action
-    .truck({ overwriter: 'trip.update' })
+    .truck({ overwriter: ['truck.view', 'truck.update'] })
     .find({ id: Number(id) })
 
   if (!truck.data) {
     return DataNotFound()
+  }
+
+  if (!edit) {
+    return (
+      <Shield page permission="truck.view">
+        <PageContent>
+          <Header />
+
+          <main>
+            <TruckDetails truck={truck.data} />
+          </main>
+        </PageContent>
+      </Shield>
+    )
   }
 
   const [brands, units, aggregates] = await Promise.all([

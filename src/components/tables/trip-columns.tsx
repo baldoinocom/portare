@@ -30,7 +30,13 @@ import { TripStatus } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  Eye,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 const status = Object.values(TripStatus).map((status) => ({
@@ -242,11 +248,20 @@ const CellActions = ({ item }: { item: TripResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <Shield permission="trip.update">
+        <Shield permission="trip.view">
           <DropdownMenuItem asChild>
             <Link href={'/trips/' + id}>
               <Eye className="mr-2 size-4" />
               Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
+
+        <Shield permission="trip.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/trips/' + id + '/edit'}>
+              <Edit3Icon className="mr-2 size-4" />
+              Editar
             </Link>
           </DropdownMenuItem>
         </Shield>

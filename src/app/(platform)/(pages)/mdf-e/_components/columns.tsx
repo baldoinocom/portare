@@ -76,11 +76,9 @@ export const columns: ColumnDef<MDFeResource>[] = [
     accessorFn: (row) => row.data.Caminhão,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
-      <div className="whitespace-nowrap">
-        <div className="flex flex-col items-start uppercase">
-          <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data.Reboque}</span>
-        </div>
+      <div className="flex flex-col items-start uppercase">
+        <span>{getValue<string>()}</span>
+        <span className="text-xs">{original.data.Reboque}</span>
       </div>
     ),
   },
@@ -90,11 +88,9 @@ export const columns: ColumnDef<MDFeResource>[] = [
     accessorFn: (row) => row.data.Destinatário,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
-      <div className="whitespace-nowrap">
-        <div className="flex flex-col items-start uppercase">
-          <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data.Endereço}</span>
-        </div>
+      <div className="flex flex-col items-start uppercase">
+        <span>{getValue<string>()}</span>
+        <span className="text-xs">{original.data.Endereço}</span>
       </div>
     ),
   },
@@ -104,11 +100,9 @@ export const columns: ColumnDef<MDFeResource>[] = [
     accessorFn: (row) => row.data['Nota Fiscal'],
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
-      <div className="whitespace-nowrap">
-        <div className="flex flex-col items-start uppercase">
-          <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Emissão da Nf']}</span>
-        </div>
+      <div className="flex flex-col items-start uppercase">
+        <span>{getValue<string>()}</span>
+        <span className="text-xs">{original.data['Emissão da Nf']}</span>
       </div>
     ),
   },
@@ -118,11 +112,9 @@ export const columns: ColumnDef<MDFeResource>[] = [
     accessorFn: (row) => row.data.CTe,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
-      <div className="whitespace-nowrap">
-        <div className="flex flex-col items-start uppercase">
-          <span>{getValue<string>()}</span>
-          <span className="text-xs">{original.data['Emissão do CTe']}</span>
-        </div>
+      <div className="flex flex-col items-start uppercase">
+        <span>{getValue<string>()}</span>
+        <span className="text-xs">{original.data['Emissão do CTe']}</span>
       </div>
     ),
   },
@@ -132,10 +124,8 @@ export const columns: ColumnDef<MDFeResource>[] = [
     accessorFn: (row) => row.note,
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
-      <div className="whitespace-nowrap">
-        <div className="flex flex-col items-start">
-          <span className="text-xs">{getValue<string>()}</span>
-        </div>
+      <div className="flex flex-col items-start">
+        <span className="text-xs">{getValue<string>()}</span>
       </div>
     ),
   },

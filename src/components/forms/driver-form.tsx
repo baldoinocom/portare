@@ -29,6 +29,7 @@ import { useAction } from '@/hooks/use-action'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -41,6 +42,9 @@ export const DriverForm = ({
   units?: UnitResource[]
   aggregates?: AggregateResource[]
 }) => {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof DriverWithRelationshipTypeSchema>>({
@@ -86,6 +90,8 @@ export const DriverForm = ({
 
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
+      router.replace(pathname.replace(/\/edit$/, ''))
+
       toast({
         title: 'Motorista atualizado com sucesso',
         description: 'O motorista foi atualizado com sucesso! 🎉',

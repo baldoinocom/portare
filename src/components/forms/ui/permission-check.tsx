@@ -32,6 +32,50 @@ export const PermissionCheck = () => {
     }
   }, [getValues, name])
 
+  // const onChangeGroup = (
+  //   value: boolean | 'indeterminate',
+  //   groupLabel: string,
+  //   group: PermissionGroup,
+  // ) => {
+  //   const permissions = permissionsByGroup.find(
+  //     (permission) => permission.groupLabel === groupLabel,
+  //   )
+
+  //   if (permissions) {
+  //     setPermissionsSelected((prev) => {
+  //       let values: PermissionSelect[] = []
+
+  //       if (!value || value === 'indeterminate') {
+  //         const newPermissions = prev.filter((p) => p.group !== group)
+
+  //         values = newPermissions
+  //       } else {
+  //         for (const guard of Object.keys(permissions.guards)) {
+  //           const newPermissions = permissions.guards[guard as PermissionGuard]
+  //             .map(({ value }) => {
+  //               const { group, code } = extractPermission(value)
+
+  //               const exists = prev.some(
+  //                 (p) =>
+  //                   p.group === group && p.code === code && p.guard === guard,
+  //               )
+
+  //               return !exists ? { group, code, guard } : null
+  //             })
+  //             .filter(Boolean) as PermissionSelect[]
+
+  //           values = values.concat(newPermissions)
+  //         }
+
+  //         values = prev.concat(values)
+  //       }
+
+  //       setValue(name, values)
+  //       return values
+  //     })
+  //   }
+  // }
+
   const onChangeGuard = (
     value: boolean | 'indeterminate',
     groupLabel: string,

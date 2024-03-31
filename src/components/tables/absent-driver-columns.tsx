@@ -21,7 +21,12 @@ import { formatCPF, formatDriverStatus } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 
 export const absentDriverColumns: ColumnDef<AbsentDriverResource>[] = [
   {
@@ -173,8 +178,8 @@ const CellActions = ({ item }: { item: AbsentDriverResource }) => {
           <Shield permission="absentDriver.update">
             <DialogTrigger asChild>
               <DropdownMenuItem>
-                <Eye className="mr-2 size-4" />
-                Visualizar
+                <Edit3Icon className="mr-2 size-4" />
+                Editar
               </DropdownMenuItem>
             </DialogTrigger>
           </Shield>

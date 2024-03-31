@@ -17,7 +17,13 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { formatLicensePlate } from '@/lib/formatters'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  Eye,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export const truckColumns: ColumnDef<TruckResource>[] = [
@@ -192,11 +198,20 @@ const CellActions = ({ item }: { item: TruckResource }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <Shield permission="truck.update">
+        <Shield permission="truck.view">
           <DropdownMenuItem asChild>
             <Link href={'/trucks/' + id}>
               <Eye className="mr-2 size-4" />
               Visualizar
+            </Link>
+          </DropdownMenuItem>
+        </Shield>
+
+        <Shield permission="truck.update">
+          <DropdownMenuItem asChild>
+            <Link href={'/trucks/' + id + '/edit'}>
+              <Edit3Icon className="mr-2 size-4" />
+              Editar
             </Link>
           </DropdownMenuItem>
         </Shield>

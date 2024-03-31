@@ -1,6 +1,6 @@
 import { action } from '@/actions'
 import { DataNotFound } from '@/app/not-found'
-import { TripInformation } from '@/components/forms/fields/trip-information'
+import { TripDetails } from '@/components/details/trip-details'
 import { TripForm } from '@/components/forms/trip-form'
 import { PageContent } from '@/components/page-content'
 import { Shield } from '@/components/shield'
@@ -13,7 +13,9 @@ export default async function Page({ params }: { params: { view: string[] } }) {
     return DataNotFound()
   }
 
-  const trip = await action.trip({ overwriter: 'trip.view' }).find({ id })
+  const trip = await action
+    .trip({ overwriter: ['trip.view', 'trip.update'] })
+    .find({ id })
 
   if (!trip.data) {
     return DataNotFound()
@@ -26,7 +28,7 @@ export default async function Page({ params }: { params: { view: string[] } }) {
           <Header />
 
           <main>
-            <TripInformation
+            <TripDetails
               status={trip.data.status}
               origin={trip.data.origin}
               destination={trip.data.destination}

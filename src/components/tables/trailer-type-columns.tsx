@@ -18,7 +18,12 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { TrailerType } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 
 export const trailerTypeColumns: ColumnDef<TrailerType>[] = [
   {
@@ -114,8 +119,8 @@ const CellActions = ({ item }: { item: TrailerType }) => {
           <Shield permission="trailerType.update">
             <DialogTrigger asChild>
               <DropdownMenuItem>
-                <Eye className="mr-2 size-4" />
-                Visualizar
+                <Edit3Icon className="mr-2 size-4" />
+                Editar
               </DropdownMenuItem>
             </DialogTrigger>
           </Shield>

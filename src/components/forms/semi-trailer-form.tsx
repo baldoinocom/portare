@@ -49,6 +49,7 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Brand, Cargo, TrailerConfiguration, TrailerType } from '@prisma/client'
 import { Check, ChevronsUpDown, Info, Loader2 } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useFieldArray, useForm, useFormContext } from 'react-hook-form'
 import { z } from 'zod'
@@ -73,6 +74,9 @@ export const SemiTrailerForm = ({
   trailerConfigurations?: TrailerConfiguration[]
   units?: UnitResource[]
 }) => {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const { toast } = useToast()
 
   const getTrailerFields = () => {
@@ -143,6 +147,8 @@ export const SemiTrailerForm = ({
 
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
+      router.replace(pathname.replace(/\/edit$/, ''))
+
       toast({
         title: 'Semirreboque atualizado com sucesso',
         description: 'O semirreboque foi atualizado com sucesso! 🎉',

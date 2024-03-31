@@ -9,31 +9,44 @@ export const checkUserAction = async ({
   permission,
   guard,
 }: {
-  permission?: PermissionGroupCode
+  permission?: PermissionGroupCode[] | PermissionGroupCode
   guard?: PermissionGuard
 }): Promise<boolean> => {
-  if (permission && guard) {
-    const clerkUser = await currentUser()
+  const clerkUser = await currentUser()
 
-    const { group, code } = extractPermission(permission)
+  if (!clerkUser || !permission || !guard) return false
 
-    if (clerkUser) {
-      const user = await db.user.findUnique({
-        where: {
-          externalUserId: clerkUser.id,
-          groups: {
-            some: {
-              roles: {
-                some: { permissions: { some: { group, code, guard } } },
-              },
+  let user
+
+  if (Array.isArray(permission)) {
+    const permissions = permission.map(extractPermission)
+
+    user = await db.user.findUnique({
+      where: {
+        externalUserId: clerkUser.id,
+        groups: {
+          some: {
+            roles: {
+              some: { permissions: { some: { OR: permissions, guard } } },
             },
           },
         },
-      })
+      },
+    })
+  } else {
+    const { group, code } = extractPermission(permission)
 
-      if (user) return true
-    }
+    user = await db.user.findUnique({
+      where: {
+        externalUserId: clerkUser.id,
+        groups: {
+          some: {
+            roles: { some: { permissions: { some: { group, code, guard } } } },
+          },
+        },
+      },
+    })
   }
 
-  return false
+  return Boolean(user)
 }

@@ -16,10 +16,14 @@ import { useAction } from '@/hooks/use-action'
 import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 export const UnitForm = ({ initialData }: { initialData?: UnitResource }) => {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof UnitSchema>>({
@@ -60,6 +64,8 @@ export const UnitForm = ({ initialData }: { initialData?: UnitResource }) => {
 
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
+      router.replace(pathname.replace(/\/edit$/, ''))
+
       toast({
         title: 'Unidade atualizada com sucesso',
         description: 'A unidade foi atualizada com sucesso! 🎉',

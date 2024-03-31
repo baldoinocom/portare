@@ -18,7 +18,12 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
 import { Brand } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Eye, MoreHorizontal, Trash2Icon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Edit3Icon,
+  MoreHorizontal,
+  Trash2Icon,
+} from 'lucide-react'
 
 export const brandColumns: ColumnDef<Brand>[] = [
   {
@@ -114,8 +119,8 @@ export const CellActions = ({ item }: { item: Brand }) => {
           <Shield permission="brand.update">
             <DialogTrigger asChild>
               <DropdownMenuItem>
-                <Eye className="mr-2 size-4" />
-                Visualizar
+                <Edit3Icon className="mr-2 size-4" />
+                Editar
               </DropdownMenuItem>
             </DialogTrigger>
           </Shield>

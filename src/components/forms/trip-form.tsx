@@ -15,8 +15,8 @@ import {
   TripResource,
   TruckResource,
 } from '@/actions/types'
+import { TripDetails } from '@/components/details/trip-details'
 import { GroupingInformation } from '@/components/forms/fields/grouping-information'
-import { TripInformation } from '@/components/forms/fields/trip-information'
 import { GroupingFormDialog } from '@/components/forms/form-dialogs/grouping-form-dialog'
 import { ClientSelect } from '@/components/forms/ui/client-select'
 import { DepartureAndArrivalDateSelect } from '@/components/forms/ui/departure-and-arrival-date-select'
@@ -107,8 +107,6 @@ export const TripForm = ({
   const pathname = usePathname()
   const router = useRouter()
 
-  const redirectView = pathname.replace(/\/edit$/, '')
-
   const { toast } = useToast()
 
   const form = useForm<TripFormValues>({
@@ -145,7 +143,7 @@ export const TripForm = ({
   }
 
   const onSuccessUpdate = () => {
-    router.replace(redirectView)
+    router.replace(pathname.replace(/\/edit$/, ''))
 
     toast({
       title: 'Viagem atualizada com sucesso',
@@ -553,7 +551,7 @@ export const TripForm = ({
               )}
 
               {step === TripSteps.three && (
-                <TripInformation
+                <TripDetails
                   status={form.getValues('status')}
                   origin={selectedOrigin}
                   destination={selectedDestination}

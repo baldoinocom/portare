@@ -2,7 +2,7 @@ import {
   shieldAction as shield,
   shieldPartialAction,
 } from '@/lib/shield-action'
-import { PermissionGroupCode } from '@/permissions'
+import { PermissionOverwriter } from '@/permissions'
 import { createAction } from './create'
 import { deleteAction } from './delete'
 import { findAction } from './find'
@@ -11,7 +11,9 @@ import { updateAction } from './update'
 
 export const brandAction = ({
   overwriter,
-}: { overwriter?: PermissionGroupCode | null } = {}) => {
+}: {
+  overwriter?: PermissionOverwriter
+} = {}) => {
   const actions = {
     create: shield({
       action: createAction,

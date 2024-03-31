@@ -60,6 +60,12 @@ export const formatPhoneNumber = (phoneNumber: string | undefined | null) => {
   return phoneNumber
 }
 
+export const formatCEP = (cep: string | undefined | null) => {
+  cep = cep?.replace(/\D/g, '')
+  cep = cep?.replace(/^(\d{5})(\d)/, '$1-$2')
+  return cep
+}
+
 export const formatUF = (state: string | undefined | null) => {
   switch (state?.toLowerCase()) {
     case 'ac':
@@ -174,5 +180,18 @@ export const formatTripStatus = (status: string | undefined | null) => {
       return 'Cancelado'
     default:
       return status
+  }
+}
+
+export const formatClientType = (type: string | undefined | null) => {
+  switch (type) {
+    case 'both':
+      return 'Ambos (Origem/Destino)'
+    case 'origin':
+      return 'Origem'
+    case 'destination':
+      return 'Destino'
+    default:
+      return type
   }
 }

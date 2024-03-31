@@ -1,11 +1,6 @@
-'use client'
-
 import { Breadcrumb, BreadcrumbProps } from '@/components/breadcrumb'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Edit3Icon } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { EditButton } from './edit-button'
 
 const pages: BreadcrumbProps[] = [
   { name: 'Viagens', href: '/trips' },
@@ -13,12 +8,6 @@ const pages: BreadcrumbProps[] = [
 ]
 
 export const Header = () => {
-  const pathname = usePathname()
-
-  const editing = pathname.match(/\/edit$/)
-
-  const redirectEdit = pathname + '/edit'
-
   return (
     <div className="sticky top-16 z-10 -mt-10 space-y-8 bg-background pt-10">
       <div>
@@ -33,14 +22,7 @@ export const Header = () => {
             </div>
 
             <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
-              <Button variant="outline" asChild>
-                {!editing && (
-                  <Link href={redirectEdit}>
-                    <Edit3Icon className="mr-2 size-4" />
-                    Editar
-                  </Link>
-                )}
-              </Button>
+              <EditButton />
             </div>
           </div>
         </div>
