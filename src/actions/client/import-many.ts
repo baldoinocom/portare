@@ -1,6 +1,7 @@
 'use server'
 
 import { db } from '@/lib/db'
+import { formatUF } from '@/lib/formatters'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Client, ClientType } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
@@ -22,7 +23,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       data.map((client) => {
         const address = {
           zipCode: client.CEP,
-          state: client.Estado,
+          state: formatUF(client.Estado),
           city: client.Cidade,
           locale: client.Endereço,
         }
@@ -81,6 +82,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }),
     )
   } catch (error) {
+    console.error(error)
     return { error: 'Erro ao importar os clientes' }
   }
 

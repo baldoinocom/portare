@@ -80,7 +80,7 @@ export const groupColumns = ({
     accessorFn: (row) => row.roles.map((role) => role.name).join(', '),
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (
-      <div className="flex flex-wrap uppercase">{getValue<string>()}</div>
+      <div className="uppercase">{getValue<string>()}</div>
     ),
   },
 
