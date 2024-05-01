@@ -5,22 +5,22 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const tabs = (uf: string) => [
-  { name: 'Abertos', href: '/mdf-e/' + uf },
-  { name: 'Encerrados', href: '/mdf-e/' + uf + '/closed' },
+const tabs = (state: string) => [
+  { name: 'Abertos', href: '/mdf-e/' + state },
+  { name: 'Encerrados', href: '/mdf-e/' + state + '/closed' },
 ]
 
 export const SubTabBar = ({ count }: { count: number }) => {
   const pathname = usePathname()
 
-  const uf = pathname.split('/')[2]
+  const state = pathname.split('/')[2]
 
   const current = (href: string) => href === pathname
 
   return (
     <div className="mt-2">
       <nav className="-mb-px flex space-x-8">
-        {tabs(uf).map((tab, index) => (
+        {tabs(state).map((tab, index) => (
           <Button
             key={index}
             variant="ghost"

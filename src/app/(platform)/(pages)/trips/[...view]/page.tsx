@@ -38,7 +38,7 @@ export default async function Page({ params }: { params: { view: string[] } }) {
               cargo={trip.data.cargo}
               note={trip.data.note}
               departedAt={trip.data.departedAt}
-              arrivedAt={trip.data.departedAt}
+              arrivedAt={trip.data.arrivedAt}
             />
           </main>
         </PageContent>

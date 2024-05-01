@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { formatUF } from '@/lib/formatters'
+import { formatShortState } from '@/lib/formatters'
 import { cn, debounce } from '@/lib/utils'
 import { validCEP } from '@/lib/validators'
 import { Loader2Icon } from 'lucide-react'
@@ -34,7 +34,10 @@ export const CompanyAddressInformation = () => {
         const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
         const data = await response.json()
 
-        setValue('company.address.state', formatUF(data.uf) || undefined)
+        setValue(
+          'company.address.state',
+          formatShortState(data.uf) || undefined,
+        )
         setValue('company.address.city', data.localidade)
         setValue('company.address.locale', data.logradouro)
       }

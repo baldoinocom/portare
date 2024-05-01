@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { formatUF } from '@/lib/formatters'
+import { formatShortState } from '@/lib/formatters'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Aggregate, CompanyType } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
@@ -26,7 +26,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
         const address = {
           zipCode: aggregate.CEP,
-          state: formatUF(aggregate.Estado),
+          state: formatShortState(aggregate.Estado),
           city: aggregate.Cidade,
           locale: aggregate.Endereço,
         }

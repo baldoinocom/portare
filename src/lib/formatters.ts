@@ -66,7 +66,7 @@ export const formatCEP = (cep: string | undefined | null) => {
   return cep
 }
 
-export const formatUF = (state: string | undefined | null) => {
+export const formatShortState = (state: string | undefined | null) => {
   switch (state?.toLowerCase()) {
     case 'ac':
       return 'Acre'
@@ -120,6 +120,65 @@ export const formatUF = (state: string | undefined | null) => {
       return 'Sergipe'
     case 'to':
       return 'Tocantins'
+    default:
+      return state
+  }
+}
+
+export const formatState = (state: string | undefined | null) => {
+  switch (state?.toLowerCase()) {
+    case 'acre':
+      return 'ac'
+    case 'alagoas':
+      return 'al'
+    case 'amapá':
+      return 'ap'
+    case 'amazonas':
+      return 'am'
+    case 'bahia':
+      return 'ba'
+    case 'ceará':
+      return 'ce'
+    case 'espírito santo':
+      return 'es'
+    case 'goiás':
+      return 'go'
+    case 'maranhão':
+      return 'ma'
+    case 'mato grosso':
+      return 'mt'
+    case 'mato grosso do sul':
+      return 'ms'
+    case 'minas gerais':
+      return 'mg'
+    case 'pará':
+      return 'pa'
+    case 'paraíba':
+      return 'pb'
+    case 'paraná':
+      return 'pr'
+    case 'pernambuco':
+      return 'pe'
+    case 'piauí':
+      return 'pi'
+    case 'rio de janeiro':
+      return 'rj'
+    case 'rio grande do norte':
+      return 'rn'
+    case 'rio grande do sul':
+      return 'rs'
+    case 'rondônia':
+      return 'ro'
+    case 'roraima':
+      return 'rr'
+    case 'santa catarina':
+      return 'sc'
+    case 'são paulo':
+      return 'sp'
+    case 'sergipe':
+      return 'se'
+    case 'tocantins':
+      return 'to'
     default:
       return state
   }

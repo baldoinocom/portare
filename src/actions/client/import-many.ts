@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { formatUF } from '@/lib/formatters'
+import { formatShortState } from '@/lib/formatters'
 import { ActionState, safeAction } from '@/lib/safe-action'
 import { Client, ClientType } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
@@ -23,7 +23,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       data.map((client) => {
         const address = {
           zipCode: client.CEP,
-          state: formatUF(client.Estado),
+          state: formatShortState(client.Estado),
           city: client.Cidade,
           locale: client.Endereço,
         }
