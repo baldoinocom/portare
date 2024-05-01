@@ -1,3 +1,4 @@
+import { EmptyState } from '@/components/empty-state'
 import { PageContent } from '@/components/page-content'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -16,6 +17,7 @@ import {
   CalendarCheckIcon,
   CalendarClockIcon,
   CalendarDaysIcon,
+  MapPinnedIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Overview, OverviewProps } from './_components/overview'
@@ -255,6 +257,22 @@ export default async function Page() {
 
             <CardContent>
               <div className="space-y-8">
+                {!tripsInProgress.length && (
+                  <EmptyState href="/trips/new">
+                    <div className="py-16">
+                      <MapPinnedIcon
+                        strokeWidth={1.2}
+                        size={42}
+                        className="mx-auto text-muted-foreground"
+                      />
+
+                      <span className="mt-2 block text-sm font-semibold">
+                        Programar uma nova viagem
+                      </span>
+                    </div>
+                  </EmptyState>
+                )}
+
                 {tripsInProgress.map((trip, index) => (
                   <Link key={index} href={'/trips/' + trip.id}>
                     <div className="group space-y-2 text-xs uppercase hover:cursor-pointer">
