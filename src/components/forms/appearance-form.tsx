@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { nullAsUndefined } from '@/lib/utils'
+import { cn, nullAsUndefined } from '@/lib/utils'
 import { usePageWidth } from '@/store/use-page-width'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const appearanceFormSchema = z.object({
-  theme: z.enum(['light', 'dark'], {
+  theme: z.enum(['system', 'light', 'dark'], {
     required_error: 'Selecione um tema para o painel',
   }),
   width: z.enum(['flexible', 'full'], {
@@ -29,12 +29,12 @@ const appearanceFormSchema = z.object({
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
 
-export function AppearanceForm({
+export const AppearanceForm = ({
   initialData,
 }: {
   initialData?: Partial<AppearanceFormValues>
-}) {
-  const { setTheme } = useTheme()
+}) => {
+  const { theme, systemTheme, setTheme } = useTheme()
   const { setWidth } = usePageWidth()
 
   const form = useForm<AppearanceFormValues>({
@@ -46,6 +46,10 @@ export function AppearanceForm({
     setTheme(data.theme)
     setWidth(data.width)
   }
+
+  const dark =
+    theme === 'system' ? systemTheme === 'dark' : initialData?.theme === 'dark'
+  const full = initialData?.width === 'full'
 
   return (
     <Form {...form}>
@@ -62,29 +66,15 @@ export function AppearanceForm({
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="grid max-w-md grid-cols-2 gap-8 pt-2"
+                className="grid max-w-md grid-cols-2 gap-8 pt-2 xl:max-w-2xl xl:grid-cols-3"
               >
                 <FormItem>
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                     <FormControl>
                       <RadioGroupItem value="light" className="sr-only" />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
-                      <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
-                        <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                      </div>
-                    </div>
+
+                    <Template full={full} />
                     <span className="block w-full p-2 text-center font-normal">
                       Claro
                     </span>
@@ -96,24 +86,23 @@ export function AppearanceForm({
                     <FormControl>
                       <RadioGroupItem value="dark" className="sr-only" />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground">
-                      <div className="space-y-2 rounded-sm bg-slate-950 p-2">
-                        <div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                          <div className="h-2 w-[80px] rounded-lg bg-slate-400" />
-                          <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-slate-400" />
-                          <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-slate-400" />
-                          <div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-                        </div>
-                      </div>
-                    </div>
+
+                    <Template dark full={full} />
                     <span className="block w-full p-2 text-center font-normal">
                       Escuro
+                    </span>
+                  </FormLabel>
+                </FormItem>
+
+                <FormItem>
+                  <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
+                    <FormControl>
+                      <RadioGroupItem value="system" className="sr-only" />
+                    </FormControl>
+
+                    <Template dark={systemTheme === 'dark'} full={full} />
+                    <span className="block w-full p-2 text-center font-normal">
+                      Sistema
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -141,22 +130,8 @@ export function AppearanceForm({
                     <FormControl>
                       <RadioGroupItem value="flexible" className="sr-only" />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
-                      <div className="space-y-2 rounded-sm bg-[#ecedef] p-2 px-8">
-                        <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                      </div>
-                    </div>
+
+                    <Template dark={dark} />
                     <span className="block w-full p-2 text-center font-normal">
                       Flexível
                     </span>
@@ -168,22 +143,8 @@ export function AppearanceForm({
                     <FormControl>
                       <RadioGroupItem value="full" className="sr-only" />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
-                      <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
-                        <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-                          <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-                          <div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-                        </div>
-                      </div>
-                    </div>
+
+                    <Template dark={dark} full />
                     <span className="block w-full p-2 text-center font-normal">
                       Máximo
                     </span>
@@ -201,3 +162,74 @@ export function AppearanceForm({
     </Form>
   )
 }
+
+const Template = ({ dark, full }: { dark?: boolean; full?: boolean }) => (
+  <div className="w-[220px] items-center rounded-md border-2 border-muted p-1 hover:border-accent">
+    <div
+      className={cn(
+        'space-y-2 rounded-sm p-2',
+        dark ? 'bg-slate-950' : 'bg-[#ecedef]',
+        !full && 'px-8',
+      )}
+    >
+      <div
+        className={cn(
+          'space-y-2 rounded-md p-2 shadow-sm',
+          dark ? 'bg-slate-800' : 'bg-white',
+        )}
+      >
+        <div
+          className={cn(
+            'h-2 w-[80px] rounded-lg',
+            dark ? 'bg-slate-400' : 'bg-[#ecedef]',
+          )}
+        />
+        <div
+          className={cn(
+            'h-2 w-[100px] rounded-lg',
+            dark ? 'bg-slate-400' : 'bg-[#ecedef]',
+          )}
+        />
+      </div>
+
+      <div
+        className={cn(
+          'flex items-center space-x-2 rounded-md  p-2 shadow-sm',
+          dark ? 'bg-slate-800' : 'bg-white',
+        )}
+      >
+        <div
+          className={cn(
+            'h-4 w-4 rounded-full',
+            dark ? 'bg-slate-400' : 'bg-[#ecedef]',
+          )}
+        />
+        <div
+          className={cn(
+            'h-2 w-[100px] rounded-lg',
+            dark ? 'bg-slate-400' : 'bg-[#ecedef]',
+          )}
+        />
+      </div>
+      <div
+        className={cn(
+          'flex items-center space-x-2 rounded-md  p-2 shadow-sm',
+          dark ? 'bg-slate-800' : 'bg-white',
+        )}
+      >
+        <div
+          className={cn(
+            'h-4 w-4 rounded-full',
+            dark ? 'bg-slate-400' : 'bg-[#ecedef]',
+          )}
+        />
+        <div
+          className={cn(
+            'h-2 w-[100px] rounded-lg',
+            dark ? 'bg-slate-400' : 'bg-[#ecedef]',
+          )}
+        />
+      </div>
+    </div>
+  </div>
+)

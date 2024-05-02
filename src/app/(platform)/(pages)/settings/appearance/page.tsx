@@ -4,10 +4,9 @@ import { AppearanceForm } from '@/components/forms/appearance-form'
 import { Separator } from '@/components/ui/separator'
 import { usePageWidth } from '@/store/use-page-width'
 import { useTheme } from 'next-themes'
-import { UseThemeProps } from 'next-themes/dist/types'
 
 export default function Page() {
-  const theme = useTheme().theme as UseThemeProps['systemTheme']
+  const theme = useTheme().theme as 'system' | 'light' | 'dark'
   const width = usePageWidth().width
 
   return (
