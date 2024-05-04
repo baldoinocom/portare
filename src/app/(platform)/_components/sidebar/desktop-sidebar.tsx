@@ -22,7 +22,7 @@ export const DesktopSidebar = () => {
   return (
     <div
       className={cn(
-        'fixed hidden h-screen border-r border-border lg:z-50 lg:flex lg:flex-col',
+        'fixed hidden h-screen border-r border-border transition-[width] duration-300 ease-in-out lg:z-50 lg:flex lg:flex-col',
         collapsed ? 'w-20' : 'w-72',
       )}
     >

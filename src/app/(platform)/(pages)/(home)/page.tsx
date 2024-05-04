@@ -23,7 +23,7 @@ import Link from 'next/link'
 import { Overview, OverviewProps } from './_components/overview'
 
 const calculatedDiff = (lastMonth: number, currentMonth: number) => {
-  return ((currentMonth - lastMonth) / lastMonth) * 100 || 0
+  return ((currentMonth - lastMonth) / (lastMonth || 1)) * 100 || 0
 }
 
 const longWeekday = (date: Date | null) => {
@@ -48,40 +48,59 @@ export default async function Page() {
     preProgrammed,
   ] = await Promise.all([
     db.trip.count({
-      where: { status: 'scheduled', createdAt: { gte: dateLastMonth } },
-    }),
-    db.trip.count({
       where: {
-        status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
-        createdAt: { gte: dateLastMonth },
+        draft: false,
+        status: 'scheduled',
+        createdAt: { lte: dateLastMonth },
       },
     }),
     db.trip.count({
-      where: { status: 'finished', createdAt: { gte: dateLastMonth } },
+      where: {
+        draft: false,
+        status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
+        createdAt: { lte: dateLastMonth },
+      },
     }),
     db.trip.count({
-      where: { draft: true, createdAt: { gte: dateLastMonth } },
+      where: {
+        draft: false,
+        status: 'finished',
+        createdAt: { lte: dateLastMonth },
+      },
+    }),
+    db.trip.count({
+      where: { draft: true, createdAt: { lte: dateLastMonth } },
     }),
 
     db.trip.count({
-      where: { status: 'scheduled', createdAt: { gte: dateCurrentMonth } },
-    }),
-    db.trip.count({
       where: {
-        status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
-        createdAt: { gte: dateCurrentMonth },
+        draft: false,
+        status: 'scheduled',
+        createdAt: { lte: dateCurrentMonth },
       },
     }),
     db.trip.count({
-      where: { status: 'finished', createdAt: { gte: dateCurrentMonth } },
+      where: {
+        draft: false,
+        status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
+        createdAt: { lte: dateCurrentMonth },
+      },
     }),
     db.trip.count({
-      where: { draft: true, createdAt: { gte: dateCurrentMonth } },
+      where: {
+        draft: false,
+        status: 'finished',
+        createdAt: { lte: dateCurrentMonth },
+      },
+    }),
+    db.trip.count({
+      where: { draft: true, createdAt: { lte: dateCurrentMonth } },
     }),
   ])
 
   const tripsNextWeek = await db.trip.findMany({
     where: {
+      draft: false,
       departedAt: { not: null },
       arrivedAt: { not: null },
       OR: [
@@ -92,7 +111,10 @@ export default async function Page() {
   })
 
   const tripsInProgress = await db.trip.findMany({
-    where: { status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] } },
+    where: {
+      draft: false,
+      status: { in: ['loaded', 'departure', 'terminal', 'unloaded'] },
+    },
     include: {
       truck: { include: { vehicle: true } },
       semiTrailer: { include: { trailers: { include: { vehicle: true } } } },

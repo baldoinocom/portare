@@ -2,7 +2,12 @@
 
 import { FormAlert } from '@/components/forms/ui/form-alert'
 import { Button } from '@/components/ui/button'
-import { DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -18,12 +23,15 @@ import { cn, nullAsUndefined } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MDFe } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
+import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { MDFeUpdateSchema } from '../_actions/type'
 import { updateMDFe } from '../_actions/update-mdfe'
 
 export const FormDialog = ({ initialData }: { initialData?: MDFe }) => {
+  const ref = React.useRef<HTMLDivElement>(null)
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof MDFeUpdateSchema>>({
@@ -33,6 +41,7 @@ export const FormDialog = ({ initialData }: { initialData?: MDFe }) => {
 
   const { execute } = useAction(updateMDFe, {
     onSuccess: () => {
+      ref.current?.click()
       toast({
         title: 'MDF-e atualizado com sucesso',
         description: 'O MDF-e foi atualizado com sucesso! 🎉',
@@ -55,6 +64,10 @@ export const FormDialog = ({ initialData }: { initialData?: MDFe }) => {
 
   return (
     <Form {...form}>
+      <DialogClose asChild>
+        <div className="sr-only" ref={ref} />
+      </DialogClose>
+
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-4">
           <DialogHeader>
