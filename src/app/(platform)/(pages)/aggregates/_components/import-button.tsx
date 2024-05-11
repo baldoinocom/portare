@@ -4,9 +4,16 @@ import { action } from '@/actions'
 import { AggregateImportSchema } from '@/actions/aggregate/schema'
 import { Shield } from '@/components/shield'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { useToast } from '@/components/ui/use-toast'
 import { useAction } from '@/hooks/use-action'
-import { Loader2, UploadIcon } from 'lucide-react'
+import { DownloadIcon, Loader2, UploadIcon } from 'lucide-react'
 import * as React from 'react'
 import * as XLSX from 'xlsx'
 import { z } from 'zod'
@@ -97,22 +104,53 @@ export const ImportButton = () => {
 
   const [loading, setLoading] = React.useState(false)
 
+  const downloadTemplate = () => {
+    const link = document.createElement('a')
+    link.href = '/import-templates/aggregates.xlsx'
+    link.download = 'Importação-Agregados.xlsx'
+    link.click()
+
+    toast({
+      title: 'Modelo baixado com sucesso',
+      description: 'O modelo foi baixado com sucesso! 🎉',
+    })
+  }
+
   return (
     <Shield permission="aggregate.import">
-      <Button variant="outline" onClick={handleFileSelect} disabled={loading}>
-        {loading ? (
-          <Loader2 className="mr-2 animate-spin" />
-        ) : (
-          <UploadIcon className="mr-1.5" />
-        )}
-        Importar
-        <input
-          id="file"
-          type="file"
-          className="sr-only"
-          onChange={handleFileChange}
-        />
-      </Button>
+      <input
+        id="file"
+        type="file"
+        className="sr-only"
+        onChange={handleFileChange}
+      />
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">
+            {loading ? (
+              <Loader2 className="mr-2 size-5 animate-spin" />
+            ) : (
+              <UploadIcon className="mr-2 size-5" />
+            )}
+            Importar
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+          <DropdownMenuItem onClick={handleFileSelect} disabled={loading}>
+            <UploadIcon className="mr-2 size-4" />
+            Selecionar arquivo
+          </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={downloadTemplate}>
+            <DownloadIcon className="mr-2 size-4" />
+            Baixar modelo
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </Shield>
   )
 }
