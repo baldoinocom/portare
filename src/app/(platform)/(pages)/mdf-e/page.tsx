@@ -39,7 +39,7 @@ export default async function Page({
     pr: await db.mDFe.count({ where: { branch: 'pr', closedAt: null } }),
     mdfe: await db.mDFe.count({
       where: {
-        manifest: { search },
+        manifest: { contains: search },
         branch: state === 'pr' ? 'pr' : 'sc',
         closedAt: closed ? { not: null } : { equals: null },
       },
@@ -50,7 +50,7 @@ export default async function Page({
     skip: page - 1,
     take: limit,
     where: {
-      manifest: { search },
+      manifest: { contains: search },
       branch: state === 'pr' ? 'pr' : 'sc',
       closedAt: closed ? { not: null } : { equals: null },
     },
