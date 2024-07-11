@@ -1,29 +1,22 @@
 import { ImportButton } from './import-button'
-import { TabBar } from './tab-bar'
 
-export const Header = ({
-  countMDFeSC,
-  countMDFePR,
-}: {
-  countMDFeSC: number
-  countMDFePR: number
-}) => {
+export const Header = () => {
   return (
     <header>
-      <div className="flex flex-col gap-1 border-b border-border pb-5 sm:pb-0">
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <div className="min-w-0 flex-1">
-            <h2 className="text-2xl font-bold sm:truncate sm:text-3xl sm:tracking-tight">
-              Encerramentos de MDF-e
-            </h2>
-          </div>
+      <div className="sm:flex sm:items-center sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl font-bold sm:truncate sm:tracking-tight">
+            Encerramentos de MDF-e
+          </h2>
 
-          <div className="mt-3 space-x-2 sm:ml-4 sm:mt-0">
-            <ImportButton />
+          <div className="text-sm text-muted-foreground">
+            Gerencie e acompanhe o encerramento dos MDF-e
           </div>
         </div>
 
-        <TabBar countMDFeSC={countMDFeSC} countMDFePR={countMDFePR} />
+        <div className="mt-3 flex space-x-2 sm:ml-4 sm:mt-0">
+          <ImportButton />
+        </div>
       </div>
     </header>
   )

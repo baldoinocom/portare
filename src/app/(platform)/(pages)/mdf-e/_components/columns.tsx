@@ -16,17 +16,15 @@ import { useAction } from '@/hooks/use-action'
 import { MDFe } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import {
-  ArrowUpDown,
   FileCheck2Icon,
   FileX2Icon,
   MessageSquarePlus,
   MoreHorizontal,
 } from 'lucide-react'
-import { MDFeResource } from '../_actions/type'
 import { updateMDFe } from '../_actions/update-mdfe'
 import { FormDialog } from './form-dialog'
 
-export const columns: ColumnDef<MDFeResource>[] = [
+export const columns: ColumnDef<MDFe & { semiTrailer?: string }>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -55,66 +53,56 @@ export const columns: ColumnDef<MDFeResource>[] = [
   {
     id: 'Manifesto',
     accessorFn: (row) => row.id,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          {column.id}
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      )
-    },
-    cell: ({ getValue }) => (
-      <div className="ml-4 uppercase">{getValue<string>()}</div>
+    header: ({ column }) => column.id,
+    cell: ({ row: { original } }) => (
+      <div className="uppercase">{original.manifest}</div>
     ),
   },
 
   {
     id: 'Placa',
-    accessorFn: (row) => row.data.Caminhão,
+    accessorFn: (row) => row.licensePlate,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="flex flex-col items-start uppercase">
         <span>{getValue<string>()}</span>
-        <span className="text-xs">{original.data.Reboque}</span>
+        <span className="text-xs">{original.semiTrailer}</span>
       </div>
     ),
   },
 
   {
     id: 'Destinatário',
-    accessorFn: (row) => row.data.Destinatário,
+    accessorFn: (row) => row.destinatary,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="flex flex-col items-start uppercase">
         <span>{getValue<string>()}</span>
-        <span className="text-xs">{original.data.Endereço}</span>
+        <span className="text-xs">{original.address}</span>
       </div>
     ),
   },
 
   {
     id: 'Nota Fiscal',
-    accessorFn: (row) => row.data['Nota Fiscal'],
+    accessorFn: (row) => row.invoice,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="flex flex-col items-start uppercase">
         <span>{getValue<string>()}</span>
-        <span className="text-xs">{original.data['Emissão da Nf']}</span>
+        <span className="text-xs">{original.invoiceIssue}</span>
       </div>
     ),
   },
 
   {
     id: 'CT-e',
-    accessorFn: (row) => row.data.CTe,
+    accessorFn: (row) => row.cte,
     header: ({ column }) => column.id,
     cell: ({ getValue, row: { original } }) => (
       <div className="flex flex-col items-start uppercase">
         <span>{getValue<string>()}</span>
-        <span className="text-xs">{original.data['Emissão do CTe']}</span>
+        <span className="text-xs">{original.cteIssue}</span>
       </div>
     ),
   },
@@ -168,7 +156,7 @@ const CellActions = ({ item }: { item: MDFe }) => {
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="size-8 p-0">
+          <Button variant="ghost" className="float-end size-8 p-0">
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="size-4" />
           </Button>

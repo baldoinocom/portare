@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -685,15 +686,23 @@ enum NotificationType {
 }
 
 model MDFe {
-  id       Int       @id
-  data     Json
-  branch   String?
-  closedAt DateTime? @map("closed_at")
-  note     String?   @db.Text
+  id           Int       @id @default(autoincrement())
+  manifest     String    @unique
+  branch       String
+  licensePlate String    @map("license_plate")
+  destinatary  String
+  address      String
+  invoice      String
+  invoiceIssue String
+  cte          String
+  cteIssue     String
+  closedAt     DateTime? @map("closed_at")
+  note         String?   @db.Text
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([manifest])
   @@index([branch])
   @@map("mdfe")
 }

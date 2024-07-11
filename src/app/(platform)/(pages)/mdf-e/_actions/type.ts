@@ -1,8 +1,7 @@
-import { MDFe } from '@prisma/client'
 import { z } from 'zod'
 
 export const MDFeSchema = z.object({
-  Manifesto: z.coerce.number(),
+  Manifesto: z.string(),
   Filial: z.string(),
   Caminhão: z.string(),
   Reboque: z.string().optional(),
@@ -28,5 +27,3 @@ export const MDFeUpdateSchema = z.object({
 })
 
 export type MDFeType = z.infer<typeof MDFeSchema>
-
-export type MDFeResource = MDFe & { data: MDFeType }

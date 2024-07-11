@@ -93,7 +93,7 @@ export const ImportButton = () => {
         })
 
         const rows = json.map((row) => ({
-          Manifesto: Number(row['No.Manifesto']),
+          Manifesto: String(Number(row['No.Manifesto'])),
           Filial: row.Filial,
           Caminhão: row['Placa Veicul'],
           Destinatário: row['Nome Destina'],
@@ -125,11 +125,16 @@ export const ImportButton = () => {
   const [loading, setLoading] = React.useState(false)
 
   return (
-    <Button variant="outline" onClick={handleFileSelect} disabled={loading}>
+    <Button
+      size="sm"
+      variant="outline"
+      onClick={handleFileSelect}
+      disabled={loading}
+    >
       {loading ? (
-        <Loader2 className="mr-2 animate-spin" />
+        <Loader2 className="mr-1 size-4 animate-spin" />
       ) : (
-        <UploadIcon className="mr-1.5" />
+        <UploadIcon className="mr-1 size-4" />
       )}
       Importar
       <input

@@ -18,10 +18,16 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   try {
     await db.mDFe.createMany({
       skipDuplicates: true,
-      data: data.map(({ Manifesto, Filial, ...json }) => ({
-        id: Manifesto,
-        branch: branch(Filial),
-        data: json,
+      data: data.map((item) => ({
+        manifest: item.Manifesto,
+        branch: branch(item.Filial),
+        licensePlate: item.Caminhão,
+        destinatary: item.Destinatário,
+        address: item.Endereço,
+        invoice: item['Nota Fiscal'],
+        invoiceIssue: item['Emissão da Nf'],
+        cte: item.CTe,
+        cteIssue: item['Emissão do CTe'],
       })),
     })
   } catch (error) {
