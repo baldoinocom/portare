@@ -71,7 +71,7 @@ export const navigation: MenuItemProps[] = [
 export const otherNavigation: MenuItemProps[] = [
   {
     name: 'Encerramentos de MDF-e',
-    href: '/mdf-e/sc',
+    href: '/mdf-e',
     icon: FileSpreadsheetIcon,
     groups: ['mdfe'],
   },
