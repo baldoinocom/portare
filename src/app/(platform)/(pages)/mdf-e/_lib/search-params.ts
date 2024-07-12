@@ -20,3 +20,9 @@ export const searchParams = {
 
 export const searchParamsCache = createSearchParamsCache(searchParams)
 export const serialize = createSerializer(searchParams)
+
+type Writable<T> = {
+  -readonly [P in keyof T]?: T[P] | null
+}
+
+export type SearchParams = Writable<ReturnType<typeof searchParamsCache.all>>

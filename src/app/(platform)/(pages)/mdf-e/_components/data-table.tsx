@@ -45,13 +45,9 @@ import {
   VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { FileCheck2Icon, FileX2Icon, Search } from 'lucide-react'
-import { usePathname } from 'next/navigation'
 import { useQueryStates } from 'nuqs'
 import * as React from 'react'
 import { updateMDFe } from '../_actions/update-mdfe'
@@ -70,7 +66,7 @@ export const DataTable = <TData, TValue>({
   count,
 }: DataTableProps<TData, TValue>) => {
   const [isLoading, startTransition] = React.useTransition()
-  const [{ search, page, limit }, setSearchParams] = useQueryStates(
+  const [{ search, page, limit, closed }, setSearchParams] = useQueryStates(
     searchParams,
     { startTransition, shallow: false },
   )
@@ -84,15 +80,11 @@ export const DataTable = <TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    initialState: { pagination: { pageSize: limit } },
     data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -101,11 +93,9 @@ export const DataTable = <TData, TValue>({
       columnVisibility,
       rowSelection,
     },
+    getRowId: (row) => String((row as MDFe)?.id),
+    manualPagination: true,
   })
-
-  const pathname = usePathname()
-
-  const closed = pathname.includes('/closed')
 
   const { toast } = useToast()
 
@@ -140,6 +130,8 @@ export const DataTable = <TData, TValue>({
 
   const debouncedSearch = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams({ search: e.target.value || null, page: null })
+
+    table.setRowSelection({})
   }, 500)
 
   return (
@@ -151,12 +143,18 @@ export const DataTable = <TData, TValue>({
             <Input
               defaultValue={search}
               onInput={debouncedSearch}
-              placeholder="Pesquisar por manifesto..."
+              placeholder="Pesquisar..."
               className="pl-8"
             />
           </div>
 
-          <Filters startTransition={startTransition} />
+          <Filters
+            onValueChange={(searchParams) => {
+              setSearchParams(searchParams)
+
+              table.setRowSelection({})
+            }}
+          />
         </div>
 
         <div className="flex items-center space-x-2">
@@ -274,11 +272,17 @@ export const DataTable = <TData, TValue>({
       </div>
 
       <div className="flex items-center justify-end space-x-6 lg:space-x-8">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {Object.keys(rowSelection).length} de {count} linha(s) selecionado
+        </div>
+
         <div className="flex items-center space-x-2">
           <Label className="text-sm font-medium">Mostrar</Label>
           <Select
             value={String(limit)}
-            onValueChange={(value) => setSearchParams({ limit: Number(value) })}
+            onValueChange={(value) =>
+              setSearchParams({ limit: Number(value), page: null })
+            }
           >
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={String(limit)} />

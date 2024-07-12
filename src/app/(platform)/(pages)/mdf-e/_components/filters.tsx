@@ -10,17 +10,14 @@ import {
 } from '@/components/ui/select'
 import { formatShortState } from '@/lib/formatters'
 import { useQueryStates } from 'nuqs'
-import { searchParams } from '../_lib/search-params'
+import { SearchParams, searchParams } from '../_lib/search-params'
 
 export const Filters = ({
-  startTransition,
+  onValueChange,
 }: {
-  startTransition: React.TransitionStartFunction
+  onValueChange: (value: SearchParams) => void
 }) => {
-  const [{ state, closed }, setSearchParams] = useQueryStates(searchParams, {
-    startTransition,
-    shallow: false,
-  })
+  const [{ state, closed }] = useQueryStates(searchParams)
 
   return (
     <>
@@ -29,7 +26,7 @@ export const Filters = ({
         <Select
           defaultValue={String(state)}
           onValueChange={(value) =>
-            setSearchParams({ state: value as 'sc' | 'pr' })
+            onValueChange({ state: value as 'sc' | 'pr', page: null })
           }
         >
           <SelectTrigger className="h-8 w-[150px]">
@@ -50,7 +47,7 @@ export const Filters = ({
         <Select
           defaultValue={String(closed)}
           onValueChange={(value) =>
-            setSearchParams({ closed: value === 'true' })
+            onValueChange({ closed: value === 'true', page: null })
           }
         >
           <SelectTrigger className="h-8 w-[150px]">

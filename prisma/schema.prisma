@@ -702,7 +702,7 @@ model MDFe {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([manifest])
   @@index([branch])
-  @@fulltext([manifest])
   @@map("mdfe")
 }

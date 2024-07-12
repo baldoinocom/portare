@@ -34,27 +34,45 @@ export default async function Page({
     return Unauthorized()
   }
 
-  const count = {
-    sc: await db.mDFe.count({ where: { branch: 'sc', closedAt: null } }),
-    pr: await db.mDFe.count({ where: { branch: 'pr', closedAt: null } }),
-    mdfe: await db.mDFe.count({
-      where: {
-        manifest: { contains: search },
-        branch: state === 'pr' ? 'pr' : 'sc',
-        closedAt: closed ? { not: null } : { equals: null },
-      },
-    }),
-  }
-
-  const mdfe = (await db.mDFe.findMany({
-    skip: page - 1,
-    take: limit,
+  const count = await db.mDFe.count({
     where: {
-      manifest: { contains: search },
+      OR: [
+        { manifest: { contains: search } },
+        { licensePlate: { contains: search } },
+        { destinatary: { contains: search } },
+        { address: { contains: search } },
+        { invoice: { contains: search } },
+        { invoiceIssue: { contains: search } },
+        { cte: { contains: search } },
+        { cteIssue: { contains: search } },
+        { note: { contains: search } },
+      ],
       branch: state === 'pr' ? 'pr' : 'sc',
       closedAt: closed ? { not: null } : { equals: null },
     },
-    orderBy: { id: 'asc' },
+  })
+
+  const take = limit > 100 ? 100 : limit
+  const skip = (page - 1) * take
+
+  const mdfe = (await db.mDFe.findMany({
+    skip,
+    take,
+    where: {
+      OR: [
+        { manifest: { contains: search } },
+        { licensePlate: { contains: search } },
+        { destinatary: { contains: search } },
+        { address: { contains: search } },
+        { invoice: { contains: search } },
+        { invoiceIssue: { contains: search } },
+        { cte: { contains: search } },
+        { cteIssue: { contains: search } },
+        { note: { contains: search } },
+      ],
+      branch: state === 'pr' ? 'pr' : 'sc',
+      closedAt: closed ? { not: null } : { equals: null },
+    },
   })) as (MDFe & { semiTrailer?: string })[]
 
   if (!closed) {
@@ -99,7 +117,7 @@ export default async function Page({
 
       <main>
         <div className="flex flex-col space-y-4">
-          <DataTable columns={columns} data={mdfe} count={count.mdfe} />
+          <DataTable columns={columns} data={mdfe} count={count} />
         </div>
       </main>
     </PageContent>
