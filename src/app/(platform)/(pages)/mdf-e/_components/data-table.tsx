@@ -130,8 +130,6 @@ export const DataTable = <TData, TValue>({
 
   const debouncedSearch = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams({ search: e.target.value || null, page: null })
-
-    table.setRowSelection({})
   }, 500)
 
   return (
