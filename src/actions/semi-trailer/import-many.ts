@@ -112,6 +112,32 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       },
     })
 
+    const semiTrailersExists = await db.semiTrailer.findMany({
+      where: {
+        trailers: {
+          some: {
+            vehicle: {
+              licensePlate: {
+                in: parsedData.flatMap(({ trailers }) =>
+                  trailers.map(({ vehicle }) => vehicle.licensePlate),
+                ),
+              },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        trailers: {
+          select: {
+            id: true,
+            vehicleId: true,
+            vehicle: { select: { licensePlate: true } },
+          },
+        },
+      },
+    })
+
     semiTrailers = await db.$transaction(
       parsedData.map(({ trailers, ...semiTrailer }) => {
         const numberOfTrailers = configurations.find(
@@ -120,6 +146,77 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
         if (numberOfTrailers && numberOfTrailers !== trailers.length) {
           throw new Error()
+        }
+
+        const semiTrailerExists = semiTrailersExists.find((semiTrailer) =>
+          trailers.every(({ vehicle }) =>
+            semiTrailer.trailers.some(
+              ({ vehicle: { licensePlate } }) =>
+                licensePlate === vehicle.licensePlate,
+            ),
+          ),
+        )
+
+        if (semiTrailerExists) {
+          return db.semiTrailer.update({
+            where: { id: semiTrailerExists.id },
+            data: {
+              type: {
+                connectOrCreate: {
+                  where: { name: semiTrailer.type.name },
+                  create: { name: semiTrailer.type.name },
+                },
+              },
+              cargos: {
+                connectOrCreate: semiTrailer.cargos.map(({ name }) => ({
+                  where: { name },
+                  create: { name },
+                })),
+              },
+              configuration: {
+                connectOrCreate: {
+                  where: { name: semiTrailer.configuration.name },
+                  create: {
+                    name: semiTrailer.configuration.name,
+                    numberOfTrailers:
+                      semiTrailer.configuration.numberOfTrailers,
+                  },
+                },
+              },
+
+              trailers: {
+                update: trailers.map(({ vehicle, fleetNumber }) => ({
+                  where: {
+                    vehicleId: semiTrailerExists.trailers.find(
+                      ({ vehicle: { licensePlate } }) =>
+                        licensePlate === vehicle.licensePlate,
+                    )?.vehicleId,
+                  },
+                  data: {
+                    vehicle: {
+                      update: {
+                        unit: { connect: { companyId: semiTrailer.unitId } },
+
+                        brand: {
+                          connectOrCreate: {
+                            where: { name: semiTrailer.brand.name },
+                            create: { name: semiTrailer.brand.name },
+                          },
+                        },
+                        model: semiTrailer.model,
+                        year: semiTrailer.year,
+
+                        licensePlate: vehicle.licensePlate,
+                        chassis: vehicle.chassis,
+                        renavam: vehicle.renavam,
+                      },
+                    },
+                    fleetNumber,
+                  },
+                })),
+              },
+            },
+          })
         }
 
         return db.semiTrailer.create({
@@ -174,6 +271,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }),
     )
   } catch (error) {
+    console.error(error)
     return { error: 'Erro ao importar os semirreboques' }
   }
 

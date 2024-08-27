@@ -42,8 +42,57 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       })),
     )
 
+    const trucksExists = await db.truck.findMany({
+      where: {
+        vehicle: {
+          OR: parsedData.map(({ vehicle }) => ({
+            licensePlate: vehicle.licensePlate,
+          })),
+        },
+      },
+      select: { id: true, vehicle: { select: { licensePlate: true } } },
+    })
+
     trucks = await db.$transaction(
       parsedData.map(({ vehicle, compressor, compressorModel }) => {
+        const truckExists = trucksExists.find(
+          ({ vehicle: { licensePlate } }) =>
+            licensePlate === vehicle.licensePlate,
+        )
+
+        if (truckExists) {
+          return db.truck.update({
+            where: { id: truckExists.id },
+            data: {
+              vehicle: {
+                update: {
+                  unit: vehicle.unitId
+                    ? { connect: { companyId: vehicle.unitId } }
+                    : undefined,
+                  aggregate: vehicle.aggregateId
+                    ? { connect: { companyId: vehicle.aggregateId } }
+                    : undefined,
+
+                  licensePlate: vehicle.licensePlate,
+                  brand: {
+                    connectOrCreate: {
+                      where: { name: vehicle.brand.name },
+                      create: { name: vehicle.brand.name },
+                    },
+                  },
+                  year: vehicle.year,
+                  model: vehicle.model,
+                  axle: vehicle.axle,
+                  chassis: vehicle.chassis,
+                  renavam: vehicle.renavam,
+                },
+              },
+              compressor,
+              compressorModel: compressor ? compressorModel : null,
+            },
+          })
+        }
+
         return db.truck.create({
           data: {
             vehicle: {

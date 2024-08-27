@@ -54,8 +54,48 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }),
     )
 
+    const clientsExists = await db.client.findMany({
+      where: {
+        company: {
+          OR: parsedData.map(({ company }) => ({ document: company.document })),
+        },
+      },
+      select: { companyId: true, company: { select: { document: true } } },
+    })
+
     clients = await db.$transaction(
       parsedData.map(({ type, company }) => {
+        const clientExists = clientsExists.find(
+          ({ company: { document } }) => document === company.document,
+        )
+
+        if (clientExists) {
+          return db.client.update({
+            where: { companyId: clientExists.companyId },
+            data: {
+              type,
+
+              company: {
+                update: {
+                  name: company.name,
+                  tradeName: company.tradeName,
+                  document: company.document,
+                  address: company.address
+                    ? {
+                        update: {
+                          zipCode: company.address.zipCode,
+                          state: company.address.state,
+                          city: company.address.city,
+                          locale: company.address.locale,
+                        },
+                      }
+                    : undefined,
+                },
+              },
+            },
+          })
+        }
+
         return db.client.create({
           data: {
             type,

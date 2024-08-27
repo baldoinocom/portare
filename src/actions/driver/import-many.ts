@@ -34,8 +34,46 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       })),
     )
 
+    const driversExists = await db.driver.findMany({
+      where: {
+        person: {
+          OR: parsedData.map(({ person }) => ({ document: person.document })),
+        },
+      },
+      select: { personId: true, person: { select: { document: true } } },
+    })
+
     drivers = await db.$transaction(
       parsedData.map(({ person, cnh, cnhMirror }) => {
+        const driverExists = driversExists.find(
+          ({ person: { document } }) => document === person.document,
+        )
+
+        if (driverExists) {
+          return db.driver.update({
+            where: { personId: driverExists.personId },
+            data: {
+              person: {
+                update: {
+                  unit: person.unitId
+                    ? { connect: { companyId: person.unitId } }
+                    : undefined,
+                  aggregate: person.aggregateId
+                    ? { connect: { companyId: person.aggregateId } }
+                    : undefined,
+
+                  name: person.name,
+                  nickname: person.nickname,
+                  document: person.document,
+                  phoneNumber: person.phoneNumber,
+                },
+              },
+              cnh,
+              cnhMirror,
+            },
+          })
+        }
+
         return db.driver.create({
           data: {
             person: {
