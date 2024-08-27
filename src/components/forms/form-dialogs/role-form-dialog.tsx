@@ -52,14 +52,14 @@ export const RoleFormDialog = ({
       onReset()
 
       toast({
-        title: 'Cargo registrado com sucesso',
-        description: 'O cargo foi registrado com sucesso! 🎉',
+        title: 'Função registrada com sucesso',
+        description: 'A função foi registrada com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao registrar o cargo',
+        title: 'Erro ao registrar a função',
         description: error,
       })
     },
@@ -68,14 +68,14 @@ export const RoleFormDialog = ({
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
-        title: 'Cargo atualizado com sucesso',
-        description: 'O cargo foi atualizado com sucesso! 🎉',
+        title: 'Função atualizada com sucesso',
+        description: 'A função foi atualizada com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao atualizar o cargo',
+        title: 'Erro ao atualizar a função',
         description: error,
       })
     },
@@ -95,11 +95,11 @@ export const RoleFormDialog = ({
         <div className="space-y-4">
           <DialogHeader>
             <DialogTitle>
-              {initialData ? 'Registro do cargo' : 'Registro de cargo'}
+              {initialData ? 'Registro da função' : 'Registro de função'}
             </DialogTitle>
 
             <DialogDescription>
-              {initialData ? 'Altere os cargos' : 'Regstre novos cargos'}
+              {initialData ? 'Altere as funções' : 'Regstre novas funções'}
             </DialogDescription>
           </DialogHeader>
 

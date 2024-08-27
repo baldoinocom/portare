@@ -76,7 +76,7 @@ export const groupColumns = ({
   },
 
   {
-    id: 'Cargo',
+    id: 'Função',
     accessorFn: (row) => row.roles.map((role) => role.name).join(', '),
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (

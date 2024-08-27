@@ -25,7 +25,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       const find = await db.role.findFirst({ where: { NOT: { id }, name } })
 
       if (find) {
-        return { error: 'Já existe um cargo com esse nome' }
+        return { error: 'Já existe uma função com esse nome' }
       }
     }
 

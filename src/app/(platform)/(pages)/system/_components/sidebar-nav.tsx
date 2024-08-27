@@ -24,7 +24,7 @@ const navs: {
     groups: ['group'],
   },
   {
-    name: 'Cargos',
+    name: 'Funções',
     href: '/system/roles',
     groups: ['role'],
   },
