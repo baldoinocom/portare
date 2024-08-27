@@ -19,7 +19,7 @@ const navs: {
     groups: ['user'],
   },
   {
-    name: 'Grupos',
+    name: 'Cargos',
     href: '/system/groups',
     groups: ['group'],
   },

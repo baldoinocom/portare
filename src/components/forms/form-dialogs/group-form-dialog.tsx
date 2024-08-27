@@ -73,14 +73,14 @@ export const GroupFormDialog = ({
       onReset()
 
       toast({
-        title: 'Grupo registrado com sucesso',
-        description: 'O grupo foi registrado com sucesso! 🎉',
+        title: 'Cargo registrado com sucesso',
+        description: 'O cargo foi registrado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao registrar o grupo',
+        title: 'Erro ao registrar o cargo',
         description: error,
       })
     },
@@ -89,14 +89,14 @@ export const GroupFormDialog = ({
   const { execute: executeUpdate } = useAction(update, {
     onSuccess: () => {
       toast({
-        title: 'Grupo atualizado com sucesso',
-        description: 'O grupo foi atualizado com sucesso! 🎉',
+        title: 'Cargo atualizado com sucesso',
+        description: 'O cargo foi atualizado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao atualizar o grupo',
+        title: 'Erro ao atualizar o cargo',
         description: error,
       })
     },
@@ -116,11 +116,11 @@ export const GroupFormDialog = ({
         <div className="space-y-4">
           <DialogHeader>
             <DialogTitle>
-              {initialData ? 'Registro do grupo' : 'Registro de grupo'}
+              {initialData ? 'Registro do cargo' : 'Registro de cargo'}
             </DialogTitle>
 
             <DialogDescription>
-              {initialData ? 'Altere os grupos' : 'Regstre novos grupos'}
+              {initialData ? 'Altere os cargos' : 'Regstre novos cargo'}
             </DialogDescription>
           </DialogHeader>
 
@@ -144,7 +144,7 @@ export const GroupFormDialog = ({
               name="roles"
               render={() => (
                 <FormItem>
-                  <FormLabel>Cargo</FormLabel>
+                  <FormLabel>Função</FormLabel>
 
                   <Popover>
                     <PopoverTrigger asChild>
@@ -174,7 +174,7 @@ export const GroupFormDialog = ({
                                 ))}
                             </div>
                           ) : (
-                            'Selecione o cargo'
+                            'Selecione a função'
                           )}
                           <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                         </Button>

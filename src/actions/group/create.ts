@@ -19,7 +19,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     const find = await db.group.findFirst({ where: { name } })
 
     if (find) {
-      return { error: 'Já existe um grupo com esse nome' }
+      return { error: 'Já existe um cargo com esse nome' }
     }
 
     group = await db.group.create({

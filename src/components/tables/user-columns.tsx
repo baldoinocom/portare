@@ -59,7 +59,7 @@ export const userColumns = ({
   },
 
   {
-    id: 'Grupo',
+    id: 'Cargo',
     accessorFn: (row) => row.groups.map((group) => group.name).join(', '),
     header: ({ column }) => column.id,
     cell: ({ getValue }) => (

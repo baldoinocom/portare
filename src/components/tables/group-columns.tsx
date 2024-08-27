@@ -107,14 +107,14 @@ const CellActions = ({
   const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
-        title: 'Grupo deletado com sucesso',
-        description: 'O grupo foi deletado com sucesso! 🎉',
+        title: 'Cargo deletado com sucesso',
+        description: 'O cargo foi deletado com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao deletar o grupo',
+        title: 'Erro ao deletar o cargo',
         description: error,
       })
     },
