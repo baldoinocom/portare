@@ -20,6 +20,9 @@ import {
   FileX2Icon,
   MessageSquarePlus,
   MoreHorizontal,
+  Plus,
+  PlusIcon,
+  ZapIcon,
 } from 'lucide-react'
 import { updateMDFe } from '../_actions/update-mdfe'
 import { FormDialog } from './form-dialog'
@@ -111,11 +114,7 @@ export const columns: ColumnDef<MDFe & { semiTrailer?: string }>[] = [
     id: 'Observação',
     accessorFn: (row) => row.note,
     header: ({ column }) => column.id,
-    cell: ({ getValue }) => (
-      <div className="flex flex-col items-start">
-        <span className="text-xs">{getValue<string>()}</span>
-      </div>
-    ),
+    cell: ({ row }) => <CellNote item={row.original} />,
   },
 
   {
@@ -124,6 +123,77 @@ export const columns: ColumnDef<MDFe & { semiTrailer?: string }>[] = [
     enableHiding: false,
   },
 ]
+
+const CellNote = ({ item }: { item: MDFe }) => {
+  const { id, note } = item
+
+  const { toast } = useToast()
+
+  const { execute } = useAction(updateMDFe, {
+    onSuccess: () => {
+      toast({
+        title: 'MDF-e atualizado com sucesso',
+        description: 'O MDF-e foi atualizado com sucesso! 🎉',
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao atualizar o MDF-e',
+        description: error,
+      })
+    },
+  })
+
+  const handleUpdate = async (note: string) => {
+    await execute([{ id, note }])
+  }
+
+  if (note) {
+    return (
+      <div className="flex flex-col items-start">
+        <span className="text-xs">{note}</span>
+      </div>
+    )
+  }
+
+  const actions = ['Pode encerrar']
+
+  return (
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="sm" variant="outline">
+            <Plus className="size-4" />
+            <div className="text-xs">Adiconar</div>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {actions.map((action) => (
+            <DropdownMenuItem
+              key={action}
+              className="text-xs"
+              onClick={() => handleUpdate(action)}
+            >
+              <ZapIcon className="mr-2 size-4" />
+              {action}
+            </DropdownMenuItem>
+          ))}
+          <DialogTrigger asChild>
+            <DropdownMenuItem className="text-xs">
+              <PlusIcon className="mr-2 size-4" />
+              Adiconar
+            </DropdownMenuItem>
+          </DialogTrigger>
+        </DropdownMenuContent>
+
+        <FormDialogContent>
+          <FormDialog initialData={item} />
+        </FormDialogContent>
+      </DropdownMenu>
+    </Dialog>
+  )
+}
 
 const CellActions = ({ item }: { item: MDFe }) => {
   const { id, closedAt } = item

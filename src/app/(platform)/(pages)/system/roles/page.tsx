@@ -19,9 +19,9 @@ export default async function Page() {
         <div className="space-y-6">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-medium">Cargos</h3>
+              <h3 className="text-lg font-medium">Funções</h3>
               <p className="text-sm text-muted-foreground">
-                Gerencie os cargos do sistema
+                Gerencie as funções do sistema
               </p>
             </div>
 
@@ -50,7 +50,7 @@ export default async function Page() {
                   />
 
                   <span className="mt-2 block text-sm font-semibold">
-                    Cadastrar uma novo cargo
+                    Cadastrar uma nova função
                   </span>
                 </EmptyState>
               </DialogTrigger>

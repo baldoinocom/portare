@@ -39,8 +39,46 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }),
     )
 
+    const unitsExists = await db.unit.findMany({
+      where: {
+        company: {
+          OR: parsedData.map(({ company }) => ({ document: company.document })),
+        },
+      },
+      select: { companyId: true, company: { select: { document: true } } },
+    })
+
     units = await db.$transaction(
       parsedData.map(({ company }) => {
+        const unitExists = unitsExists.find(
+          ({ company: { document } }) => document === company.document,
+        )
+
+        if (unitExists) {
+          return db.unit.update({
+            where: { companyId: unitExists.companyId },
+            data: {
+              company: {
+                update: {
+                  name: company.name,
+                  tradeName: company.tradeName,
+                  document: company.document,
+                  address: company.address
+                    ? {
+                        update: {
+                          zipCode: company.address.zipCode,
+                          state: company.address.state,
+                          city: company.address.city,
+                          locale: company.address.locale,
+                        },
+                      }
+                    : undefined,
+                },
+              },
+            },
+          })
+        }
+
         return db.unit.create({
           data: {
             company: {

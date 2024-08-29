@@ -45,8 +45,49 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       }),
     )
 
+    const aggregatesExists = await db.aggregate.findMany({
+      where: {
+        company: {
+          OR: parsedData.map(({ company }) => ({ document: company.document })),
+        },
+      },
+      select: { companyId: true, company: { select: { document: true } } },
+    })
+
     aggregates = await db.$transaction(
       parsedData.map(({ unitId, company }) => {
+        const aggregateExists = aggregatesExists.find(
+          ({ company: { document } }) => document === company.document,
+        )
+
+        if (aggregateExists) {
+          return db.aggregate.update({
+            where: { companyId: aggregateExists.companyId },
+            data: {
+              unit: unitId ? { connect: { companyId: unitId } } : undefined,
+              company: {
+                update: {
+                  type: company.type as CompanyType,
+
+                  name: company.name,
+                  tradeName: company.tradeName,
+                  document: company.document,
+                  address: company.address
+                    ? {
+                        update: {
+                          zipCode: company.address.zipCode,
+                          state: company.address.state,
+                          city: company.address.city,
+                          locale: company.address.locale,
+                        },
+                      }
+                    : undefined,
+                },
+              },
+            },
+          })
+        }
+
         return db.aggregate.create({
           data: {
             unit: unitId ? { connect: { companyId: unitId } } : undefined,

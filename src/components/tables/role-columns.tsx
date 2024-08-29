@@ -95,14 +95,14 @@ const CellActions = ({ item }: { item: RoleResource }) => {
   const { execute } = useAction(del, {
     onSuccess: () => {
       toast({
-        title: 'Cargo deletado com sucesso',
-        description: 'O cargo foi deletado com sucesso! 🎉',
+        title: 'Função deletada com sucesso',
+        description: 'A função foi deletada com sucesso! 🎉',
       })
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Erro ao deletar o cargo',
+        title: 'Erro ao deletar a função',
         description: error,
       })
     },

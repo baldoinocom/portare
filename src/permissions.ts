@@ -254,12 +254,12 @@ export const permissionsHelper: PermissionsHelper[] = [
     partial: true,
   },
   {
-    label: 'Grupo',
+    label: 'Cargo',
     group: 'group',
     partial: true,
   },
   {
-    label: 'Cargo',
+    label: 'Função',
     group: 'role',
     partial: true,
   },

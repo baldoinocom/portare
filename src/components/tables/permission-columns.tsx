@@ -7,7 +7,7 @@ import { ArrowUpDown } from 'lucide-react'
 
 export const permissionColumns: ColumnDef<Permission>[] = [
   {
-    id: 'Grupo',
+    id: 'Cargo',
     accessorFn: (row) => row.group,
     header: ({ column }) => {
       return (

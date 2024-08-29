@@ -169,7 +169,7 @@ export const UserFormDialog = ({
                 name="groups"
                 render={() => (
                   <FormItem>
-                    <FormLabel>Grupo</FormLabel>
+                    <FormLabel>Cargo</FormLabel>
 
                     <Popover>
                       <PopoverTrigger asChild>
@@ -199,7 +199,7 @@ export const UserFormDialog = ({
                                   ))}
                               </div>
                             ) : (
-                              'Selecione o grupo'
+                              'Selecione o cargo'
                             )}
                             <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                           </Button>

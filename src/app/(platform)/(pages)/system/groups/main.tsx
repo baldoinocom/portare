@@ -26,7 +26,7 @@ export const Main = ({
             />
 
             <span className="mt-2 block text-sm font-semibold">
-              Cadastrar um novo grupo
+              Cadastrar um novo cargos
             </span>
           </EmptyState>
         </DialogTrigger>

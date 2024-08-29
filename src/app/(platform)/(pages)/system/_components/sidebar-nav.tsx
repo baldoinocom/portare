@@ -19,12 +19,12 @@ const navs: {
     groups: ['user'],
   },
   {
-    name: 'Grupos',
+    name: 'Cargos',
     href: '/system/groups',
     groups: ['group'],
   },
   {
-    name: 'Cargos',
+    name: 'Funções',
     href: '/system/roles',
     groups: ['role'],
   },

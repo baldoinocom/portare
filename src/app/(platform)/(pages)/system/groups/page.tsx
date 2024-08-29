@@ -20,9 +20,9 @@ export default async function Page() {
         <div className="space-y-6">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-medium">Grupos</h3>
+              <h3 className="text-lg font-medium">Cargos</h3>
               <p className="text-sm text-muted-foreground">
-                Gerencie as permissões dos grupos do sistema
+                Gerencie as permissões dos cargos do sistema
               </p>
             </div>
 
