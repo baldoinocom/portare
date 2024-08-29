@@ -1,8 +1,8 @@
 export const validLicensePlate = (licensePlate: string | undefined) => {
   if (!licensePlate) return true
 
-  const isOldFormat = /^[A-Z]{3}-\d{4}$/.test(licensePlate)
-  const isNewFormat = /^[A-Z]{3}-\d[A-Z]\d{2}$/.test(licensePlate)
+  const isOldFormat = /^[A-Z]{3}-?\d{4}$/.test(licensePlate)
+  const isNewFormat = /^[A-Z]{3}-?\d[A-Z]\d{2}$/.test(licensePlate)
 
   if (!(isOldFormat || isNewFormat)) return false
 
@@ -13,8 +13,9 @@ export const validRenavam = (renavam: string | undefined) => {
   if (!renavam) return true
 
   renavam = renavam.replace(/[^\d]/g, '')
-  if (renavam.length !== 11) return false
+  if (renavam.length !== 9 && renavam.length !== 11) return false
 
+  renavam = renavam.padStart(11, '0')
   if (/^(\d)\1+$/.test(renavam)) return false
 
   let sum = 0
