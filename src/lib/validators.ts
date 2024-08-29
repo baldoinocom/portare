@@ -13,7 +13,7 @@ export const validRenavam = (renavam: string | undefined) => {
   if (!renavam) return true
 
   renavam = renavam.replace(/[^\d]/g, '')
-  if (renavam.length !== 9 && renavam.length !== 11) return false
+  if (renavam.length < 9 || renavam.length > 11) return false
 
   renavam = renavam.padStart(11, '0')
   if (/^(\d)\1+$/.test(renavam)) return false

@@ -60,8 +60,8 @@ export const VehicleSchema = z.object({
       .string()
       .trim()
       .transform(extractNumber)
-      .refine(({ length }) => !length || length === 9 || length === 11, {
-        message: 'O RENAVAM deve ter exatamente 9 ou 11 dígitos',
+      .refine(({ length }) => !length || (length >= 9 && length <= 11), {
+        message: 'O RENAVAM deve ter no mínimo 9 e no máximo 11 dígitos',
       })
       .refine(validRenavam, { message: 'O RENAVAM deve ser válido' }),
   ),
