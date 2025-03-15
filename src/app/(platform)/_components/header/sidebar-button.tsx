@@ -1,6 +1,6 @@
 'use client'
 
-import { LogoSlogan } from '@/components/logo-slogan'
+import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useSidebar } from '@/store/use-sidebar'
@@ -12,15 +12,16 @@ export const SidebarButton = () => {
   return (
     <>
       <div className="hidden lg:flex">
-        <LogoSlogan className={cn('w-auto', !collapsed && 'sr-only')} />
+        <Logo className={cn('size-5 w-auto', !collapsed && 'sr-only')} />
       </div>
 
       <Button
         variant="ghost"
+        size="sm"
         className="-m-2.5 p-2.5 lg:hidden"
         onClick={onOpen}
       >
-        <MenuIcon />
+        <MenuIcon className="size-[1rem]" />
         <span className="sr-only">Open</span>
       </Button>
     </>

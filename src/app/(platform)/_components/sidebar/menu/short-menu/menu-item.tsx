@@ -21,7 +21,7 @@ export const ShortMenuItem = ({ item }: { item: MenuItemProps }) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="ghost" asChild className="justify-center px-2">
+        <Button variant="ghost" size="sm" asChild>
           <Link
             href={item.href ?? '#'}
             className={cn(
@@ -29,13 +29,13 @@ export const ShortMenuItem = ({ item }: { item: MenuItemProps }) => {
               'group flex w-full items-center rounded-md text-sm font-semibold',
             )}
           >
-            <item.icon className="shrink-0 text-foreground" />
+            <item.icon className="size-5 shrink-0 text-foreground" />
           </Link>
         </Button>
       </TooltipTrigger>
 
       <TooltipContent side="right" className="ml-2 bg-foreground">
-        <p className="text-background">{item.name}</p>
+        <p className="text-xs text-background">{item.name}</p>
       </TooltipContent>
     </Tooltip>
   )

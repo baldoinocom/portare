@@ -1,4 +1,4 @@
-import { LogoSlogan } from '@/components/logo-slogan'
+import { Logo } from '@/components/logo'
 import { PermissionGroup } from '@prisma/client'
 import { LucideIcon } from 'lucide-react'
 import { FooterMenuItem } from './footer-menu-item'
@@ -22,9 +22,9 @@ export type MenuItemProps = {
 export const Menu = ({ mobile }: { mobile?: boolean }) => {
   return (
     <div className="group flex grow flex-col gap-y-5 overflow-y-auto bg-background px-6 pb-4">
-      <div className="flex h-16 shrink-0 items-center">
+      <div className="flex h-14 shrink-0 items-center">
         <div className="px-2">
-          <LogoSlogan className="w-auto" />
+          <Logo className="size-4 w-auto" />
         </div>
 
         {!mobile && <ToggleButton />}

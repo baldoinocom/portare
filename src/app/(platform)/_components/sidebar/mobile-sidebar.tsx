@@ -47,10 +47,11 @@ export const MobileSidebar = () => {
                 <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
                   <Button
                     variant="ghost"
+                    size="sm"
                     className="-m-2.5 bg-background p-2.5 text-foreground"
                     onClick={onClose}
                   >
-                    <XIcon />
+                    <XIcon className="size-4" />
                     <span className="sr-only">Close</span>
                   </Button>
                 </div>

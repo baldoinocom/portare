@@ -31,12 +31,12 @@ export const Overview = ({ data }: { data: OverviewProps }) => {
             <div className="flex flex-row justify-center space-x-4">
               <div className="flex flex-row items-center space-x-1">
                 <div className="size-3 rounded-sm bg-foreground/90" />
-                <div className="text-sm text-foreground">Saídas</div>
+                <div className="text-xs text-foreground">Saídas</div>
               </div>
 
               <div className="flex flex-row items-center space-x-1">
                 <div className="size-3 rounded-sm bg-foreground/50" />
-                <div className="text-sm text-foreground">Entregas</div>
+                <div className="text-xs text-foreground">Entregas</div>
               </div>
             </div>
           }

@@ -15,20 +15,23 @@ export const MenuItem = ({ item }: { item: MenuItemProps }) => {
     : false
 
   return (
-    <Button variant="ghost" asChild className="justify-start">
+    <Button variant="ghost" size="sm" asChild className="justify-start">
       <Link
         href={item.href ?? '#'}
         className={cn(
           current ? 'bg-accent' : 'hover:bg-accent',
-          'group flex w-full items-center gap-x-3 rounded-md text-sm font-semibold',
+          'group flex w-full items-center gap-x-3 rounded-md text-xs font-semibold',
         )}
       >
-        <item.icon className="shrink-0 text-foreground" />
+        <item.icon className="size-5 shrink-0 text-foreground" />
 
         {item.name}
 
         {item.count && (
-          <Badge variant="outline" className="ml-auto rounded-full px-3">
+          <Badge
+            variant="outline"
+            className="ml-auto rounded-full px-3 text-xs"
+          >
             {item.count}
           </Badge>
         )}

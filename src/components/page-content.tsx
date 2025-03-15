@@ -22,7 +22,7 @@ export const PageContent = ({ className, ...props }: PageContentProps) => {
   return (
     <div
       className={cn(
-        'mx-auto flex flex-col gap-y-8 px-4 py-10 sm:px-6 lg:px-8',
+        'mx-auto flex flex-col gap-y-4 px-4 py-10 sm:px-6 lg:px-8',
         width === 'full' ? 'w-full' : 'max-w-7xl',
         className,
       )}

@@ -117,7 +117,7 @@ export default async function Page() {
       <header>
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="flex min-w-0 flex-1 items-center">
-            <h2 className="text-2xl font-bold sm:truncate sm:text-3xl sm:tracking-tight">
+            <h2 className="text-xl font-bold sm:truncate sm:text-2xl sm:tracking-tight">
               Início
             </h2>
 
@@ -138,11 +138,11 @@ export default async function Page() {
             <div className="flex items-start justify-between space-x-4 p-6">
               <div>
                 <div className="text-sm font-medium">Progamados</div>
-                <div className="text-2xl font-bold">{programmed}</div>
+                <div className="text-xl font-bold">{programmed}</div>
               </div>
 
               <div className="rounded-lg bg-secondary p-2">
-                <CalendarDaysIcon className="size-6 text-muted-foreground" />
+                <CalendarDaysIcon className="size-5 text-muted-foreground" />
               </div>
             </div>
           </Card>
@@ -151,11 +151,11 @@ export default async function Page() {
             <div className="flex items-start justify-between space-x-4 p-6">
               <div>
                 <div className="text-sm font-medium">Em progresso</div>
-                <div className="text-2xl font-bold">{inProgress}</div>
+                <div className="text-xl font-bold">{inProgress}</div>
               </div>
 
               <div className="rounded-lg bg-secondary p-2">
-                <CalendarClockIcon className="size-6 text-muted-foreground" />
+                <CalendarClockIcon className="size-5 text-muted-foreground" />
               </div>
             </div>
           </Card>
@@ -164,11 +164,11 @@ export default async function Page() {
             <div className="flex items-start justify-between space-x-4 p-6">
               <div>
                 <div className="text-sm font-medium">Finalizados</div>
-                <div className="text-2xl font-bold">{finished}</div>
+                <div className="text-xl font-bold">{finished}</div>
               </div>
 
               <div className="rounded-lg bg-secondary p-2">
-                <CalendarCheckIcon className="size-6 text-muted-foreground" />
+                <CalendarCheckIcon className="size-5 text-muted-foreground" />
               </div>
             </div>
           </Card>
@@ -177,11 +177,11 @@ export default async function Page() {
             <div className="flex items-start justify-between space-x-4 p-6">
               <div>
                 <div className="text-sm font-medium">Pré-progamados</div>
-                <div className="text-2xl font-bold">{preProgrammed}</div>
+                <div className="text-xl font-bold">{preProgrammed}</div>
               </div>
 
               <div className="rounded-lg bg-secondary p-2">
-                <CalendarCheck2Icon className="size-6 text-muted-foreground" />
+                <CalendarCheck2Icon className="size-5 text-muted-foreground" />
               </div>
             </div>
           </Card>
@@ -225,7 +225,7 @@ export default async function Page() {
 
                 {tripsInProgress.map((trip, index) => (
                   <Link key={index} href={'/trips/' + trip.id}>
-                    <div className="group space-y-2 text-xs uppercase hover:cursor-pointer">
+                    <div className="group pb-2 text-xs uppercase hover:cursor-pointer">
                       <div className="flex justify-between space-x-6 *:rounded-md *:bg-secondary *:p-1">
                         <p className="-ms-1 text-nowrap">
                           {trip.truck?.vehicle.licensePlate}

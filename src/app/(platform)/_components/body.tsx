@@ -7,7 +7,7 @@ export const Body = ({ children }: { children: React.ReactNode }) => {
   const { collapsed } = useSidebar()
 
   return (
-    <div className={cn('w-full', collapsed ? 'lg:pl-20' : 'lg:pl-72')}>
+    <div className={cn('w-full', collapsed ? 'lg:pl-16' : 'lg:pl-72')}>
       {children}
     </div>
   )

@@ -24,30 +24,31 @@ export const ExpandableMenuItem = ({ item }: { item: MenuItemProps }) => {
     <Disclosure as="div">
       {({ open }) => (
         <>
-          <Button variant="ghost" asChild>
-            <Disclosure.Button
-              className={cn(
-                current ? 'bg-accent' : 'hover:bg-accent',
-                'flex w-full items-center gap-x-3 rounded-md text-left text-sm font-semibold',
+          <Disclosure.Button
+            className={cn(
+              current ? 'bg-accent' : 'hover:bg-accent',
+              'flex w-full items-center gap-x-3 rounded-md text-left text-xs font-semibold',
+            )}
+            variant="ghost"
+            size="sm"
+            as={Button}
+          >
+            <item.icon className="size-5 shrink-0" />
+
+            {item.name}
+
+            <div className="ml-auto flex items-center gap-x-3">
+              {item.count && (
+                <Badge variant="outline" className="rounded-full px-3 text-xs">
+                  {item.count}
+                </Badge>
               )}
-            >
-              <item.icon className="shrink-0" />
 
-              {item.name}
-
-              <div className="ml-auto flex items-center gap-x-3">
-                {item.count && (
-                  <Badge variant="outline" className="rounded-full px-3">
-                    {item.count}
-                  </Badge>
-                )}
-
-                <ChevronRightIcon
-                  className={cn(open && 'rotate-90', 'shrink-0')}
-                />
-              </div>
-            </Disclosure.Button>
-          </Button>
+              <ChevronRightIcon
+                className={cn(open && 'rotate-90', 'size-4 shrink-0')}
+              />
+            </div>
+          </Disclosure.Button>
 
           <Disclosure.Panel as="ul" className="mt-1 flex flex-col gap-y-1">
             {item.children?.map(({ groups, ...subItem }) => {
@@ -57,15 +58,22 @@ export const ExpandableMenuItem = ({ item }: { item: MenuItemProps }) => {
 
               return (
                 <li key={subItem.name}>
-                  <Button variant="ghost" asChild className="justify-start">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="justify-start"
+                  >
                     <Link
                       href={subItem.href}
                       className={cn(
                         current ? 'bg-accent' : 'hover:bg-accent',
-                        'flex w-full items-center gap-x-3 rounded-md pl-9 pr-2 text-sm',
+                        'flex w-full items-center gap-x-3 rounded-md pl-9 pr-2 text-xs',
                       )}
                     >
-                      {subItem.icon && <subItem.icon className="shrink-0" />}
+                      {subItem.icon && (
+                        <subItem.icon className="size-5 shrink-0" />
+                      )}
 
                       {subItem.name}
                     </Link>

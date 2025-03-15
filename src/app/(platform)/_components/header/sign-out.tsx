@@ -13,5 +13,9 @@ export const SignOut = () => {
     await signOut(() => router.push('/auth/sign-in'))
   }
 
-  return <DropdownMenuItem onClick={onSignOut}>Sair</DropdownMenuItem>
+  return (
+    <DropdownMenuItem className="text-xs" onClick={onSignOut}>
+      Sair
+    </DropdownMenuItem>
+  )
 }

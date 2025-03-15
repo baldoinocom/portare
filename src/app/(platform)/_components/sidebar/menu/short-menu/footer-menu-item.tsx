@@ -25,18 +25,18 @@ export const ShortFooterMenuItem = () => {
         {check && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" asChild className="justify-start px-2">
+              <Button variant="ghost" size="sm" asChild>
                 <Link
                   href="/system/users"
                   className="group flex w-full items-center rounded-md text-sm font-semibold hover:bg-accent"
                 >
-                  <SettingsIcon className="shrink-0" />
+                  <SettingsIcon className="size-5 shrink-0" />
                 </Link>
               </Button>
             </TooltipTrigger>
 
             <TooltipContent side="right" className="ml-2 bg-foreground">
-              <p className="text-background">Sistema</p>
+              <p className="text-xs text-background">Sistema</p>
             </TooltipContent>
           </Tooltip>
         )}

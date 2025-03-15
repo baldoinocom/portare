@@ -18,12 +18,12 @@ export const FooterMenuItem = () => {
     <ul role="list" className="-mx-2 space-y-1">
       <li>
         {check && (
-          <Button variant="ghost" asChild className="justify-start">
+          <Button variant="ghost" size="sm" asChild className="justify-start">
             <Link
               href="/system/users"
-              className="group flex w-full items-center gap-x-3 rounded-md text-sm font-semibold hover:bg-accent"
+              className="group flex w-full items-center gap-x-3 rounded-md text-xs font-semibold hover:bg-accent"
             >
-              <SettingsIcon className="shrink-0 text-foreground" />
+              <SettingsIcon className="size-5 shrink-0 text-foreground" />
               Sistema
             </Link>
           </Button>

@@ -19,23 +19,22 @@ export const ProfileDropdown = async () => {
 
   return (
     <div className="flex items-center gap-x-2">
-      <Avatar className="size-10">
-        <AvatarFallback className="uppercase">
+      <Avatar className="size-8">
+        <AvatarFallback className="text-sm uppercase">
           {user?.username?.substring(0, 2)}
         </AvatarFallback>
       </Avatar>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost">
+          <Button variant="ghost" size="sm">
             <span className="text-sm font-semibold">{user?.username}</span>
-            <ChevronDownIcon size={20} className="ml-1" />
-            <span className="sr-only">Alternar tema</span>
+            <ChevronDownIcon className="ml-1 size-[1rem]" />
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs">
             <p>Nome de usuário</p>
             <p className="font-medium">{user?.username}</p>
           </DropdownMenuLabel>
@@ -44,7 +43,9 @@ export const ProfileDropdown = async () => {
 
           {userNavigation.map((item, index) => (
             <Link key={index} href={item.href}>
-              <DropdownMenuItem>{item.name}</DropdownMenuItem>
+              <DropdownMenuItem className="text-xs">
+                {item.name}
+              </DropdownMenuItem>
             </Link>
           ))}
 

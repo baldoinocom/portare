@@ -13,19 +13,19 @@ export const ToggleButton = () => {
         <Button
           variant="outline"
           size="sm"
-          className="m-0 scale-0 group-hover:scale-100"
+          className="mx-auto size-8 scale-0 p-0 group-hover:scale-100"
           onClick={onExpand}
         >
-          <ArrowRight size={12} />
+          <ArrowRight className="size-3" />
         </Button>
       ) : (
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto scale-0 group-hover:scale-100"
+          className="ml-auto size-8 scale-0 p-0 group-hover:scale-100"
           onClick={onCollapse}
         >
-          <ArrowLeft size={12} />
+          <ArrowLeft className="size-3" />
         </Button>
       )}
     </>

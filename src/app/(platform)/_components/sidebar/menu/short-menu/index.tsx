@@ -5,8 +5,8 @@ import { ToggleButton } from './toggle-button'
 
 export const ShortMenu = () => {
   return (
-    <div className="group flex grow flex-col gap-y-5 overflow-y-auto bg-background px-4 pb-4">
-      <div className="flex h-16 shrink-0 items-center">
+    <div className="group flex grow flex-col gap-y-5 overflow-y-auto bg-background px-2 pb-4">
+      <div className="flex h-14 shrink-0 items-center">
         <ToggleButton />
       </div>
 
