@@ -1,0 +1,14 @@
+services:
+  mysql:
+    image: bitnami/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_USER: mysql
+      MYSQL_ROOT_PASSWORD: supersecret
+      MYSQL_DATABASE: default
+    volumes:
+      - mysql-data:/bitnami/mysql
+
+volumes:
+  mysql-data:
