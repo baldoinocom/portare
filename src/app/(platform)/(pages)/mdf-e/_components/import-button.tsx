@@ -88,7 +88,7 @@ export const ImportButton = () => {
         const sheet = workbook.Sheets[sheetName]
 
         const json = XLSX.utils.sheet_to_json<Input>(sheet, {
-          range: 3,
+          range: 4,
           raw: false,
         })
 
