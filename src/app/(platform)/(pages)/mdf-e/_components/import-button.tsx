@@ -23,6 +23,31 @@ type Input = {
   'Placa Veicul': string
 }
 
+const extractAndFormatRows = (sheet: XLSX.WorkSheet, range: number) => {
+  try {
+    const json = XLSX.utils.sheet_to_json<Input>(sheet, {
+      range,
+      raw: false,
+    })
+
+    const rows = json.map((row) => ({
+      Manifesto: String(Number(row['No.Manifesto'])),
+      Filial: row.Filial,
+      Caminhão: row['Placa Veicul'],
+      Destinatário: row['Nome Destina'],
+      Endereço: row['Local Entreg'],
+      'Nota Fiscal': String(Number(row['NF CLIENTE'])),
+      'Emissão da Nf': format(new Date(row['Emis Nf Cli']), 'dd/MM/yyyy'),
+      CTe: String(Number(row['Numero CTRC'])),
+      'Emissão do CTe': format(new Date(row['Dt. Emissao']), 'dd/MM/yyyy'),
+    }))
+
+    return rows
+  } catch (error) {
+    return false
+  }
+}
+
 export const ImportButton = () => {
   const { toast } = useToast()
 
@@ -87,22 +112,10 @@ export const ImportButton = () => {
 
         const sheet = workbook.Sheets[sheetName]
 
-        const json = XLSX.utils.sheet_to_json<Input>(sheet, {
-          range: 4,
-          raw: false,
-        })
+        let rows = extractAndFormatRows(sheet, 3)
 
-        const rows = json.map((row) => ({
-          Manifesto: String(Number(row['No.Manifesto'])),
-          Filial: row.Filial,
-          Caminhão: row['Placa Veicul'],
-          Destinatário: row['Nome Destina'],
-          Endereço: row['Local Entreg'],
-          'Nota Fiscal': String(Number(row['NF CLIENTE'])),
-          'Emissão da Nf': format(new Date(row['Emis Nf Cli']), 'dd/MM/yyyy'),
-          CTe: String(Number(row['Numero CTRC'])),
-          'Emissão do CTe': format(new Date(row['Dt. Emissao']), 'dd/MM/yyyy'),
-        }))
+        // Fix: If the first range is not valid, try the second range
+        if (!rows) rows = extractAndFormatRows(sheet, 4)
 
         const data = z.array(MDFeSchema).parse(rows)
 
